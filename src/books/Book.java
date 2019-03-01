@@ -10,30 +10,121 @@ public class Book {
     private Date publishedDate;
     private int pageCount;
     private int numCopies;
-    private int numCpiesCheckedOut;
+    private int numCopiesCheckedOut;
     private Date purchasedDate;
+    private String name;
 
+    public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
+        this.author = author;
+        this.publisher = publisher;
+        this.ISBN = ISBN;
+        this.publishedDate = publishedDate;
+        this.pageCount = pageCount;
+        this.numCopies = numCopies;
+        this.numCopiesCheckedOut = numCopiesCheckedOut;
+        this.purchasedDate = purchasedDate;
+        this.name = name;
+    }
+
+    /**
+     * get the book's ISBN
+     * @return the  book's ISBN
+     */
+    public int getISBN() {
+        return ISBN;
+    }
+
+    /**
+     * get the date the book was published
+     * @return when the book was published
+     */
+    public Date getPublishedDate() {
+        return publishedDate;
+    }
+
+    /**
+     * get how many pages are in the book
+     * @return how many pages are in the book
+     */
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    /**
+     * get how many copies of this book the library owns
+     * @return how many copies of this book the library owns
+     */
+    public int getNumCopies() {
+        return numCopies;
+    }
+
+    /**
+     * get when the library purchased this book
+     * @return when the book was purchased
+     */
+    public Date getPurchasedDate() {
+        return purchasedDate;
+    }
+
+    /**
+     * get how many of this book are checked out
+     * @return how many of this book are checaked out
+     */
+    public int getNumCopiesCheckedOut() {
+        return numCopiesCheckedOut;
+    }
+
+    /**
+     * Get the hashcode of this object
+     * @return the hashcode of this book
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(ISBN);
+    }
+
+    /**
+     * get the author of this book
+     * @return the author of this book
+     */
+    public Author getAuthor() {
+        return author;
+    }
+
+    /**
+     * get the publisher of this book
+     * @return the publisher of this book
+     */
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    /**
+     * get the name og this book
+     * @return the name of this book
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /**
+     * compares two books to see if they are equal
+     * @param o the book to compare to
+     * @return if the books are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return ISBN == book.ISBN &&
-                pageCount == book.pageCount &&
-                numCopies == book.numCopies &&
-                numCpiesCheckedOut == book.numCpiesCheckedOut &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(publisher, book.publisher) &&
-                Objects.equals(publishedDate, book.publishedDate) &&
-                Objects.equals(purchasedDate, book.purchasedDate) &&
-                Objects.equals(name, book.name);
+        return ISBN == book.ISBN
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(author, publisher, ISBN, publishedDate, pageCount, numCopies, numCpiesCheckedOut, purchasedDate, name);
-    }
-
+    /**
+     * return this object as a string
+     * @return this object as a string
+     */
     @Override
     public String toString() {
         return "Book{" +
@@ -43,48 +134,10 @@ public class Book {
                 ", publishedDate=" + publishedDate +
                 ", pageCount=" + pageCount +
                 ", numCopies=" + numCopies +
-                ", numCpiesCheckedOut=" + numCpiesCheckedOut +
+                ", numCopiesCheckedOut=" + numCopiesCheckedOut +
                 ", purchasedDate=" + purchasedDate +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public Publisher getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(Publisher publisher) {
-        this.publisher = publisher;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    private String name;
-
-    public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCpiesCheckedOut, Date purchasedDate, String name) {
-        this.author = author;
-        this.publisher = publisher;
-        this.ISBN = ISBN;
-        this.publishedDate = publishedDate;
-        this.pageCount = pageCount;
-        this.numCopies = numCopies;
-        this.numCpiesCheckedOut = numCpiesCheckedOut;
-        this.purchasedDate = purchasedDate;
-        this.name = name;
     }
 
 }
