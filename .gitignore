@@ -24,10 +24,9 @@ hs_err_pid*
 
 #intelij stuff
 *.iml
-*.idea
+.idea\*
+.idea/*
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
 .idea/workspace.xml
-.idea/usage.statistics.xml
-.idea/tasks.xml
-.idea/workspace.xml
-.idea/usage.statistics.xml
-.idea/tasks.xml

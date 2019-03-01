@@ -1,6 +1,8 @@
 package user;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -39,6 +41,6 @@ public class NameTest {
         Name CuT2 = new Name("John","Doe");
 
         // Run the assertions.
-        assertEquals(CuT1,CuT2,"Names aren't equal.");
+        assertEquals("Names aren't equal.", CuT1, CuT2);
     }
 }
