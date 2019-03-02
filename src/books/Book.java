@@ -3,6 +3,12 @@ package books;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Class representing a book.
+ *
+ * @author Michael Dolan
+ * @author Zachary Cook
+ */
 public class Book {
     private Author author;
     private Publisher publisher;
@@ -14,6 +20,19 @@ public class Book {
     private Date purchasedDate;
     private String name;
 
+    /**
+     * Creates a book.
+     *
+     * @param author the author of the book.
+     * @param publisher the publisher of the book.
+     * @param ISBN the ISBN of the book.
+     * @param publishedDate the date that book was published.
+     * @param pageCount the page count of the book.
+     * @param numCopies the number of copies of the book.
+     * @param numCopiesCheckedOut the number of copies checked out.
+     * @param purchasedDate the purchase date of the book.
+     * @param name the name of the book.
+     */
     public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
         this.author = author;
         this.publisher = publisher;
@@ -27,103 +46,90 @@ public class Book {
     }
 
     /**
-     * get the book's ISBN
-     * @return the  book's ISBN
+     * Gets the book's ISBN.
+     *
+     * @return the  book's ISBN.
      */
     public int getISBN() {
         return ISBN;
     }
 
     /**
-     * get the date the book was published
-     * @return when the book was published
+     * Gets the date the book was published.
+     *
+     * @return when the book was published.
      */
     public Date getPublishedDate() {
         return publishedDate;
     }
 
     /**
-     * get how many pages are in the book
-     * @return how many pages are in the book
+     * Gets how many pages are in the book.
+     *
+     * @return how many pages are in the book.
      */
     public int getPageCount() {
         return pageCount;
     }
 
     /**
-     * get how many copies of this book the library owns
-     * @return how many copies of this book the library owns
+     * Gets how many copies of this book the library owns.
+     *
+     * @return how many copies of this book the library owns.
      */
     public int getNumCopies() {
         return numCopies;
     }
 
     /**
-     * get when the library purchased this book
-     * @return when the book was purchased
+     * Gets when the library purchased this book.
+     *
+     * @return when the book was purchased.
      */
     public Date getPurchasedDate() {
         return purchasedDate;
     }
 
     /**
-     * get how many of this book are checked out
-     * @return how many of this book are checaked out
+     * Gets how many of this book are checked out.
+     *
+     * @return how many of this book are checked out.
      */
     public int getNumCopiesCheckedOut() {
         return numCopiesCheckedOut;
     }
 
     /**
-     * Get the hashcode of this object
-     * @return the hashcode of this book
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(ISBN);
-    }
-
-    /**
-     * get the author of this book
-     * @return the author of this book
+     * Gets the author of this book.
+     *
+     * @return the author of this book.
      */
     public Author getAuthor() {
         return author;
     }
 
     /**
-     * get the publisher of this book
-     * @return the publisher of this book
+     * Gets the publisher of this book.
+     *
+     * @return the publisher of this book.
      */
     public Publisher getPublisher() {
         return publisher;
     }
 
     /**
-     * get the name og this book
-     * @return the name of this book
+     * Gets the name of this book.
+     *
+     * @return the name of this book.
      */
     public String getName() {
         return name;
     }
 
-
     /**
-     * compares two books to see if they are equal
-     * @param o the book to compare to
-     * @return if the books are equal
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return ISBN == book.ISBN;
-    }
-
-    /**
-     * return this object as a string
-     * @return this object as a string
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
      */
     @Override
     public String toString() {
@@ -140,4 +146,33 @@ public class Book {
                 '}';
     }
 
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return a hash code value for this object.
+     */
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param obj the reference object with which to compare.
+     *
+     * @return true if this object is the same as the obj argument;
+     * false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        // Return false if the class isn't the same.
+        if (!(obj instanceof Book)) {
+            return false;
+        }
+
+        // Cast the object and return if the hashcodes are the same.
+        Book book = (Book) obj;
+        return this.hashCode() == book.hashCode();
+    }
 }
