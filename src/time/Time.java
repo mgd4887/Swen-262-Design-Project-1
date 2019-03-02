@@ -32,6 +32,14 @@ public class Time {
     }
 
     /**
+     * This method returns this time in number of seconds, so that other classes may use it.
+     * @return returns time in seconds as an int
+     */
+    public int getSeconds(){
+        return (this.hours * 3600) + (this.minutes * 60) + this.seconds;
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.

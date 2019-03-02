@@ -20,6 +20,18 @@ public class TimeTest {
     }
 
     /**
+     * Tests the seconds converter of time.
+     */
+    @Test
+    public void test_getSeconds(){
+        Time secondTime = new Time(560);
+        Time regularTime = new Time(2, 3, 15);
+
+        assertEquals(560, secondTime.getSeconds(), "Seconds incorrect");
+        assertEquals(7395, regularTime.getSeconds(), "Seconds incorrect");
+    }
+
+    /**
      * Tests the {@link Time#toString()} method.
      */
     @Test
