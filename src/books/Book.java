@@ -1,7 +1,6 @@
 package books;
 
-import java.util.Date;
-import java.util.Objects;
+import time.Date;
 
 /**
  * Class representing a book.

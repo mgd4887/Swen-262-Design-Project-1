@@ -5,9 +5,9 @@ package time;
  * hours, minutes, and seconds of a day.
  */
 public class Time {
-    private int hours;
-    private int minutes;
-    private int seconds;
+    protected int hours;
+    protected int minutes;
+    protected int seconds;
 
     /**
      * Creates a time object.

@@ -2,8 +2,7 @@ package books;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
+import time.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,11 +27,11 @@ public class BookTest {
 
         // Create the book information.
         int ISBN = 1;
-        Date publishedDate = new Date();
+        Date publishedDate = new Date(0,0,0,0,0,0);
         int pageCount = 1;
         int numCopies = 2;
         int numCopiesCheckedOut = 1;
-        Date purchasedDate = new Date();
+        Date purchasedDate = new Date(0,0,0,0,0,0);
         String name = "Test Book";
 
         // Create the CuT.
@@ -52,7 +51,7 @@ public class BookTest {
      */
     @Test
     public void test_getPublishedDate() {
-        assertEquals(CuT.getPublishedDate(), new Date(), "Publisher date is incorrect.");
+        assertEquals(CuT.getPublishedDate(), new Date(0,0,0,0,0,0), "Publisher date is incorrect.");
     }
 
     /**
@@ -76,7 +75,7 @@ public class BookTest {
      */
     @Test
     public void test_getPurchasedDate() {
-        assertEquals(CuT.getPublishedDate(), new Date(), "Purchase date is incorrect.");
+        assertEquals(CuT.getPublishedDate(), new Date(0,0,0,0,0,0), "Purchase date is incorrect.");
     }
 
     /**
