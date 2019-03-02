@@ -67,4 +67,69 @@ public class Date extends Time {
         Date date = (Date) obj;
         return this.hashCode() == date.hashCode();
     }
+
+    /**
+     * tells if a given date is after this date
+     * @param dueDate the date to check to see if it is after this date
+     * @return if hte date is after this one
+     */
+    public boolean after(Date dueDate) {
+        if (this.year > dueDate.year){
+            return true;
+        }
+        if (this.year < dueDate.year){
+            return false;
+        }
+        if (this.month > dueDate.month){
+            return true;
+        }
+        if (this.month < dueDate.month){
+            return false;
+        }
+        if (this.day > dueDate.day){
+            return true;
+        }
+        if (this.day < dueDate.day){
+            return false;
+        }
+        if (this.hours > dueDate.hours){
+            return true;
+        }
+        if (this.hours < dueDate.hours){
+            return false;
+        }
+        if (this.minutes > dueDate.minutes){
+            return true;
+        }
+        if (this.minutes < dueDate.minutes){
+            return false;
+        }
+        if (this.seconds > dueDate.seconds){
+            return true;
+        }
+        if (this.seconds < dueDate.seconds){
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * gets the difference in the number of days between two dates
+     * @param otherDate the date before this one to get he number of days between
+     * @return how many days are between two dates
+     */
+    public int differenceInDays(Date otherDate) {
+        int difference = 0;
+        difference += (this.year - otherDate.year) * 365;
+
+        int[] monthToDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        for (int i = otherDate.month; i < this.month; i++){
+            difference += monthToDays[i];
+        }
+
+        difference += this.day += otherDate.day;
+
+        return difference;
+    }
 }
