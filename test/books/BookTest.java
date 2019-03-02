@@ -1,84 +1,121 @@
 package books;
 
-import org.junit.Before;
-import org.junit.Test;
-import books.Author;
-import user.Name;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Unit tests for the {@link Book} class.
+ *
+ * @author Michael Dolan
+ * @author Zachary Cook
+ */
 public class BookTest {
+    private Book CuT;
 
-    Book CuT;
+    /**
+     * Sets up the unit test.
+     */
+    @BeforeEach
+    public void setUp() {
+        // Create the author and publisher.
+        Author author = new Author("John","Doe");
+        Publisher publisher = new Publisher("Test Publisher");
 
-    @Before
-    public void setUp() throws Exception {
-
-        Name authorName = new Name("authorName", "authorLast");
-        Author author = new Author(authorName);
-        Publisher publisher = new Publisher();
+        // Create the book information.
         int ISBN = 1;
         Date publishedDate = new Date();
         int pageCount = 1;
         int numCopies = 2;
         int numCopiesCheckedOut = 1;
         Date purchasedDate = new Date();
-        String name = "testbook";
+        String name = "Test Book";
 
-
+        // Create the CuT.
         this.CuT = new Book(author, publisher, ISBN, publishedDate, pageCount, numCopies, numCopiesCheckedOut, purchasedDate, name);
     }
 
+    /**
+     * Tests the {@link Book#getISBN()} method.
+     */
     @Test
-    public void getISBN() {
-        assertEquals(CuT.getISBN(), 1);
+    public void test_getISBN() {
+        assertEquals(CuT.getISBN(), 1, "ISBN number is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getPublishedDate()} method.
+     */
     @Test
-    public void getPublishedDate() {
-        assertEquals(CuT.getPublishedDate(), new Date());
+    public void test_getPublishedDate() {
+        assertEquals(CuT.getPublishedDate(), new Date(), "Publisher date is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getPageCount()} method.
+     */
     @Test
-    public void getPageCount() {
-        assertEquals(CuT.getPageCount(), 1);
+    public void test_getPageCount() {
+        assertEquals(CuT.getPageCount(), 1, "Page count is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getNumCopies()} method.
+     */
     @Test
-    public void getNumCopies() {
-        assertEquals(CuT.getNumCopies(), 2);
+    public void test_getNumCopies() {
+        assertEquals(CuT.getNumCopies(), 2, "Number of copies is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getPurchasedDate()} method.
+     */
     @Test
-    public void getPurchasedDate() {
-        assertEquals(CuT.getPublishedDate(), new Date());
+    public void test_getPurchasedDate() {
+        assertEquals(CuT.getPublishedDate(), new Date(), "Purchase date is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getNumCopiesCheckedOut()} method.
+     */
     @Test
-    public void getNumCopiesCheckedOut() {
-        assertEquals(CuT.getNumCopiesCheckedOut(), 1);
+    public void test_getNumCopiesCheckedOut() {
+        assertEquals(CuT.getNumCopiesCheckedOut(), 1, "Number of copies checked out is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getAuthor()} method.
+     */
     @Test
-    public void getAuthor() {
-        assertEquals(CuT.getAuthor(), new Author(new Name("authorName", "authorLast")));
+    public void test_getAuthor() {
+        assertEquals(CuT.getAuthor(), new Author("John","Doe"), "Author isn't correct.");
     }
 
+    /**
+     * Tests the {@link Book#getPublisher()} method.
+     */
     @Test
-    public void getPublisher() {
-        assertEquals(CuT.getPublisher(), new Publisher());
+    public void test_getPublisher() {
+        assertEquals(CuT.getPublisher(), new Publisher("Test Publisher"), "Publisher is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#getName()} method.
+     */
     @Test
-    public void getName() {
-        assertEquals(CuT.getName(), "testbook");
+    public void test_getName() {
+        assertEquals(CuT.getName(), "Test Book","Name is incorrect.");
     }
 
+    /**
+     * Tests the {@link Book#equals(Object)} method.
+     */
     @Test
-    public void equals() {
-        assertTrue(CuT.equals(CuT));
+    public void test_equals() {
+        assertTrue(CuT.equals(CuT),"Books aren't equal.");
     }
 }
