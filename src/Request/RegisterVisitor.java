@@ -16,7 +16,7 @@ public class RegisterVisitor implements Request {
         address = _address;
         phoneNumber = _phoneNumber;
     }
-
+//
     @Override
     public List<Object> ExecuteCommand(){
         List<Object> output = new ArrayList<Object>();
