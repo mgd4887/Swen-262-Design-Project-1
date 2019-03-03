@@ -4,6 +4,7 @@ package time;
  * Class representing a date.
  *
  * @author Zachary Cook
+ * @author Michael Dolan
  */
 public class Date extends Time {
     protected int day;
@@ -69,67 +70,48 @@ public class Date extends Time {
     }
 
     /**
-     * tells if a given date is after this date
-     * @param dueDate the date to check to see if it is after this date
-     * @return if hte date is after this one
+     * Determines if the date is after the given date.
+     *
+     * @param otherDate the date to check.
+     * @return if the date is given after the given date.
      */
-    public boolean after(Date dueDate) {
-        if (this.year > dueDate.year){
+    public boolean after(Date otherDate) {
+        // Return if there is a difference in daysDifference.
+        int daysDifference = this.differenceInDays(otherDate);
+        if (daysDifference > 0) {
             return true;
-        }
-        if (this.year < dueDate.year){
+        } else if (daysDifference < 0) {
             return false;
         }
-        if (this.month > dueDate.month){
-            return true;
-        }
-        if (this.month < dueDate.month){
-            return false;
-        }
-        if (this.day > dueDate.day){
-            return true;
-        }
-        if (this.day < dueDate.day){
-            return false;
-        }
-        if (this.hours > dueDate.hours){
-            return true;
-        }
-        if (this.hours < dueDate.hours){
-            return false;
-        }
-        if (this.minutes > dueDate.minutes){
-            return true;
-        }
-        if (this.minutes < dueDate.minutes){
-            return false;
-        }
-        if (this.seconds > dueDate.seconds){
-            return true;
-        }
-        if (this.seconds < dueDate.seconds){
-            return false;
-        }
-        return false;
+
+        // Return based on the difference in seconds.
+        return this.getSeconds() > otherDate.getSeconds();
     }
 
     /**
-     * gets the difference in the number of days between two dates
-     * @param otherDate the date before this one to get he number of days between
-     * @return how many days are between two dates
+     * Gets the difference in the number of days between two dates. The date given
+     * as the parameter should be greater than for the difference to be positive.
+     *
+     * @param otherDate the date before this one to get he number of days between.
+     * @return how many days are between two dates.
      */
     public int differenceInDays(Date otherDate) {
         int difference = 0;
+
+        // Add based on the difference in years.
         difference += (this.year - otherDate.year) * 365;
 
+        // Add based on the difference in months.
+        // TODO: Doesn't account for leap years (year % 4 is 0 and year % 100 is not 0).
         int[] monthToDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
         for (int i = otherDate.month; i < this.month; i++){
             difference += monthToDays[i];
         }
 
-        difference += this.day += otherDate.day;
+        // Add the difference based on the days.
+        difference += this.day - otherDate.day;
 
+        // Return the difference in days.
         return difference;
     }
 }
