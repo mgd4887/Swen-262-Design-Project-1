@@ -32,7 +32,7 @@ class TransactionHistoryTest {
      * Sets up the unit tests.
      */
     @BeforeEach
-    void setup() {
+    public void setup() {
         // Create the component under testing.
         CuT = new TransactionHistory();
 
@@ -85,46 +85,22 @@ class TransactionHistoryTest {
     }
 
     /**
-     * Tests the {@link TransactionHistory#registerTransaction(Transaction)} method.
+     * Tests the {@link TransactionHistory#registerTransaction(Transaction)} method and other getters.
      */
     @Test
-    void registerTransaction() {
+    public void test_registerTransaction() {
+        // Create the dates.
         Date out1 = new Date(1,1,1,1,1,1);
         Date in1 = new Date(2,2,2,2,2,2);
+
+        // Create the transaction.
         Transaction transaction1 = new Transaction(1, visitor1, book1, out1, in1);
         CuT.registerTransaction(transaction1);
-        
-        assertEquals(CuT.getTransaction(1), transaction1);
-        assertEquals(CuT.getTransactionsByVisitor(visitor1).get(0), transaction1);
-        assertEquals(CuT.getTransactionsCheckedOutOn(out1).get(0), transaction1);
-        assertEquals(CuT.getTransactionsDueOn(in1).get(0), transaction1);
-    }
 
-    /**
-     * Tests the {@link TransactionHistory#registerTransaction(Transaction)} method.
-     */
-    @Test
-    void test_getTransaction() {
-    }
-
-    /**
-     * Tests the {@link TransactionHistory#registerTransaction(Transaction)} method.
-     */
-    @Test
-    void getTransactionsByVisitor() {
-    }
-
-    /**
-     * Tests the {@link TransactionHistory#getTransactionsCheckedOutOn(Date)} method.
-     */
-    @Test
-    void getTransactionsCheckedOutOn() {
-    }
-
-    /**
-     * Tests the {@link TransactionHistory#getTransactionsDueOn(Date)} method.
-     */
-    @Test
-    void getTransactionsDueOn() {
+        // Run the assertions.
+        assertEquals(CuT.getTransaction(1), transaction1,"Transaction is incorrect.");
+        assertEquals(CuT.getTransactionsByVisitor(visitor1).get(0), transaction1,"Transaction is incorrect.");
+        assertEquals(CuT.getTransactionsCheckedOutOn(out1).get(0), transaction1,"Transaction is incorrect.");
+        assertEquals(CuT.getTransactionsDueOn(in1).get(0), transaction1,"Transaction is incorrect.");
     }
 }

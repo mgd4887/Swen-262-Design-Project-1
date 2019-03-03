@@ -50,6 +50,7 @@ public class TransactionHistory {
      * @return an ArrayList of transactions by the given visitor.
      */
     public ArrayList<Transaction> getTransactionsByVisitor(Visitor visitor){
+        // Search for the transactions by the visitor.
         ArrayList<Transaction> output = new ArrayList<>();
         Collection<Transaction> transactions = this.transactions.values();
         for(Transaction transaction: transactions){
@@ -57,6 +58,8 @@ public class TransactionHistory {
                 output.add(transaction);
             }
         }
+
+        // Return the transactions.
         return output;
     }
 
@@ -67,6 +70,7 @@ public class TransactionHistory {
      * @return an ArrayList of transactions where the book was checked out on the given date.
      */
     public ArrayList<Transaction> getTransactionsCheckedOutOn(Date checkedOut){
+        // Search for the transactions by the date.
         ArrayList<Transaction> output = new ArrayList<>();
         Collection<Transaction> transactions = this.transactions.values();
         for(Transaction transaction: transactions){
@@ -74,6 +78,8 @@ public class TransactionHistory {
                 output.add(transaction);
             }
         }
+
+        // Return the transactions.
         return output;
     }
 
@@ -84,6 +90,7 @@ public class TransactionHistory {
      * @return an ArrayList of transactions where the book is due on the given date.
      */
     public ArrayList<Transaction> getTransactionsDueOn(Date dueDate){
+        // Search for the transactions by the date.
         ArrayList<Transaction> output = new ArrayList<>();
         Collection<Transaction> transactions = this.transactions.values();
         for(Transaction transaction: transactions){
@@ -91,7 +98,8 @@ public class TransactionHistory {
                 output.add(transaction);
             }
         }
+
+        // Return the transactions.
         return output;
     }
-
 }
