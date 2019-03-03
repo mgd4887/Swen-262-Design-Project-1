@@ -11,11 +11,11 @@ import user.Visitor;
  * @author Zachary Cook
  */
 public class Transaction {
-    int id;
-    Visitor visitor;
-    Book book;
-    Date checkedOut;
-    Date dueDate;
+    private int id;
+    private Visitor visitor;
+    private Book book;
+    private Date checkedOut;
+    private Date dueDate;
 
     /**
      * Creates a transaction.
