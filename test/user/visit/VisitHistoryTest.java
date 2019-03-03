@@ -59,15 +59,34 @@ public class VisitHistoryTest {
     }
 
     /**
+     * Tests the {@link VisitHistory#finishAllVisits(Time)} method.
+     */
+    @Test
+    public void test_finishAllVisits(){
+        // Create the component under testing.
+        VisitHistory CuT = new VisitHistory();
+        CuT.addVisit(this.visitor1, new Date(4,5,2016,4,0,0));
+        CuT.addVisit(this.visitor2, new Date(4, 5, 2016, 8, 30, 0));
+
+        // Assert the average visit time is 0.
+        Assertions.assertEquals(new Time(0), CuT.averageVisitTime(), "Average visit time isn't 0 for no finished visits.");
+
+        // Finish the current visits.
+        CuT.finishAllVisits(new Time(12, 30, 0));
+
+        // Assert the average visit time.
+        Assertions.assertEquals(new Time(22500), CuT.averageVisitTime(), "Incorrect average visit time");
+    }
+
+    /**
      * Tests the {@link VisitHistory#averageVisitTime()} method.
      */
     @Test
     public void test_averageVisitTime(){
         // Create the component under testing.
         VisitHistory CuT = new VisitHistory();
-        Visitor v1 = new Visitor("3203021457", new Name("Johnny", "Bravo"), "43 loophole road", "5092332214");
-        CuT.addVisit(v1, new Date(4,5,2016,4,0,0));
-        CuT.finishVisit(v1, new Time(6,45,0));
+        CuT.addVisit(this.visitor1, new Date(4,5,2016,4,0,0));
+        CuT.finishVisit(this.visitor1, new Time(6,45,0));
 
         // Assert the average visit time.
         Assertions.assertEquals(new Time(9900), CuT.averageVisitTime(), "Average visit time is incorrect");

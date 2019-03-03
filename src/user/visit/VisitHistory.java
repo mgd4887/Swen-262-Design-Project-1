@@ -83,6 +83,11 @@ public class VisitHistory {
      * @return returns the average time as a new time object
      */
     public Time averageVisitTime(){
+        // Return 0 if there are no finished visits.
+        if (this.finishedVisits.size() == 0) {
+            return new Time(0);
+        }
+
         // Calculate the total seconds of the visits.
         int totalSeconds = 0;
         for (Visit visit : this.finishedVisits) {
