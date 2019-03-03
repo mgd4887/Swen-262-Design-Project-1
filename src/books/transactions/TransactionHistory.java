@@ -1,14 +1,18 @@
 package books.transactions;
 
-import books.Book;
 import time.Date;
 import user.Visitor;
-import user.visit.Visit;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+/**
+ * Class for storing transactions.
+ *
+ * @author Michael Dolan
+ * @author Zachary Cook
+ */
 public class TransactionHistory {
 
     private final HashMap<Integer, Transaction> transactions;
@@ -29,14 +33,21 @@ public class TransactionHistory {
         this.transactions.put(transaction.getId(),transaction);
     }
 
+    /**
+     * Returns the transaction for the given id.
+     *
+     * @param id the id of the transaction.
+     * @return the transaction for the given id.
+     */
     public Transaction getTransaction(int id){
         return transactions.get(id);
     }
 
     /**
-     * Gets an arraylist of transactions by a specific visitor
-     * @param visitor the visitor whose transactions you want to find
-     * @return an arraylist of transactions by the given visitor
+     * Gets an ArrayList of transactions by a specific visitor.
+     *
+     * @param visitor the visitor whose transactions you want to find.
+     * @return an ArrayList of transactions by the given visitor.
      */
     public ArrayList<Transaction> getTransactionsByVisitor(Visitor visitor){
         ArrayList<Transaction> output = new ArrayList<>();
@@ -50,9 +61,10 @@ public class TransactionHistory {
     }
 
     /**
-     * Gets an arraylist of transactions by a the date the book was checked out
-     * @param checkedOut the date on which the transaction took place
-     * @return an arraylist of transactions where the book was checked out on the given date
+     * Gets an ArrayList of transactions by a the date the book was checked out.
+     *
+     * @param checkedOut the date on which the transaction took place.
+     * @return an ArrayList of transactions where the book was checked out on the given date.
      */
     public ArrayList<Transaction> getTransactionsCheckedOutOn(Date checkedOut){
         ArrayList<Transaction> output = new ArrayList<>();
@@ -66,9 +78,10 @@ public class TransactionHistory {
     }
 
     /**
-     * Gets an arraylist of transactions by a the date the book is due back
-     * @param dueDate the date on which the book is due back
-     * @return an arraylist of transactions where the book is due on the given date
+     * Gets an ArrayList of transactions by a the date the book is due back.
+     *
+     * @param dueDate the date on which the book is due back.
+     * @return an ArrayList of transactions where the book is due on the given date.
      */
     public ArrayList<Transaction> getTransactionsDueOn(Date dueDate){
         ArrayList<Transaction> output = new ArrayList<>();
