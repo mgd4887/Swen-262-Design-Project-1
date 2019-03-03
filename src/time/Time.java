@@ -3,6 +3,9 @@ package time;
 /**
  * Base class representing a time. This includes the
  * hours, minutes, and seconds of a day.
+ *
+ * @author Zachary Cook
+ * @author Bendrix Bailey
  */
 public class Time {
     protected int hours;
@@ -29,6 +32,15 @@ public class Time {
      */
     public Time(int totalSeconds) {
         this(totalSeconds / 3600,(totalSeconds / 60) % 60,totalSeconds % 60);
+    }
+
+    /**
+     * Returns the total time in seconds.
+     *
+     * @return returns time in seconds as an int
+     */
+    public int getSeconds(){
+        return (this.hours * 3600) + (this.minutes * 60) + this.seconds;
     }
 
     /**
