@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import time.Date;
 import user.Visitor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link Transaction} class.
@@ -119,5 +119,23 @@ public class TransactionTest {
         assertEquals(CuT.calculateFee(new Date(1,10,2019,0,0,0)),10,"Fee is incorrect.");
         assertEquals(CuT.calculateFee(new Date(1,17,2019,0,0,0)),12,"Fee is incorrect.");
         assertEquals(CuT.calculateFee(new Date(1,17,2020,0,0,0)),30,"Fee is incorrect.");
+    }
+
+    /**
+     * Tests the late fee being paid.
+     */
+    @Test
+    public void test_lateFeePaid() {
+        // Create the component under testing.
+        Transaction CuT = new Transaction(1,this.visitor,this.book,new Date(1,2,2019,0,0,0),new Date(1,9,2019,0,0,0));
+
+        // Assert the late fee is not paid.
+        assertFalse(CuT.getLateFeedPaid(),"Late fee was paid.");
+        assertEquals(CuT.calculateFee(new Date(1,17,2019,0,0,0)),12,"Fee is incorrect.");
+
+        // Pay the late fee and assert it was paid.
+        CuT.setLateFeeAsPaid();
+        assertTrue(CuT.getLateFeedPaid(),"Late fee wasn't paid.");
+        assertEquals(CuT.calculateFee(new Date(1,17,2019,0,0,0)),0,"Fee is incorrect.");
     }
 }

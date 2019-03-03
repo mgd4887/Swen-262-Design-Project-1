@@ -18,6 +18,7 @@ public class Transaction {
     private Book book;
     private Date checkedOut;
     private Date dueDate;
+    private boolean lateFeePaid;
 
     /**
      * Creates a transaction.
@@ -34,6 +35,7 @@ public class Transaction {
         this.book = book;
         this.checkedOut = checkedOut;
         this.dueDate = dueDate;
+        this.lateFeePaid = false;
     }
 
     /**
@@ -82,6 +84,22 @@ public class Transaction {
     }
 
     /**
+     * Returns if the late fee was paid.
+     *
+     * @return if the late fee was paid.
+     */
+    public boolean getLateFeedPaid() {
+        return this.lateFeePaid;
+    }
+
+    /**
+     * Sets the late fee as paid.
+     */
+    public void setLateFeeAsPaid() {
+        this.lateFeePaid = true;
+    }
+
+    /**
      * Returns the late fee for the transaction.
      *
      * @param currentDate the current date to determine the late fee.
@@ -91,7 +109,7 @@ public class Transaction {
         double fee = 0;
 
         // Calculate the fee if the current date is after the due date.
-        if (currentDate.after(dueDate)){
+        if (currentDate.after(dueDate) && !this.getLateFeedPaid()) {
             // Add the base fee.
             fee += 10;
 
