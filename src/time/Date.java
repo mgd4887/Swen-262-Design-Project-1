@@ -8,11 +8,11 @@ import java.util.Calendar;
  * @author Zachary Cook
  * @author Michael Dolan
  */
-public class Date extends java.util.Date {
+public class Date extends Time {
+    private java.util.Date date;
     private int year;
     private int month;
     private int day;
-    private Time time;
 
     /**
      * Creates a data object.
@@ -25,24 +25,15 @@ public class Date extends java.util.Date {
      * @param seconds the seconds of the date.
      */
     public Date(int month,int day,int year,int hours,int minutes,int seconds) {
-        super(year - 1900,month - 1,day,hours,minutes,seconds);
+        super(hours,minutes,seconds);
+
+        // Create the date.
+        this.date = new java.util.Date(year - 1900,month - 1,day,hours,minutes,seconds);
 
         // Store the date information.
         this.year = year;
         this.month = month;
         this.day = day;
-
-        // Store the time.
-        this.time = new Time(hours,minutes,seconds);
-    }
-
-    /**
-     * Returns the time of the date.
-     *
-     * @return the time of the date.
-     */
-    public Time getDayTime() {
-        return this.time;
     }
 
     /**
@@ -50,7 +41,6 @@ public class Date extends java.util.Date {
      *
      * @return the year of the date.
      */
-    @Override
     public int getYear() {
         return this.year;
     }
@@ -60,7 +50,6 @@ public class Date extends java.util.Date {
      *
      * @return the month of the date.
      */
-    @Override
     public int getMonth() {
         return this.month;
     }
@@ -70,7 +59,6 @@ public class Date extends java.util.Date {
      *
      * @return the day of the date.
      */
-    @Override
     public int getDay() {
         return this.day;
     }
@@ -83,7 +71,7 @@ public class Date extends java.util.Date {
     public int getTimestamp() {
         // Create the calender object.
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(this);
+        calendar.setTime(this.date);
 
         // Return the total time in seconds.
         return (int) (calendar.getTimeInMillis() / 1000);
@@ -96,7 +84,7 @@ public class Date extends java.util.Date {
      */
     @Override
     public String toString() {
-        return this.month + "/" + this.day + "/" + this.year + " " + this.time.toString();
+        return this.month + "/" + this.day + "/" + this.year + " " + super.toString();
     }
 
     /**
