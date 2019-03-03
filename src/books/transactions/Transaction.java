@@ -114,7 +114,7 @@ public class Transaction {
             fee += 10;
 
             // Add the additional fee.
-            int daysPastDueDate = currentDate.differenceInDays(dueDate);
+            int daysPastDueDate = dueDate.differenceInDays(currentDate);
             int weeksPastDueDate = daysPastDueDate / 7;
             fee += weeksPastDueDate * 2;
 
