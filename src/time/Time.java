@@ -3,6 +3,9 @@ package time;
 /**
  * Base class representing a time. This includes the
  * hours, minutes, and seconds of a day.
+ *
+ * @author Zachary Cook
+ * @author Bendrix Bailey
  */
 public class Time {
     protected int hours;
@@ -32,7 +35,8 @@ public class Time {
     }
 
     /**
-     * This method returns this time in number of seconds, so that other classes may use it.
+     * Returns the total time in seconds.
+     *
      * @return returns time in seconds as an int
      */
     public int getSeconds(){

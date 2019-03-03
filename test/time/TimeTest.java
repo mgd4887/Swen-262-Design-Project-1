@@ -20,7 +20,7 @@ public class TimeTest {
     }
 
     /**
-     * Tests the seconds converter of time.
+     * Tests the {@link Time#getSeconds()} method.
      */
     @Test
     public void test_getSeconds(){
