@@ -1,15 +1,18 @@
 package time;
 
+import java.util.Calendar;
+
 /**
  * Class representing a date.
  *
  * @author Zachary Cook
  * @author Michael Dolan
  */
-public class Date extends Time {
-    protected int day;
-    protected int month;
-    protected int year;
+public class Date extends java.util.Date {
+    private int year;
+    private int month;
+    private int day;
+    private Time time;
 
     /**
      * Creates a data object.
@@ -22,11 +25,68 @@ public class Date extends Time {
      * @param seconds the seconds of the date.
      */
     public Date(int month,int day,int year,int hours,int minutes,int seconds) {
-        super(hours,minutes,seconds);
+        super(year - 1900,month - 1,day,hours,minutes,seconds);
 
-        this.day = day;
-        this.month = month;
+        // Store the date information.
         this.year = year;
+        this.month = month;
+        this.day = day;
+
+        // Store the time.
+        this.time = new Time(hours,minutes,seconds);
+    }
+
+    /**
+     * Returns the time of the date.
+     *
+     * @return the time of the date.
+     */
+    public Time getDayTime() {
+        return this.time;
+    }
+
+    /**
+     * Returns the year of the date.
+     *
+     * @return the year of the date.
+     */
+    @Override
+    public int getYear() {
+        return this.year;
+    }
+
+    /**
+     * Returns the month of the date.
+     *
+     * @return the month of the date.
+     */
+    @Override
+    public int getMonth() {
+        return this.month;
+    }
+
+    /**
+     * Returns the day of the date.
+     *
+     * @return the day of the date.
+     */
+    @Override
+    public int getDay() {
+        return this.day;
+    }
+
+    /**
+     * Returns the timestamp in seconds.
+     *
+     * @return the timestamp in seconds.
+     */
+    public int getTimestamp() {
+        // Create the calender object.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this);
+
+        // Return the total time in seconds.
+        return (int) (calendar.getTimeInMillis() / 1000);
     }
 
     /**
@@ -36,7 +96,7 @@ public class Date extends Time {
      */
     @Override
     public String toString() {
-        return this.month + "/" + this.day + "/" + this.year + " " + super.toString();
+        return this.month + "/" + this.day + "/" + this.year + " " + this.time.toString();
     }
 
     /**
@@ -76,16 +136,7 @@ public class Date extends Time {
      * @return if the date is given after the given date.
      */
     public boolean after(Date otherDate) {
-        // Return if there is a difference in daysDifference.
-        int daysDifference = this.differenceInDays(otherDate);
-        if (daysDifference > 0) {
-            return true;
-        } else if (daysDifference < 0) {
-            return false;
-        }
-
-        // Return based on the difference in seconds.
-        return this.getSeconds() > otherDate.getSeconds();
+        return otherDate.getTimestamp() < this.getTimestamp();
     }
 
     /**
@@ -96,22 +147,10 @@ public class Date extends Time {
      * @return how many days are between two dates.
      */
     public int differenceInDays(Date otherDate) {
-        int difference = 0;
+        // Determine the difference in seconds.
+        int secondsBetween = otherDate.getTimestamp() - this.getTimestamp();
 
-        // Add based on the difference in years.
-        difference += (this.year - otherDate.year) * 365;
-
-        // Add based on the difference in months.
-        // TODO: Doesn't account for leap years (year % 4 is 0 and year % 100 is not 0).
-        int[] monthToDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        for (int i = otherDate.month; i < this.month; i++){
-            difference += monthToDays[i];
-        }
-
-        // Add the difference based on the days.
-        difference += this.day - otherDate.day;
-
-        // Return the difference in days.
-        return difference;
+        // Convert and return the seconds to days.
+        return secondsBetween / (60 * 60 * 24);
     }
 }

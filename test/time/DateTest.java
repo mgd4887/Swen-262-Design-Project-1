@@ -46,6 +46,22 @@ public class DateTest {
     }
 
     /**
+     * Tests the {@link Date#differenceInDays(Date)} method.
+     */
+    @Test
+    public void test_differenceInDays() {
+        // Create the components under testing.
+        Date CuT = new Date(3,14,2018,5,2,30);
+
+        // Run the assertions.
+        assertEquals(CuT.differenceInDays(new Date(3,14,2018,5,2,30)),0,"Difference is incorrect.");
+        assertEquals(CuT.differenceInDays(new Date(3,15,2018,5,2,30)),1,"Difference is incorrect.");
+        assertEquals(CuT.differenceInDays(new Date(4,14,2018,5,2,30)),31,"Difference is incorrect.");
+        assertEquals(CuT.differenceInDays(new Date(4,14,2019,5,2,30)),31 + 365,"Difference is incorrect.");
+        assertEquals(CuT.differenceInDays(new Date(4,14,2020,5,2,30)),31 + 365 + 366,"Difference with leap year is incorrect.");
+    }
+
+    /**
      * Tests the {@link Date#toString()} method.
      */
     @Test
