@@ -10,6 +10,7 @@ import user.Name;
 import user.Visitor;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TransactionHistoryTest {
 
@@ -73,9 +74,16 @@ class TransactionHistoryTest {
 
     @Test
     void registerTransaction() {
+        Date out1 = new Date(1,1,1,1,1,1);
+        Date in1 = new Date(2,2,2,2,2,2);
+        Transaction transaction1 = new Transaction(1, visitor1, book1, out1, in1);
+        CuT.registerTransaction(transaction1);
 
+        assertEquals(CuT.getTransaction(1), transaction1);
+        assertEquals(CuT.getTransactionsByVisitor(visitor1).get(0), transaction1);
+        assertEquals(CuT.getTransactionsCheckedOutOn(out1).get(0), transaction1);
+        assertEquals(CuT.getTransactionsDueOn(in1).get(0), transaction1);
 
-        registerTransaction(new Transaction(1, visitor1, ));
     }
 
     @Test
