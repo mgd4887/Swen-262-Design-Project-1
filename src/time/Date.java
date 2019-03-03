@@ -1,14 +1,18 @@
 package time;
 
+import java.util.Calendar;
+
 /**
  * Class representing a date.
  *
  * @author Zachary Cook
+ * @author Michael Dolan
  */
 public class Date extends Time {
-    protected int day;
-    protected int month;
-    protected int year;
+    private java.util.Date date;
+    private int year;
+    private int month;
+    private int day;
 
     /**
      * Creates a data object.
@@ -23,9 +27,54 @@ public class Date extends Time {
     public Date(int month,int day,int year,int hours,int minutes,int seconds) {
         super(hours,minutes,seconds);
 
-        this.day = day;
-        this.month = month;
+        // Create the date.
+        this.date = new java.util.Date(year - 1900,month - 1,day,hours,minutes,seconds);
+
+        // Store the date information.
         this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    /**
+     * Returns the year of the date.
+     *
+     * @return the year of the date.
+     */
+    public int getYear() {
+        return this.year;
+    }
+
+    /**
+     * Returns the month of the date.
+     *
+     * @return the month of the date.
+     */
+    public int getMonth() {
+        return this.month;
+    }
+
+    /**
+     * Returns the day of the date.
+     *
+     * @return the day of the date.
+     */
+    public int getDay() {
+        return this.day;
+    }
+
+    /**
+     * Returns the timestamp in seconds.
+     *
+     * @return the timestamp in seconds.
+     */
+    public int getTimestamp() {
+        // Create the calender object.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.date);
+
+        // Return the total time in seconds.
+        return (int) (calendar.getTimeInMillis() / 1000);
     }
 
     /**
@@ -66,5 +115,30 @@ public class Date extends Time {
         // Cast the object and return if the hashcodes are the same.
         Date date = (Date) obj;
         return this.hashCode() == date.hashCode();
+    }
+
+    /**
+     * Determines if the date is after the given date.
+     *
+     * @param otherDate the date to check.
+     * @return if the date is given after the given date.
+     */
+    public boolean after(Date otherDate) {
+        return otherDate.getTimestamp() < this.getTimestamp();
+    }
+
+    /**
+     * Gets the difference in the number of days between two dates. The date given
+     * as the parameter should be greater than for the difference to be positive.
+     *
+     * @param otherDate the date before this one to get he number of days between.
+     * @return how many days are between two dates.
+     */
+    public int differenceInDays(Date otherDate) {
+        // Determine the difference in seconds.
+        int secondsBetween = otherDate.getTimestamp() - this.getTimestamp();
+
+        // Convert and return the seconds to days.
+        return secondsBetween / (60 * 60 * 24);
     }
 }
