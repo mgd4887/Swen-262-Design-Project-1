@@ -4,6 +4,8 @@ import books.Book;
 import time.Date;
 import user.Visitor;
 
+import java.util.Objects;
+
 /**
  * Stores the transaction of a book.
  *
@@ -125,26 +127,26 @@ public class Transaction {
      */
     @Override
     public int hashCode() {
-        return this.toString().hashCode();
+        return Objects.hash(id, visitor, book, checkedOut, dueDate);
     }
 
     /**
      * Indicates whether some other object is "equal to" this one.
      *
-     * @param obj the reference object with which to compare.
+     * @param o the reference object with which to compare.
      *
      * @return true if this object is the same as the obj argument;
      * false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
-        // Return false if the class isn't the same.
-        if (!(obj instanceof Transaction)) {
-            return false;
-        }
-
-        // Cast the object and return if the hashcodes are the same.
-        Transaction transaction = (Transaction) obj;
-        return this.hashCode() == transaction.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id == that.id &&
+                Objects.equals(visitor, that.visitor) &&
+                Objects.equals(book, that.book) &&
+                Objects.equals(checkedOut, that.checkedOut) &&
+                Objects.equals(dueDate, that.dueDate);
     }
 }
