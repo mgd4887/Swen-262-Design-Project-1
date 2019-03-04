@@ -1,5 +1,7 @@
 package request;
 
+import books.BookStore;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class Arguments {
 
         // Store the parameters.
         this.pointer = 0;
-        this.paramters = Arrays.asList(arguments.split(","));
+        this.paramters = BookStore.parseCSV(arguments);
     }
 
     /**

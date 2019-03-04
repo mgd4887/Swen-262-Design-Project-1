@@ -39,7 +39,7 @@ public class BookStore {
      * @param pageCount the page count of the book.
      */
     public void addBook(long isbn,String name,ArrayList<Author> authors,Publisher publisher,Date date,int pageCount) {
-        this.books.add(new Book(authors,publisher,isbn,date,pageCount,0,0,new Date(0,0,0,0,0,0),name));
+        this.books.add(new Book(authors,publisher,isbn,date,pageCount,0,0,new Date(0,0,0,0,0,0),name,books.size() + 1));
     }
 
     /**
@@ -76,8 +76,8 @@ public class BookStore {
         // Parse the published date.
         String dateString = entries.get(4);
         int year = 0;
-        int month = 0;
-        int day = 0;
+        int month = 1;
+        int day = 1;
         try {
             if (dateString.length() > 0) {
                 year = Integer.parseInt(dateString.substring(0,4));
@@ -121,7 +121,7 @@ public class BookStore {
      * @param csvLine the line to parse.
      * @return the parsed CSV line as a CSV.
      */
-    public ArrayList<String> parseCSV(String csvLine) {
+    public static ArrayList<String> parseCSV(String csvLine) {
         ArrayList<String> parsedLine = new ArrayList<>();
         String currentString = "";
         boolean inBreak = false;

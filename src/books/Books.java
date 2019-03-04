@@ -45,7 +45,7 @@ public class Books extends ArrayList<Book> {
             this.sort(new Comparator<Book>() {
                 @Override
                 public int compare(Book o1, Book o2) {
-                    return o1.getName().compareTo(o2.getName());
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
                 }
             });
         }
@@ -55,7 +55,7 @@ public class Books extends ArrayList<Book> {
             this.sort(new Comparator<Book>() {
                 @Override
                 public int compare(Book o1, Book o2) {
-                    return o1.getPublishedDate().getTimestamp() - o2.getPublishedDate().getTimestamp();
+                    return o2.getPublishedDate().getTimestamp() - o1.getPublishedDate().getTimestamp();
                 }
             });
         }

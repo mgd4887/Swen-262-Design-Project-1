@@ -22,6 +22,7 @@ public class Book {
     private int numCopiesCheckedOut;
     private Date purchasedDate;
     private String name;
+    private int id;
 
     /**
      * Creates a book.
@@ -36,7 +37,7 @@ public class Book {
      * @param purchasedDate the purchase date of the book.
      * @param name the name of the book.
      */
-    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
+    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name,int id) {
         this.authors = authors;
         this.publisher = publisher;
         this.ISBN = ISBN;
@@ -46,6 +47,7 @@ public class Book {
         this.numCopiesCheckedOut = numCopiesCheckedOut;
         this.purchasedDate = purchasedDate;
         this.name = name;
+        this.id = id;
     }
 
     /**
@@ -62,7 +64,16 @@ public class Book {
      * @param name the name of the book.
      */
     public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
-        this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,purchasedDate,name);
+        this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,purchasedDate,name,0);
+    }
+
+    /**
+     * Gets the book's id.
+     *
+     * @return the book's id.
+     */
+    public int getId() {
+        return this.id;
     }
 
     /**
