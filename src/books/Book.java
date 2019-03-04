@@ -2,6 +2,10 @@ package books;
 
 import time.Date;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Class representing a book.
  *
@@ -9,7 +13,7 @@ import time.Date;
  * @author Zachary Cook
  */
 public class Book {
-    private Author author;
+    private ArrayList<Author> authors;
     private Publisher publisher;
     private int ISBN;
     private Date publishedDate;
@@ -18,6 +22,31 @@ public class Book {
     private int numCopiesCheckedOut;
     private Date purchasedDate;
     private String name;
+
+    /**
+     * Creates a book.
+     *
+     * @param authors the authors of the book.
+     * @param publisher the publisher of the book.
+     * @param ISBN the ISBN of the book.
+     * @param publishedDate the date that book was published.
+     * @param pageCount the page count of the book.
+     * @param numCopies the number of copies of the book.
+     * @param numCopiesCheckedOut the number of copies checked out.
+     * @param purchasedDate the purchase date of the book.
+     * @param name the name of the book.
+     */
+    public Book(ArrayList<Author> authors, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
+        this.authors = authors;
+        this.publisher = publisher;
+        this.ISBN = ISBN;
+        this.publishedDate = publishedDate;
+        this.pageCount = pageCount;
+        this.numCopies = numCopies;
+        this.numCopiesCheckedOut = numCopiesCheckedOut;
+        this.purchasedDate = purchasedDate;
+        this.name = name;
+    }
 
     /**
      * Creates a book.
@@ -33,15 +62,7 @@ public class Book {
      * @param name the name of the book.
      */
     public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
-        this.author = author;
-        this.publisher = publisher;
-        this.ISBN = ISBN;
-        this.publishedDate = publishedDate;
-        this.pageCount = pageCount;
-        this.numCopies = numCopies;
-        this.numCopiesCheckedOut = numCopiesCheckedOut;
-        this.purchasedDate = purchasedDate;
-        this.name = name;
+        this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,purchasedDate,name);
     }
 
     /**
@@ -99,12 +120,12 @@ public class Book {
     }
 
     /**
-     * Gets the author of this book.
+     * Gets the authors of the book.
      *
-     * @return the author of this book.
+     * @return the authors of the book.
      */
-    public Author getAuthor() {
-        return author;
+    public ArrayList<Author> getAuthors() {
+        return new ArrayList<>(authors);
     }
 
     /**
@@ -133,7 +154,7 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "author=" + author +
+                "authors=" + authors +
                 ", publisher=" + publisher +
                 ", ISBN=" + ISBN +
                 ", publishedDate=" + publishedDate +

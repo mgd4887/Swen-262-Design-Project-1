@@ -70,7 +70,7 @@ public class Inventory {
         // Search the books.
         ArrayList<Book> output = new ArrayList<>();
         for (Book book: books.values()){
-            if (book.getAuthor().equals(author)){
+            if (book.getAuthors().contains(author)){
                 output.add(book);
             }
         }

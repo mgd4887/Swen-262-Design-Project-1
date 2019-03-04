@@ -87,11 +87,11 @@ public class BookTest {
     }
 
     /**
-     * Tests the {@link Book#getAuthor()} method.
+     * Tests the {@link Book#getAuthors()} method.
      */
     @Test
     public void test_getAuthor() {
-        assertEquals(CuT.getAuthor(), new Author("John","Doe"), "Author isn't correct.");
+        assertEquals(CuT.getAuthors().get(0), new Author("John","Doe"), "Author isn't correct.");
     }
 
     /**
