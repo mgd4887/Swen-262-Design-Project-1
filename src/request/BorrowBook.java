@@ -1,12 +1,10 @@
 package request;
 
-import books.Author;
 import books.Book;
 import books.transactions.Transaction;
 import response.Response;
 import system.Services;
 import time.Date;
-import user.UnformattedName;
 import user.Visitor;
 
 import java.util.ArrayList;
@@ -110,8 +108,10 @@ public class BorrowBook extends Request {
         int unretunedBooks = 0;
         int unpaidBalance = 0;
         for (Transaction transaction : this.services.getTransactionHistory().getTransactionsByVisitor(visitor)) {
-            if (!transaction.getLateFeedPaid()) {
+            if (!transaction.getReturned()) {
                 unretunedBooks += 1;
+            }
+            if (!transaction.getLateFeedPaid()) {
                 unpaidBalance += transaction.calculateFee(currentDate);
             }
         }
