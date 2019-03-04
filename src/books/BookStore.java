@@ -111,8 +111,8 @@ public class BookStore {
      *
      * @return the books as a list.
      */
-    public ArrayList<Book> getBooks() {
-        return new ArrayList<>(this.books);
+    public Books getBooks() {
+        return new Books(this.books);
     }
 
     /**
