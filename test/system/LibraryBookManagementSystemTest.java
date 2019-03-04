@@ -140,55 +140,7 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_bookSearch() {
-        // Assert missing parameters.
-        this.assertRequest("search;","search,missing-parameters,{title};");
 
-        // Perform a search with only the title.
-        this.assertRequest("search,Harry Potter;","search,8\n" +
-                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
-                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
-                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
-                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
-                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
-                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
-                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
-
-        // Perform a search with the title and authors.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling};","search,3\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
-                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
-                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
-
-        // Perform a search with the title, authors, and ISBN.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling},9781781107041;","search,1\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,;");
-
-        // Perform a search with the title, authors, and publisher.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling},*,Pottermore;","search,3\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
-                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
-                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
-
-        // Perform a search with only the title and search order.
-        this.assertRequest("search,Harry Potter,*,*,*,title;","search,8\n" +
-                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
-                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
-                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
-                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
-                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
-                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
-                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
-        this.assertRequest("search,Harry Potter,*,*,*,publish-date;","search,8\n" +
-                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
-                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,\n" +
-                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
-                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
-                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
-                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
-                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
-                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,;");
     }
 
     /**
@@ -228,7 +180,55 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_searchBookStore() {
+        // Assert missing parameters.
+        this.assertRequest("search;","search,missing-parameters,{title};");
 
+        // Perform a search with only the title.
+        this.assertRequest("search,Harry Potter;","search,8\n" +
+                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
+                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
+                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
+                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
+
+        // Perform a search with the title and authors.
+        this.assertRequest("search,Harry Potter,{J.K. Rowling};","search,3\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
+
+        // Perform a search with the title, authors, and ISBN.
+        this.assertRequest("search,Harry Potter,{J.K. Rowling},9781781107041;","search,1\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,;");
+
+        // Perform a search with the title, authors, and publisher.
+        this.assertRequest("search,Harry Potter,{J.K. Rowling},*,Pottermore;","search,3\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
+
+        // Perform a search with only the title and search order.
+        this.assertRequest("search,Harry Potter,*,*,*,title;","search,8\n" +
+                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
+                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
+                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
+                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
+        this.assertRequest("search,Harry Potter,*,*,*,publish-date;","search,8\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
+                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
+                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
+                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
+                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
+                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,;");
     }
 
     /**
@@ -236,7 +236,16 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_purchaseBook() {
+        // Assert missing parameters.
+        this.assertRequest("buy;","buy,missing-parameters,{quantity,id};");
+        this.assertRequest("buy,3;","buy,missing-parameters,{id};");
 
+        // Test a purchase.
+        this.assertRequest("buy,3,1,1,2,3,4;","buy,4\n" +
+                "9780936070278,Galloway's Book on Running,{Jeff Galloway},2002/01/01,6,\n" +
+                "9781840894622,Running Shoes,{Frederick Lipp},2007/09/01,3,\n" +
+                "9780736045100,Fitness Running,{Richard L. Brown, Joe Henderson},2003/01/01,3,\n" +
+                "9780375896798,The Running Dream,{Wendelin Van Draanen},2011/01/11,3,;");
     }
 
     /**

@@ -158,6 +158,27 @@ public class Book {
     }
 
     /**
+     * Adds a copy of the book.
+     */
+    public void addCopy() {
+        this.numCopies += 1;
+    }
+
+    /**
+     * Takes out a copy of the book.
+     */
+    public void borrowCopy() {
+        this.numCopiesCheckedOut += 1;
+    }
+
+    /**
+     * Returns a copy of the book.
+     */
+    public void returnCopy() {
+        this.numCopiesCheckedOut += -1;
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.

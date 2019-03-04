@@ -1,5 +1,7 @@
 package books;
 
+import time.Date;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,9 +25,22 @@ public class Inventory {
      * Registers a book in the inventory.
      *
      * @param book the book to register.
+     * @param purchaseDate the date the book was purchased.
+     */
+    public void registerBook(Book book,Date purchaseDate) {
+        // If the book doesn't exist, add the book.
+        if (!this.books.containsKey(book.getISBN())) {
+            this.books.put(book.getISBN(),new Book(book.getAuthors(),book.getPublisher(),book.getISBN(),book.getPublishedDate(),book.getPageCount(),book.getNumCopies(),book.getNumCopiesCheckedOut(),purchaseDate,book.getName(),book.getId()));
+        }
+    }
+
+    /**
+     * Registers a book in the inventory.
+     *
+     * @param book the book to register.
      */
     public void registerBook(Book book) {
-        this.books.put(book.getISBN(),book);
+        this.registerBook(book,book.getPurchasedDate());
     }
 
     /**

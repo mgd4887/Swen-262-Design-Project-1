@@ -116,6 +116,16 @@ public class BookStore {
     }
 
     /**
+     * Returns the book for a given id.
+     *
+     * @param id the id to return.
+     * @return the book with the id.
+     */
+    public Book getBook(int id) {
+        return this.books.get(id);
+    }
+
+    /**
      * Reads and parses a CSV line.
      *
      * @param csvLine the line to parse.
