@@ -31,9 +31,11 @@ public class Date extends Time {
         this.date = new java.util.Date(year - 1900,month - 1,day,hours,minutes,seconds);
 
         // Store the date information.
-        this.year = year;
-        this.month = month;
-        this.day = day;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.date);
+        this.year = calendar.get(Calendar.YEAR);
+        this.month = calendar.get(Calendar.MONTH) + 1;
+        this.day = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     /**

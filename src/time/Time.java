@@ -35,6 +35,15 @@ public class Time {
     }
 
     /**
+     * Returns the hours of the time.
+     *
+     * @return the hours of the time.
+     */
+    public int getHours() {
+        return this.hours;
+    }
+
+    /**
      * Returns the total time in seconds.
      *
      * @return returns time in seconds as an int
