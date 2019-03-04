@@ -2,12 +2,14 @@ package user;
 
 import time.Date;
 
+import java.io.Serializable;
+
 /**
  * Class representing a visitor.
  *
  * @author Zachary Cook
  */
-public class Visitor {
+public class Visitor implements Serializable {
     // The required length for user ids.
     public int USER_ID_LENGTH = 10;
 

@@ -6,12 +6,14 @@ import books.transactions.TransactionHistory;
 import user.Registry;
 import user.visit.VisitHistory;
 
+import java.io.Serializable;
+
 /**
  * Class representing a set of services.
  *
  * @author Zachary Cook
  */
-public class Services {
+public class Services implements Serializable {
     private TransactionHistory transactionHistory;
     private Inventory bookInventory;
     private VisitHistory visitHistory;

@@ -2,12 +2,14 @@ package books;
 
 import user.Name;
 
+import java.io.Serializable;
+
 /**
  * Class representing the author of a book.
  *
  * @author Zachary Cook
  */
-public class Author {
+public class Author implements Serializable {
     private Name name;
 
     /**

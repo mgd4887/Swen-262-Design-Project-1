@@ -5,6 +5,7 @@ import time.Time;
 import user.Visitor;
 import user.visit.Visit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.function.Predicate;
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
  * @author Zachary Cook
  */
 
-public class VisitHistory {
+public class VisitHistory implements Serializable {
     private ArrayList<Visit> finishedVisits;
     private ArrayList<Visit> unfinishedVisits;
     private int visitId;

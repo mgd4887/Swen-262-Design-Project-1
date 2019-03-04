@@ -1,11 +1,13 @@
 package user;
 
+import java.io.Serializable;
+
 /**
  * Class representing a person's name.
  *
  * @author Zachary Cook
  */
-public class Name {
+public class Name implements Serializable {
     private String firstName;
     private String lastName;
 

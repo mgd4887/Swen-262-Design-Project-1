@@ -1,12 +1,14 @@
 package user;
 
+import java.io.Serializable;
+
 /**
  * Class representing an unformatted name. This is used for authors
  * since they may include extra parts or be unknown.
  *
  * @author Zachary Cook
  */
-public class UnformattedName extends Name {
+public class UnformattedName extends Name implements Serializable {
     private String name;
 
     /**

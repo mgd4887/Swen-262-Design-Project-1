@@ -1,5 +1,6 @@
 package books;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author Zachary Cook
  */
-public class Books extends ArrayList<Book> {
+public class Books extends ArrayList<Book> implements Serializable {
     /**
      * The sorting methods.
      */

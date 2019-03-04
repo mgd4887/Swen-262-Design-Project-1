@@ -2,6 +2,7 @@ package user;
 
 import time.Date;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Zachary Cook
  */
-public class Registry {
+public class Registry implements Serializable {
     private ArrayList<Visitor> visitors;
 
     /**

@@ -2,6 +2,7 @@ package books;
 
 import time.Date;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.Collections;
  * @author Michael Dolan
  * @author Zachary Cook
  */
-public class Book {
+public class Book implements Serializable {
     private ArrayList<Author> authors;
     private Publisher publisher;
     private long ISBN;

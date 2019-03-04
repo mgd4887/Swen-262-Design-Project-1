@@ -3,6 +3,7 @@ package books.transactions;
 import time.Date;
 import user.Visitor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.HashMap;
  * @author Michael Dolan
  * @author Zachary Cook
  */
-public class TransactionHistory {
+public class TransactionHistory implements Serializable {
 
     private final HashMap<Integer, Transaction> transactions;
 

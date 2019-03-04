@@ -6,6 +6,7 @@ import user.UnformattedName;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,7 +16,7 @@ import java.util.Arrays;
  *
  * @author Zachary Cook
  */
-public class BookStore {
+public class BookStore implements Serializable {
     // The default file location of the book store file.
     public static String BOOK_STORE_FILE_LOCATION = "../books.txt";
 

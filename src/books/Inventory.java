@@ -2,6 +2,7 @@ package books;
 
 import time.Date;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * @author Michael Dolan
  * @author Zachary Cook
  */
-public class Inventory {
+public class Inventory implements Serializable {
     private HashMap<Long,Book> books;
 
     /**

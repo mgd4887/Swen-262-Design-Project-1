@@ -4,6 +4,7 @@ import books.Book;
 import time.Date;
 import user.Visitor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Objects;
  * @author Michael Dolan
  * @author Zachary Cook
  */
-public class Transaction {
+public class Transaction implements Serializable {
     private int id;
     private Visitor visitor;
     private Book book;

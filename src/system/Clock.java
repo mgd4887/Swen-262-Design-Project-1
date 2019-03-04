@@ -2,12 +2,14 @@ package system;
 
 import time.Date;
 
+import java.io.Serializable;
+
 /**
  * Class representing the "clock" of the system.
  *
  * @author Zachary Cook
  */
-public class Clock {
+public class Clock implements Serializable {
     private Date currentDate;
 
     /**

@@ -4,12 +4,14 @@ import time.Date;
 import time.Time;
 import user.Visitor;
 
+import java.io.Serializable;
+
 /**
  * Class representing a visitor.
  *
  * @author Zachary Cook
  */
-public class Visit {
+public class Visit implements Serializable {
     private int id;
     private Visitor visitor;
     private Date date;

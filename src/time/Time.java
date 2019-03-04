@@ -1,5 +1,7 @@
 package time;
 
+import java.io.Serializable;
+
 /**
  * Base class representing a time. This includes the
  * hours, minutes, and seconds of a day.
@@ -7,7 +9,7 @@ package time;
  * @author Zachary Cook
  * @author Bendrix Bailey
  */
-public class Time {
+public class Time implements Serializable {
     protected int hours;
     protected int minutes;
     protected int seconds;

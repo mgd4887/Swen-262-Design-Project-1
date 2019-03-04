@@ -1,11 +1,13 @@
 package books;
 
+import java.io.Serializable;
+
 /**
  * Class representing the publisher of a book.
  *
  * @author Zachary Cook
  */
-public class Publisher {
+public class Publisher implements Serializable {
     private String name;
 
     /**

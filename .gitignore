@@ -30,3 +30,6 @@ hs_err_pid*
 .idea/misc.xml
 .idea/modules.xml
 .idea/workspace.xml
+
+# project specific
+services_save

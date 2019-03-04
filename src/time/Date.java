@@ -1,5 +1,6 @@
 package time;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Calendar;
  * @author Zachary Cook
  * @author Michael Dolan
  */
-public class Date extends Time {
+public class Date extends Time implements Serializable {
     private java.util.Date date;
     private int year;
     private int month;
