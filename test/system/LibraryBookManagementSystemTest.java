@@ -87,7 +87,28 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_beginVisit() {
+        // Assert missing parameters.
+        this.assertRequest("arrive;","arrive,missing-parameters,{visitor-id};");
 
+        // Assert an unregistered visitor.
+        this.assertRequest("arrive,0000000001;","arrive,invalid-id;");
+
+        // Assert someone arriving when closed.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("advance,0,12;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/01,20:00:00;","Time not advanced.");
+        this.assertRequest("arrive,0000000001;","arrive,closed;");
+        this.assertRequest("advance,0,10;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/02,06:00:00;","Time not advanced.");
+        this.assertRequest("arrive,0000000001;","arrive,closed;");
+
+        // Assert someone arriving when open.
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/02,08:00:00;","Time not advanced.");
+        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/02,08:00:00;");
+
+        // Assert someone arriving when already arrived.
+        this.assertRequest("arrive,0000000001;","arrive,duplicate;");
     }
 
     /**

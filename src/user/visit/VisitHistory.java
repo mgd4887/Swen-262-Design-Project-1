@@ -12,6 +12,7 @@ import java.util.HashSet;
  * This class stores all visit history, and allows history for each user and each day to be fetched.
  *
  * @author Bendrix Bailey
+ * @author Zachary Cook
  */
 
 public class VisitHistory {
@@ -26,6 +27,23 @@ public class VisitHistory {
         this.finishedVisits = new HashSet<>();
         this.unfinishedVisits = new HashSet<>();
         this.visitId = 0;
+    }
+
+    /**
+     * Returns if the visitor has an open visit.
+     *
+     * @param visitor the visitor to check.
+     */
+    public boolean hasOpenVisit(Visitor visitor) {
+        // Return true if an unfinished visit is found.
+        for (Visit visit : this.unfinishedVisits) {
+            if (visit.getVisitor().equals(visitor)) {
+                return true;
+            }
+        }
+
+        // Return false (visit not found).
+        return false;
     }
 
     /**
