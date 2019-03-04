@@ -3,10 +3,6 @@ package system;
 import request.*;
 import response.Response;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
 /**
@@ -19,7 +15,7 @@ public class LibraryBookManagementSystem {
     // The default file location for saving the services.
     public static String SERVICES_SAVE_LOCATION = "services_save";
 
-    private Services services;
+    protected Services services;
     private HashMap<String,Request> requests;
 
     /**
@@ -95,45 +91,9 @@ public class LibraryBookManagementSystem {
         Response response = requestObject.handleRequest(argumentParser);
         String responseString = response.getResponse();
 
-        // Save the system.
-        this.save();
-
         // Return the response.
         return responseString;
     }
 
-    /**
-     * Saves the current services.
-     */
-    public void save() {
-        try {
-            // Write the services.
-            FileOutputStream fileOut = new FileOutputStream(SERVICES_SAVE_LOCATION);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this.services);
-            objectOut.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
-    /**
-     * Loads the library management system from file.
-     */
-    public static LibraryBookManagementSystem loadFromFile() {
-        // Try to load the services.
-        try {
-            FileInputStream fileIn = new FileInputStream(SERVICES_SAVE_LOCATION);
-            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-            Object loadedServices = objectIn.readObject();
-
-            objectIn.close();
-            return new LibraryBookManagementSystem((Services) loadedServices);
-        } catch (Exception ex) {
-            System.out.println("Save of system not found; loading blank state.");
-        }
-
-        // Create a new system (fallback if unable to load).
-        return new LibraryBookManagementSystem();
-    }
 }

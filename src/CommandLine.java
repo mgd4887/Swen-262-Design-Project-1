@@ -1,4 +1,4 @@
-import system.LibraryBookManagementSystem;
+import system.SerializedLibraryBookManagementSystem;
 
 import java.util.Scanner;
 
@@ -13,7 +13,7 @@ public class CommandLine {
      */
     public static void main(String[] args) {
         // Create the system.
-        LibraryBookManagementSystem system = LibraryBookManagementSystem.loadFromFile();
+        SerializedLibraryBookManagementSystem system = SerializedLibraryBookManagementSystem.loadFromFile();
 
         // Print the initial statement.
         System.out.println("Welcome to the Library Book Management System.\nType in any command or exit; to close the program.\nAll changes will be saved.");
