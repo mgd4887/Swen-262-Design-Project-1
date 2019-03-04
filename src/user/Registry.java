@@ -51,13 +51,14 @@ public class Registry {
      * @param address the address of the visitor.
      * @param phoneNumber the phone number of the visitor.
      */
-    public void registerVisitor(Name name,String address,String phoneNumber) {
+    public Visitor registerVisitor(Name name,String address,String phoneNumber) {
         // Create the visitor.
         String id = this.getNextId();
         Visitor visitor = new Visitor(id,name,address,phoneNumber);
 
-        // Add the visitor.
+        // Add and return the visitor.
         this.visitors.add(visitor);
+        return visitor;
     }
 
     /**

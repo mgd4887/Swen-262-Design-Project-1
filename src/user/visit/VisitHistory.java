@@ -34,13 +34,14 @@ public class VisitHistory {
      * @param visitor the visitor who is visiting.
      * @param visitDate the date of the visit, includes start time.
      */
-    public void addVisit(Visitor visitor, Date visitDate){
+    public Visit addVisit(Visitor visitor, Date visitDate){
         // Create the visit.
         this.visitId = this.finishedVisits.size() + this.unfinishedVisits.size();
         Visit visit = new Visit(visitId, visitor, visitDate);
 
-        // Register the visit as unfinished.
+        // Register the visit as unfinished and return the visit.
         this.unfinishedVisits.add(visit);
+        return visit;
     }
 
     /**

@@ -2,8 +2,11 @@ package system;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import user.Name;
+import user.Visitor;
+import user.visit.Visit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Behavior tests for the {@link LibraryBookManagementSystemTest} class.
@@ -145,7 +148,64 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_advanceTime() {
+        // Assert not giving a set of days.
+        this.assertRequest("advance;","advance,missing-parameters,{number-of-days};");
 
+        // Assert advancing an incorrect amount days.
+        this.assertRequest("advance,-2;","advance,invalid-number-of-days,-2;");
+        this.assertRequest("advance,28;","advance,invalid-number-of-days,28;");
+        this.assertRequest("advance,test;","advance,invalid-number-of-days,test;");
+        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
+
+        // Assert advancing an incorrect amount of hours.
+        this.assertRequest("advance,0,-2;","advance,invalid-number-of-hours,-2;");
+        this.assertRequest("advance,0,28;","advance,invalid-number-of-hours,28;");
+        this.assertRequest("advance,0,test;","advance,invalid-number-of-hours,test;");
+        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
+
+        // Assert advancing into the next day.
+        this.assertRequest("advance,1;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/02,08:00:00;","Time not advanced.");
+
+        // Assert advancing only days.
+        this.assertRequest("advance,2,0;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/04,08:00:00;","Time not advanced.");
+
+        // Assert advancing only hours.
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/04,10:00:00;","Time not advanced.");
+
+        // Assert advancing both.
+        this.assertRequest("advance,2,2;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/06,12:00:00;","Time not advanced.");
+
+        // Assert advancing into the next day only using hours.
+        this.assertRequest("advance,0,20;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/07,08:00:00;","Time not advanced.");
+
+        // Test a visitor having his visit ended by the time being past 19:00.
+        Visitor visitor = CuT.getServices().getVisitorsRegistry().registerVisitor(new Name("John","Doe"),"Test Address","1234567890");
+        Visit visit = CuT.getServices().getVisitHistory().addVisit(visitor,CuT.getServices().getClock().getDate());
+
+        // Assert the visit has not ended.
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/07,10:00:00;","Time not advanced.");
+        assertFalse(visit.hasEnded(),"Visit ended.");
+
+        // Finish the visit
+        this.assertRequest("advance,0,10;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/07,20:00:00;","Time not advanced.");
+        assertTrue(visit.hasEnded(),"Visit not ended.");
+
+        // Reset the time to the next day.
+        this.assertRequest("advance,0,12;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/08,08:00:00;","Time not advanced.");
+
+        // Test a visitor having his visit ended by the time being set to the next day.
+        visit = CuT.getServices().getVisitHistory().addVisit(visitor,CuT.getServices().getClock().getDate());
+        this.assertRequest("advance,1,0;","advance,success;");
+        this.assertRequest("datetime;","datetime,2019/01/09,08:00:00;","Time not advanced.");
+        assertTrue(visit.hasEnded(),"Visit not ended.");
     }
 
     /**
@@ -153,7 +213,7 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_currentDateAndTime() {
-
+        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Initial time is incorrect.");
     }
 
     /**
