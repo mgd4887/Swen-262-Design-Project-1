@@ -15,7 +15,7 @@ import java.util.Collections;
 public class Book {
     private ArrayList<Author> authors;
     private Publisher publisher;
-    private int ISBN;
+    private long ISBN;
     private Date publishedDate;
     private int pageCount;
     private int numCopies;
@@ -36,7 +36,7 @@ public class Book {
      * @param purchasedDate the purchase date of the book.
      * @param name the name of the book.
      */
-    public Book(ArrayList<Author> authors, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
+    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
         this.authors = authors;
         this.publisher = publisher;
         this.ISBN = ISBN;
@@ -70,7 +70,7 @@ public class Book {
      *
      * @return the  book's ISBN.
      */
-    public int getISBN() {
+    public long getISBN() {
         return ISBN;
     }
 

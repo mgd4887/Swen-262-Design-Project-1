@@ -1,5 +1,6 @@
 package system;
 
+import books.BookStore;
 import books.Inventory;
 import books.transactions.TransactionHistory;
 import user.Registry;
@@ -16,6 +17,7 @@ public class Services {
     private VisitHistory visitHistory;
     private Registry visitorsRegistry;
     private Clock clock;
+    private BookStore bookStore;
 
     /**
      * Creates the services.
@@ -26,6 +28,7 @@ public class Services {
         this.visitHistory = new VisitHistory();
         this.visitorsRegistry = new Registry();
         this.clock = new Clock();
+        this.bookStore = BookStore.fromFile(BookStore.BOOK_STORE_FILE_LOCATION);
     }
 
     /**
@@ -71,5 +74,14 @@ public class Services {
      */
     public Clock getClock() {
         return this.clock;
+    }
+
+    /**
+     * Returns the book store.
+     *
+     * @return the book store.
+     */
+    public BookStore getBookStore() {
+        return this.bookStore;
     }
 }

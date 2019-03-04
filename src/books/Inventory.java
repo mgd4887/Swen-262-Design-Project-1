@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author Zachary Cook
  */
 public class Inventory {
-    private HashMap<Integer,Book> books;
+    private HashMap<Long,Book> books;
 
     /**
      * Creates the inventory of book.
@@ -35,7 +35,7 @@ public class Inventory {
      *
      * @return the book with the corresponding ISBN number.
      */
-    public Book getBook(int ISBN){
+    public Book getBook(long ISBN){
         return books.get(ISBN);
     }
 
