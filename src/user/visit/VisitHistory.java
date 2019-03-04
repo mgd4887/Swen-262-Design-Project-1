@@ -7,6 +7,7 @@ import user.visit.Visit;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Predicate;
 
 /**
  * This class stores all visit history, and allows history for each user and each day to be fetched.
@@ -16,16 +17,16 @@ import java.util.HashSet;
  */
 
 public class VisitHistory {
-    private HashSet<Visit> finishedVisits;
-    private HashSet<Visit> unfinishedVisits;
+    private ArrayList<Visit> finishedVisits;
+    private ArrayList<Visit> unfinishedVisits;
     private int visitId;
 
     /**
      * Creates the visit history.
      */
     public VisitHistory(){
-        this.finishedVisits = new HashSet<>();
-        this.unfinishedVisits = new HashSet<>();
+        this.finishedVisits = new ArrayList<>();
+        this.unfinishedVisits = new ArrayList<>();
         this.visitId = 0;
     }
 
@@ -68,16 +69,27 @@ public class VisitHistory {
      *
      * @param visitor the visitor of the ended visit
      * @param visitEndTime the time of the ended visit
+     * @return the visit, if any.
      */
-    public void finishVisit(Visitor visitor, Time visitEndTime){
+    public Visit finishVisit(Visitor visitor, Time visitEndTime){
         // Get the unfinished visit.
-        for (Visit v : this.unfinishedVisits) {
-            if (v.getVisitor().equals(visitor)) {
-                v.endVisit(visitEndTime);
-                this.unfinishedVisits.remove(v);
-                this.finishedVisits.add(v);
+        Visit visitToRemove = null;
+        for (Visit visit : this.unfinishedVisits) {
+            if (visit.getVisitor().equals(visitor)) {
+                visit.endVisit(visitEndTime);
+                visitToRemove = visit;
+                break;
             }
         }
+
+        // Remove the visit, if any.
+        if (visitToRemove != null) {
+            this.unfinishedVisits.remove(visitToRemove);
+            this.finishedVisits.add(visitToRemove);
+        }
+
+        // Return null (no visit).
+        return visitToRemove;
     }
 
     /**
