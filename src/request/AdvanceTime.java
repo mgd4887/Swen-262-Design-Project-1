@@ -41,7 +41,7 @@ public class AdvanceTime extends Request {
     public Response handleRequest(Arguments arguments) {
         // Return an error if the number of days is missing.
         if (!arguments.hasNext()) {
-            return this.sendMissingParamtersResponse("{number-of-days}");
+            return this.sendMissingParametersResponse("number-of-days");
         }
 
         // Get the number of hours and days to advance.

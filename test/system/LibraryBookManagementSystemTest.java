@@ -69,6 +69,17 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("register,John,Doe;","register,missing-parameters,{address,phone-number};");
         this.assertRequest("register,John,Doe,Test Address;","register,missing-parameters,{phone-number};");
 
+        // Assert registering visitors.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+        this.assertRequest("register,Jane,Doe,Test Address 2,1234567890;","register,0000000003,2019/01/01 08:00:00;");
+        assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000001").getName(),"John Doe","Wrong visitor stored.");
+        assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000002").getName(),"Jane Doe","Wrong visitor stored.");
+        assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000003").getName(),"Jane Doe","Wrong visitor stored.");
+
+        // Assert an error for a duplicate visitor.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,duplicate;");
+        assertNull(CuT.getServices().getVisitorsRegistry().getVisitor("0000000004"),"Duplicate user stored.");
     }
 
     /**

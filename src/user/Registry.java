@@ -1,5 +1,7 @@
 package user;
 
+import time.Date;
+
 import java.util.ArrayList;
 
 /**
@@ -50,15 +52,27 @@ public class Registry {
      * @param name the name of the visitor.
      * @param address the address of the visitor.
      * @param phoneNumber the phone number of the visitor.
+     * @param registrationDate the registration date of the visitor.
      */
-    public Visitor registerVisitor(Name name,String address,String phoneNumber) {
+    public Visitor registerVisitor(Name name, String address, String phoneNumber, Date registrationDate) {
         // Create the visitor.
         String id = this.getNextId();
-        Visitor visitor = new Visitor(id,name,address,phoneNumber);
+        Visitor visitor = new Visitor(id,name,address,phoneNumber,registrationDate);
 
         // Add and return the visitor.
         this.visitors.add(visitor);
         return visitor;
+    }
+
+    /**
+     * Registers a visitor.
+     *
+     * @param name the name of the visitor.
+     * @param address the address of the visitor.
+     * @param phoneNumber the phone number of the visitor.
+     */
+    public Visitor registerVisitor(Name name,String address,String phoneNumber) {
+        return this.registerVisitor(name,address,phoneNumber,new Date(0,0,0,0,0,0));
     }
 
     /**

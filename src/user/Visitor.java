@@ -1,5 +1,7 @@
 package user;
 
+import time.Date;
+
 /**
  * Class representing a visitor.
  *
@@ -13,6 +15,7 @@ public class Visitor {
     private Name name;
     private String address;
     private String phoneNumber;
+    private Date registrationDate;
 
     /**
      * Creates a visitor.
@@ -21,8 +24,9 @@ public class Visitor {
      * @param name the name of the visitor.
      * @param address the address of the visitor.
      * @param phoneNumber the phone number of the user.
+     * @param registrationDate the regisration date of the user.
      */
-    public Visitor(String id,Name name,String address,String phoneNumber) {
+    public Visitor(String id,Name name,String address,String phoneNumber,Date registrationDate) {
         // Throw an error if the id is the wrong length or contains non-numbers.
         if (!id.matches("[0-9]+")) {
             throw new IllegalArgumentException("Id contains non-number characters");
@@ -41,6 +45,19 @@ public class Visitor {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.registrationDate = registrationDate;
+    }
+
+    /**
+     * Creates a visitor.
+     *
+     * @param id the id of the visitor.
+     * @param name the name of the visitor.
+     * @param address the address of the visitor.
+     * @param phoneNumber the phone number of the user.
+     */
+    public Visitor(String id,Name name,String address,String phoneNumber) {
+        this(id,name,address,phoneNumber,new Date(0,0,0,0,0,0));
     }
 
     /**
@@ -90,6 +107,15 @@ public class Visitor {
      */
     public String getPhoneNumber() {
         return this.phoneNumber;
+    }
+
+    /**
+     * Returns the registration date.
+     *
+     * @return the registration date.
+     */
+    public Date getRegistrationDate() {
+        return this.registrationDate;
     }
 
     /**

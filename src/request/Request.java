@@ -37,10 +37,10 @@ public abstract class Request {
     /**
      * Sends a missing parameters response.
      *
-     * @param missingParameters the missing parameters as "{param-1,param-2,param-3}"
+     * @param missingParameters the missing parameters as "param-1,param-2,param-3"
      */
-    public Response sendMissingParamtersResponse(String missingParameters) {
-        return this.sendResponse("missing-parameters," + missingParameters);
+    public Response sendMissingParametersResponse(String missingParameters) {
+        return this.sendResponse("missing-parameters,{" + missingParameters + "}");
     }
 
     /**
