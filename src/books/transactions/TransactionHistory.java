@@ -1,5 +1,6 @@
 package books.transactions;
 
+import books.Book;
 import time.Date;
 import user.Visitor;
 
@@ -32,6 +33,29 @@ public class TransactionHistory implements Serializable {
      */
     public void registerTransaction(Transaction transaction) {
         this.transactions.put(transaction.getId(),transaction);
+    }
+
+    /**
+     * Registers a transaction in the transaction history.
+     *
+     * @param book the book part of the transaction.
+     * @param visitor the visitor part of the transaction.
+     * @param checkoutDate the checkout date.
+     * @param dueDate the due date.
+     */
+    public void registerTransaction(Book book, Visitor visitor, Date checkoutDate, Date dueDate) {
+        // Determine the next id.
+        int nextId = 0;
+        for (int i : this.transactions.keySet()) {
+            if (i > nextId) {
+                nextId = i;
+            }
+        }
+        nextId = nextId + 1;
+
+        // Create and store the transaction.
+        Transaction transaction = new Transaction(nextId,visitor,book,checkoutDate,dueDate);
+        this.registerTransaction(transaction);
     }
 
     /**

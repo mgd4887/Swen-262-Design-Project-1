@@ -198,7 +198,42 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_bookBorrow() {
+        // Assert missing parameters.
+        this.assertRequest("borrow;","borrow,missing-parameters,{visitor-id,{id}};");
+        this.assertRequest("borrow,0000000001;","borrow,missing-parameters,{{id}};");
 
+        // Register a visitor.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+
+        // Purchase some books.
+        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Assert various errors.
+        this.assertRequest("borrow,0000000003,{1};","borrow,invalid-visitor-id;");
+        this.assertRequest("borrow,0000000001,{1};","borrow,invalid-book-id;");
+
+        // Borrow 5 books.
+        this.assertRequest("borrow,0000000001,{9,9};","borrow,2019/01/08;");
+        this.assertRequest("borrow,0000000001,{9};","borrow,2019/01/08;");
+        this.assertRequest("borrow,0000000001,{10};","borrow,2019/01/08;");
+        this.assertRequest("borrow,0000000001,{10};","borrow,2019/01/08;");
+
+        // Assert borrowing a 6th book fails.
+        this.assertRequest("borrow,0000000001,{10};","borrow,book-limit-exceeded;");
+
+        // Test a book that is not available.
+        this.assertRequest("borrow,0000000002,{9};","borrow,book-limit-exceeded;");
+
+        // Test an outstanding balance.
+        this.assertRequest("borrow,0000000002,{10,16};","borrow,2019/01/08;");
+        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("borrow,0000000002,{11};","borrow,outstanding-fine,20;");
     }
 
     /**
