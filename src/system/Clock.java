@@ -33,13 +33,7 @@ public class Clock implements Serializable {
      * @param hours the amount of hours to advance.
      */
     public void advanceTime(int days,int hours) {
-        // Determine the new hours.
-        int rawNewHours = this.currentDate.getHours() + hours;
-        int newHours = rawNewHours % 24;
-        days += (rawNewHours / 24);
-
-        // Set the new date.
-        this.currentDate = new Date(this.currentDate.getMonth(),this.currentDate.getDay() + days,this.currentDate.getYear(),newHours,0,0);
+        this.currentDate = this.currentDate.advance(0,0,days,hours,0,0);
     }
 
     /**

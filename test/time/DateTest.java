@@ -62,6 +62,24 @@ public class DateTest {
     }
 
     /**
+     * Test the {@link Time#advance(int, int, int)} method.
+     */
+    @Test
+    public void test_advance() {
+        // Create the component under testing.
+        Date CuT = new Date(3, 14, 2018, 5, 2, 30);
+
+        // Run the assertions.
+        assertEquals(CuT.advance(6, 3, 8, 2, 3, 4), new Date(6, 22, 2024, 7, 5, 34), "Date advanced incorrectly.");
+        assertEquals(CuT.advance(6, 3, 8, 2, 3, 34), new Date(6, 22, 2024, 7, 6, 4), "Date advanced incorrectly.");
+        assertEquals(CuT.advance(6, 3, 8, 2, 73, 34), new Date(6, 22, 2024, 8, 16, 4), "Date advanced incorrectly.");
+        assertEquals(CuT.advance(6, 3, 8, 25, 73, 34), new Date(6, 23, 2024, 7, 16, 4), "Date advanced incorrectly.");
+        assertEquals(CuT.advance(6, 3, 17, 25, 73, 34), new Date(7, 2, 2024, 7, 16, 4), "Date advanced incorrectly.");
+        assertEquals(CuT.advance(6, 13, 17, 25, 73, 34), new Date(5, 2, 2025, 7, 16, 4), "Date advanced incorrectly.");
+
+    }
+
+    /**
      * Tests the {@link Date#toString()} method.
      */
     @Test

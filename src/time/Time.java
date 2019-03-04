@@ -81,6 +81,34 @@ public class Time implements Serializable {
     }
 
     /**
+     * Creates a new time that has the time advanced.
+     *
+     * @param hours the hours to advance.
+     * @param minutes the minutes to advance.
+     * @param seconds the seconds to advance.
+     */
+    public Time advance(int hours,int minutes,int seconds) {
+        // Get the new hours, minutes, and seconds.
+        int newHours = this.hours + hours;
+        int newMinutes = this.minutes + minutes;
+        int newSeconds = this.seconds + seconds;
+
+        // Handle seconds overflow.
+        newMinutes += newSeconds / 60;
+        newSeconds = newSeconds % 60;
+
+        // Handle minutes overflow.
+        newHours += newMinutes / 60;
+        newMinutes = newMinutes % 60;
+
+        // Handle hours overflow.
+        newHours = newHours % 24;
+
+        // Return the new time.
+        return new Time(newHours,newMinutes,newSeconds);
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.

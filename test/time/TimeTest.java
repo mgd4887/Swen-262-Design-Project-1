@@ -32,6 +32,21 @@ public class TimeTest {
     }
 
     /**
+     * Test the {@link Time#advance(int, int, int)} method.
+     */
+    @Test
+    public void test_advance() {
+        // Create the component under testing.
+        Time CuT = new Time(5,2,30);
+
+        // Run the assertions.
+        assertEquals(CuT.advance(2,3,4),new Time(7,5,34), "Time advanced incorrectly.");
+        assertEquals(CuT.advance(2,3,34),new Time(7,6,4), "Time advanced incorrectly.");
+        assertEquals(CuT.advance(2,73,4),new Time(8,15,34), "Time advanced incorrectly.");
+        assertEquals(CuT.advance(28,3,4),new Time(9,5,34), "Time advanced incorrectly.");
+    }
+
+    /**
      * Tests the {@link Time#toString()} method.
      */
     @Test

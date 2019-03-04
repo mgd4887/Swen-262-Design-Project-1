@@ -102,6 +102,38 @@ public class Date extends Time implements Serializable {
     }
 
     /**
+     * Creates a new time that has the time advanced.
+     *
+     * @param years the years to advance.
+     * @param months the months to advance.
+     * @param days the days to advance.
+     * @param hours the hours to advance.
+     * @param minutes the minutes to advance.
+     * @param seconds the seconds to advance.
+     */
+    public Date advance(int years,int months,int days,int hours,int minutes,int seconds) {
+        // Get the new hours, minutes, and seconds.
+        int newHours = this.hours + hours;
+        int newMinutes = this.minutes + minutes;
+        int newSeconds = this.seconds + seconds;
+
+        // Handle seconds overflow.
+        newMinutes += newSeconds / 60;
+        newSeconds = newSeconds % 60;
+
+        // Handle minutes overflow.
+        newHours += newMinutes / 60;
+        newMinutes = newMinutes % 60;
+
+        // Handle hours overflow.
+        days += newHours / 24;
+        newHours = newHours % 24;
+
+        // Return the new time.
+        return new Date(this.month + months,this.day + days,this.year + years,newHours,newMinutes,newSeconds);
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.
