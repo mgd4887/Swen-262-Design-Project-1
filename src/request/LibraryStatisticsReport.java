@@ -1,25 +1,43 @@
 package request;
 
-import java.util.ArrayList;
-import java.util.List;
+import response.Response;
+import system.Services;
 
-public class LibraryStatisticsReport implements Request{
-
-    private int days;
-
-    public LibraryStatisticsReport(int _days){
-        days = _days;
+/**
+ * Request for getting a statistics report of the library.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class LibraryStatisticsReport extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public LibraryStatisticsReport(Services services) {
+        super(services);
     }
 
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
     @Override
-    public List<Object> ExecuteCommand() {
+    public String getName() {
+        return "datetime";
+    }
+
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
+    @Override
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
         return null;
-    }
-
-    @Override
-    public List<Object> UndoCommand(){
-        List<Object> output = new ArrayList<>();
-        output.add(new Problem("cannot-undo", "The most recently executed command cannot be undone."));
-        return output;
     }
 }

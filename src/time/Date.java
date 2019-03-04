@@ -65,6 +65,27 @@ public class Date extends Time {
         return this.day;
     }
 
+   /**
+     * Formats the date as YYYY/MM/DD.
+     *
+     * @return the formatted date.
+     */
+    public String formatDate() {
+        // Determine the partial strings.
+        String month = String.valueOf(this.month);
+        if (month.length() == 1) {
+            month = "0" + month;
+        }
+
+        String day = String.valueOf(this.day);
+        if (day.length() == 1) {
+            day = "0" + day;
+        }
+
+        // Create the new string.
+        return this.year + "/" + month + "/" + day;
+    }
+
     /**
      * Returns the timestamp in seconds.
      *

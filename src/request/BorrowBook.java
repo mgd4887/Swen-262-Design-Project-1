@@ -1,34 +1,43 @@
 package request;
 
-import java.util.ArrayList;
-import java.util.List;
+import response.Response;
+import system.Services;
 
-
-public class BorrowBook implements Request {
-
-    private String clientId;
-    private List<Integer> bookIds;
-    private String visitorId;
-
-    public BorrowBook(String _clientId, List<Integer> _bookIds){
-        clientId = _clientId;
-        bookIds = _bookIds;
+/**
+ * Request for starting a loan of a book to a visitor.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class BorrowBook extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public BorrowBook(Services services) {
+        super(services);
     }
 
-    public BorrowBook(String _clientId, List<Integer> _bookIds, String _visitorId){
-        clientId = _clientId;
-        bookIds = _bookIds;
-        visitorId = _visitorId;
-    }
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
     @Override
-    public List<Object> ExecuteCommand(){
-
-        List<Object> output = new ArrayList<>();
-        return output;
+    public String getName() {
+        return "datetime";
     }
+
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
     @Override
-    public List<Object> UndoCommand(){
-        List<Object> output = new ArrayList<>();
-        return output;
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
+        return null;
     }
 }

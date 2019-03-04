@@ -1,6 +1,9 @@
 package system;
 
-import request.Arguments;
+import request.*;
+import response.Response;
+
+import java.util.HashMap;
 
 /**
  * Class representing the library book management system. This acts
@@ -10,6 +13,7 @@ import request.Arguments;
  */
 public class LibraryBookManagementSystem {
     private Services services;
+    private HashMap<String,Request> requests;
 
     /**
      * Creates the library book management system.
@@ -17,7 +21,24 @@ public class LibraryBookManagementSystem {
      * @param services the services to use.
      */
     public LibraryBookManagementSystem(Services services) {
+        // Store the services.
         this.services = services;
+
+        // Create the response classes.
+        this.requests = new HashMap<>();
+        this.requests.put("register",new RegisterVisitor(this.services));
+        this.requests.put("arrive",new BeginVisit(this.services));
+        this.requests.put("depart",new EndVisit(this.services));
+        this.requests.put("info",new LibraryBookSearch(this.services));
+        this.requests.put("borrow",new BorrowBook(this.services));
+        this.requests.put("borrowed",new FindBorrowedBooks(this.services));
+        this.requests.put("return",new ReturnBook(this.services));
+        this.requests.put("pay",new PayFine(this.services));
+        this.requests.put("search",new BookStoreSearch(this.services));
+        this.requests.put("buy",new BookPurchase(this.services));
+        this.requests.put("advance",new AdvanceTime(this.services));
+        this.requests.put("datetime",new CurrentDateTime(this.services));
+        this.requests.put("report",new LibraryStatisticsReport(this.services));
     }
 
     /**
@@ -55,12 +76,19 @@ public class LibraryBookManagementSystem {
         }
 
         // Create the request.
-        // TODO
+        if (!argumentParser.hasNext()) {
+            return "partial-request;";
+        }
+        Request requestObject = this.requests.get(argumentParser.getNextString());
+        if (requestObject == null) {
+            return "invalid-request;";
+        }
 
         // Run the request and get a response.
-        // TODO
+        Response response = requestObject.handleRequest(argumentParser);
+        String responseString = response.getResponse();
 
         // Return the response.
-        return "Unimplemented";
+        return responseString;
     }
 }

@@ -53,6 +53,32 @@ public class Time {
     }
 
     /**
+     * Formats the time as HH:MM:SS.
+     *
+     * @return the formatted date.
+     */
+    public String formatTime() {
+        // Determine the partial strings.
+        String seconds = String.valueOf(this.seconds);
+        if (seconds.length() == 1) {
+            seconds = "0" + seconds;
+        }
+
+        String minutes = String.valueOf(this.minutes);
+        if (minutes.length() == 1) {
+            minutes = "0" + minutes;
+        }
+
+        String hours = String.valueOf(this.hours);
+        if (hours.length() == 1) {
+            hours = "0" + hours;
+        }
+
+        // Create the new string.
+        return hours + ":" + minutes + ":" + seconds;
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.

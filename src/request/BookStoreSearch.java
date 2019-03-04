@@ -1,19 +1,43 @@
 package request;
 
+import response.Response;
+import system.Services;
 
-import Response.BookSearch;
-import books.Book;
-import java.util.*;
-
-
-public class BookStoreSearch extends BookSearch {
-    public BookStoreSearch(String _title, List<Object> params){
-        return;
+/**
+ * Request for searching the book store.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class BookStoreSearch extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public BookStoreSearch(Services services) {
+        super(services);
     }
-    public List<Book> bookList(List<Object> params){
+
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
+    @Override
+    public String getName() {
+        return "datetime";
+    }
+
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
+    @Override
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
         return null;
-    }
-    public void setUserSelection(List<Long> books){
-        return;
     }
 }

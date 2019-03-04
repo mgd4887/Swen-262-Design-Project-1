@@ -1,26 +1,44 @@
 package request;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class BeginVisit implements Request{
-    String visitorID;
+import response.Response;
+import system.Services;
 
-    public BeginVisit(String _visitorID){
-        visitorID = _visitorID;
+/**
+ * Request for a visitor beginning a visit.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class BeginVisit extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public BeginVisit(Services services) {
+        super(services);
     }
 
-   @Override
-    public List<Object> ExecuteCommand(){
-        List<Object> output = new ArrayList<>();
-
-
-        return output;
-    }
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
     @Override
-    public List<Object> UndoCommand() {
-        List<Object> output = new ArrayList<>();
-        return output;
+    public String getName() {
+        return "datetime";
     }
 
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
+    @Override
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
+        return null;
+    }
 }

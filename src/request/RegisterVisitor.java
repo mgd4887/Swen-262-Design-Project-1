@@ -1,32 +1,43 @@
 package request;
 
-import java.util.ArrayList;
-import java.util.List;
+import response.Response;
+import system.Services;
 
-public class RegisterVisitor implements Request {
-
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String phoneNumber;
-
-    public RegisterVisitor(String _firstName, String _lastName, String _address, String _phoneNumber){
-        firstName = _firstName;
-        lastName = _lastName;
-        address = _address;
-        phoneNumber = _phoneNumber;
-    }
-//
-    @Override
-    public List<Object> ExecuteCommand(){
-        List<Object> output = new ArrayList<Object>();
-        return output;
+/**
+ * Request for registering a visitor.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class RegisterVisitor extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public RegisterVisitor(Services services) {
+        super(services);
     }
 
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
     @Override
-    public List<Object> UndoCommand(){
-        List<Object> output = new ArrayList<>();
-        output.add(new Problem("cannot-undo", "The most recently executed command cannot be undone."));
-        return output;
+    public String getName() {
+        return "datetime";
+    }
+
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
+    @Override
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
+        return null;
     }
 }

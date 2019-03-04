@@ -24,6 +24,6 @@ public class Response {
      * @return the response.
      */
     public String getResponse() {
-        return this.getResponse();
+        return this.response;
     }
 }

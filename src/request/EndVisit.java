@@ -1,26 +1,43 @@
 package request;
 
-import java.util.ArrayList;
-import java.util.List;
+import response.Response;
+import system.Services;
 
-
-public class EndVisit implements Request{
-    String visitorID;
-
-    public EndVisit(String _clientId, String _visitorID){
-        visitorID = _visitorID;
+/**
+ * Request for getting the current date and time.
+ *
+ * @author Joey Zhen
+ * @author Zachary Cook
+ */
+public class EndVisit extends Request {
+    /**
+     * Creates a request.
+     *
+     * @param services the services to use for the request.
+     */
+    public EndVisit(Services services) {
+        super(services);
     }
 
+    /**
+     * Returns the name of the request.
+     *
+     * @return the name of the request.
+     */
     @Override
-    public List<Object> ExecuteCommand(){
-
-        List<Object> output = new ArrayList<>();
-        return output;
+    public String getName() {
+        return "datetime";
     }
 
+    /**
+     * Returns a response for the request.
+     *
+     * @param arguments the argument parser.
+     * @return the response of the request.
+     */
     @Override
-    public List<Object> UndoCommand(){
-        List<Object> output = new ArrayList<>();
-        return output;
+    public Response handleRequest(Arguments arguments) {
+        // TODO: Unimplemented
+        return null;
     }
 }

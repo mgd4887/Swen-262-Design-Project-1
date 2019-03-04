@@ -4,19 +4,18 @@ import response.Response;
 import system.Services;
 
 /**
- * Request for searching books that are owned by library and can
- * be loaned to visitors.
+ * Request for advancing the current time.
  *
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class LibraryBookSearch extends Request {
+public class AdvanceTime extends Request {
     /**
      * Creates a request.
      *
      * @param services the services to use for the request.
      */
-    public LibraryBookSearch(Services services) {
+    public AdvanceTime(Services services) {
         super(services);
     }
 
