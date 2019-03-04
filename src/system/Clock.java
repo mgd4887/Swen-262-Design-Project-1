@@ -11,12 +11,22 @@ import java.io.Serializable;
  */
 public class Clock implements Serializable {
     private Date currentDate;
+    private TimeState currentState;
+
+    /**
+     * Time states for the library.
+     */
+    public enum TimeState {
+        OPEN,
+        CLOSED
+    }
 
     /**
      * Creates the clock.
      */
     public Clock(Date date) {
         this.currentDate = date;
+        this.updateTimeState();
     }
 
     /**
@@ -27,6 +37,17 @@ public class Clock implements Serializable {
     }
 
     /**
+     * Updates the time state of the clock.
+     */
+    private void updateTimeState() {
+        if (this.currentDate.getHours() < 8 || this.currentDate.getHours() >= 19) {
+            this.currentState = TimeState.CLOSED;
+        } else {
+            this.currentState = TimeState.OPEN;
+        }
+    }
+
+    /**
      * Advances the system time.
      *
      * @param days the amount of days to advance.
@@ -34,6 +55,7 @@ public class Clock implements Serializable {
      */
     public void advanceTime(int days,int hours) {
         this.currentDate = this.currentDate.advance(0,0,days,hours,0,0);
+        this.updateTimeState();
     }
 
     /**
@@ -43,5 +65,14 @@ public class Clock implements Serializable {
      */
     public Date getDate() {
         return this.currentDate;
+    }
+
+    /**
+     * Returns the current time state.
+     *
+     * @return the current time state.
+     */
+    public TimeState getTimeState() {
+        return this.currentState;
     }
 }

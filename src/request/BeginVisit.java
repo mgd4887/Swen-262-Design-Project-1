@@ -60,7 +60,7 @@ public class BeginVisit extends Request {
         String formattedTime = date.formatTime();
 
         // Return an error if the library is closed.
-        if (date.getHours() < 8 || date.getHours() > 19) {
+        if (clock.getTimeState() == Clock.TimeState.CLOSED) {
             return this.sendResponse("closed");
         }
 
