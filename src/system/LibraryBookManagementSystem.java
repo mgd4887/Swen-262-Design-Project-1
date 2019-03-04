@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class LibraryBookManagementSystem {
     // The default file location for saving the services.
-    public static String SERVICES_SAVE_LOCATION = "../services_save";
+    public static String SERVICES_SAVE_LOCATION = "services_save";
 
     private Services services;
     private HashMap<String,Request> requests;
@@ -130,7 +130,7 @@ public class LibraryBookManagementSystem {
             objectIn.close();
             return new LibraryBookManagementSystem((Services) loadedServices);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Save of system not found; loading blank state.");
         }
 
         // Create a new system (fallback if unable to load).

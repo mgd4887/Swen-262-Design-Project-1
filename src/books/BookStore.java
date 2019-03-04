@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class BookStore implements Serializable {
     // The default file location of the book store file.
-    public static String BOOK_STORE_FILE_LOCATION = "../books.txt";
+    public static String BOOK_STORE_FILE_LOCATION = "books.txt";
 
     private ArrayList<Book> books;
 
@@ -192,7 +192,8 @@ public class BookStore implements Serializable {
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Warning: The books in the book store (" +  BOOK_STORE_FILE_LOCATION + ") is unreadable.");
+            // e.printStackTrace();
         }
 
         // Return the bookstore.
