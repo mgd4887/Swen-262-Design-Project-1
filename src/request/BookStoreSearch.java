@@ -5,7 +5,7 @@ import books.Book;
 import books.Books;
 import response.Response;
 import system.Services;
-import user.UnformattedName;
+import user.Name;
 
 import java.util.ArrayList;
 
@@ -57,7 +57,7 @@ public class BookStoreSearch extends Request {
             // Parse the authors.
             if (!authorsString.equals("*")) {
                 for (String authorName : authorsString.split(",")) {
-                    authors.add(new Author(new UnformattedName(authorName.trim())));
+                    authors.add(new Author(new Name(authorName.trim())));
                 }
             }
         }

@@ -1,7 +1,7 @@
 package books;
 
 import time.Date;
-import user.UnformattedName;
+import user.Name;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -68,7 +68,7 @@ public class BookStore implements Serializable {
         String authorString = entries.get(2);
         ArrayList<Author> authors = new ArrayList<>();
         for (String authorName : Arrays.asList(authorString.split(","))) {
-            authors.add(new Author(new UnformattedName(authorName)));
+            authors.add(new Author(new Name(authorName)));
         }
 
         // Parse the publisher.

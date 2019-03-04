@@ -15,6 +15,7 @@ public class NameTest {
     @Test
     public void test_constructor() {
         new Name("John","Doe");
+        new Name("John Doe");
     }
 
     /**

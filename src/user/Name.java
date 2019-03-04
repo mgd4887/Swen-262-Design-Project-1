@@ -3,13 +3,21 @@ package user;
 import java.io.Serializable;
 
 /**
- * Class representing a person's name.
+ * Class representing an person's name.
  *
  * @author Zachary Cook
  */
 public class Name implements Serializable {
-    private String firstName;
-    private String lastName;
+    private String name;
+
+    /**
+     * Creates a name class.
+     *
+     * @param name the name of the person.
+     */
+    public Name(String name) {
+        this.name = name;
+    }
 
     /**
      * Creates a name class.
@@ -18,8 +26,7 @@ public class Name implements Serializable {
      * @param lastName the last name.
      */
     public Name(String firstName,String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this(firstName + " " + lastName);
     }
 
     /**
@@ -29,7 +36,7 @@ public class Name implements Serializable {
      */
     @Override
     public String toString() {
-        return this.firstName + " " + this.lastName;
+        return this.name;
     }
 
     /**
