@@ -15,6 +15,7 @@ public class Services {
     private Inventory bookInventory;
     private VisitHistory visitHistory;
     private Registry visitorsRegistry;
+    private Clock clock;
 
     /**
      * Creates the services.
@@ -24,6 +25,7 @@ public class Services {
         this.bookInventory = new Inventory();
         this.visitHistory = new VisitHistory();
         this.visitorsRegistry = new Registry();
+        this.clock = new Clock();
     }
 
     /**
@@ -60,5 +62,14 @@ public class Services {
      */
     public Registry getVisitorsRegistry() {
         return visitorsRegistry;
+    }
+
+    /**
+     * Returns the system clock.
+     *
+     * @return the system clock.
+     */
+    public Clock getClock() {
+        return this.clock;
     }
 }

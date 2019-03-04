@@ -1,7 +1,6 @@
 package system;
 
 import request.Arguments;
-import time.Date;
 
 /**
  * Class representing the library book management system. This acts
@@ -11,23 +10,21 @@ import time.Date;
  */
 public class LibraryBookManagementSystem {
     private Services services;
-    private Date currentDate;
 
     /**
      * Creates the library book management system.
      *
      * @param services the services to use.
      */
-    public LibraryBookManagementSystem(Services services, Date date) {
+    public LibraryBookManagementSystem(Services services) {
         this.services = services;
-        this.currentDate = date;
     }
 
     /**
      * Creates the library book management system.
      */
     public LibraryBookManagementSystem() {
-        this(new Services(),new Date(1,1,2019,8,0,0));
+        this(new Services());
     }
 
     /**
@@ -38,31 +35,6 @@ public class LibraryBookManagementSystem {
      */
     protected Services getServices() {
         return this.services;
-    }
-
-    /**
-     * Advances the system time.
-     *
-     * @param days the amount of days to advance.
-     * @param hours the amount of hours to advance.
-     */
-    public void advanceTime(int days,int hours) {
-        // Determine the new hours.
-        int rawNewHours = this.currentDate.getHours() + hours;
-        int newHours = rawNewHours % 24;
-        days += (rawNewHours / 24);
-
-        // Set the new date.
-        this.currentDate = new Date(this.currentDate.getMonth(),this.currentDate.getDay() + days,this.currentDate.getYear(),newHours,0,0);
-    }
-
-    /**
-     * Returns the current date.
-     *
-     * @return the current date.
-     */
-    public Date getDate() {
-        return this.currentDate;
     }
 
     /**
