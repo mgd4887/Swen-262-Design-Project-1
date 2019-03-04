@@ -140,7 +140,57 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_bookSearch() {
+        // Assert missing parameters.
+        this.assertRequest("info;","info,missing-parameters,{title,{authors}};");
+        this.assertRequest("info,title;","info,missing-parameters,{{authors}};");
 
+        // Purchase some books.
+        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Search using title.
+        this.assertRequest("info,Harry Potter,*;","info,3\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
+                "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,;");
+
+        // Search using author.
+        this.assertRequest("info,*,{J.K. Rowling};","info,2\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
+
+        // Search using title and author.
+        this.assertRequest("info,Sorcerer's Stone,{J.K. Rowling};","info,1\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
+
+        // Search using ISBN.
+        this.assertRequest("info,*,*,9780545387200;","info,1\n" +
+                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
+
+        // Search using publisher.
+        this.assertRequest("info,*,*,*,Pottermore;","info,2\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
+
+        // Searching with sorts.
+        this.assertRequest("info,*,*,*,*,title;","info,4\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
+                "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
+                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
+        this.assertRequest("info,*,*,*,*,publish-date;","info,4\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
+                "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
+                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,;");
+        this.assertRequest("info,*,*,*,*,book-status;","info,4\n" +
+                "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
+                "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
+                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
     }
 
     /**

@@ -4,6 +4,7 @@ import time.Date;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -53,6 +54,15 @@ public class Inventory implements Serializable {
      */
     public Book getBook(long ISBN){
         return books.get(ISBN);
+    }
+
+    /**
+     * Returns all of the books in the inventory.
+     *
+     * @return all of the books.
+     */
+    public Collection<Book> getBooks() {
+        return this.books.values();
     }
 
     /**

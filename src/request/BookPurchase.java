@@ -82,7 +82,7 @@ public class BookPurchase extends Request {
 
             for (int i = 0; i < amountToBuy.get(id); i++) {
                 this.services.getBookInventory().registerBook(book);
-                book.addCopy();
+                this.services.getBookInventory().getBook(book.getISBN()).addCopy();
             }
         }
 

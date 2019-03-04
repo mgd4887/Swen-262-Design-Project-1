@@ -66,7 +66,7 @@ public class Books extends ArrayList<Book> implements Serializable {
             this.sort(new Comparator<Book>() {
                 @Override
                 public int compare(Book o1, Book o2) {
-                    return (o1.getNumCopies() - o1.getNumCopiesCheckedOut()) - (o2.getNumCopies() - o2.getNumCopiesCheckedOut());
+                    return (o2.getNumCopies() - o2.getNumCopiesCheckedOut()) - (o1.getNumCopies() - o1.getNumCopiesCheckedOut());
                 }
             });
         }
