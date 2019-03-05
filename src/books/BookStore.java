@@ -20,13 +20,13 @@ public class BookStore implements Serializable {
     // The default file location of the book store file.
     public static String BOOK_STORE_FILE_LOCATION = "books.txt";
 
-    private ArrayList<Book> books;
+    private Books books;
 
     /**
      * Creates the book store.
      */
     public BookStore() {
-        this.books = new ArrayList<>();
+        this.books = new Books();
     }
 
     /**
@@ -124,6 +124,19 @@ public class BookStore implements Serializable {
      */
     public Book getBook(int id) {
         return this.books.get(id);
+    }
+
+    /**
+     * Returns the books for the given search.
+     *
+     * @param title the title of the book. To ignore this, leave it empty or use "*".
+     * @param authors the authors of the book. To ignore this, leave it empty or use "*".
+     * @param isbn the authors of the book. To ignore this, leave it empty or use "*".
+     * @param publisher the publisher of the book. To ignore this, leave it empty or use "*".
+     * @return the filtered books.
+     */
+    public Books getBooks(String title,String authors,String isbn,String publisher) {
+        return this.books.filterBooks(title,authors,isbn,publisher);
     }
 
     /**

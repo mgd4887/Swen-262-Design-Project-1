@@ -54,15 +54,7 @@ public class LibraryBookSearch extends Request {
         if (!arguments.hasNext()) {
             return this.sendMissingParametersResponse("{authors}");
         }
-        ArrayList<Author> authors = new ArrayList<>();
         String authorsString = arguments.getNextString();
-
-        // Parse the authors.
-        if (!authorsString.equals("*")) {
-            for (String authorName : authorsString.split(",")) {
-                authors.add(new Author(new Name(authorName.trim())));
-            }
-        }
 
         // Get the ISBN, if any.
         String isbn = "*";
@@ -94,27 +86,8 @@ public class LibraryBookSearch extends Request {
             return this.sendResponse("invalid-sort-order");
         }
 
-        // Search for the books.
-        Books foundBooks = new Books();
-        for (Book book : this.services.getBookInventory().getBooks()) {
-            if (title.equals("*") || book.getName().toLowerCase().contains(title.toLowerCase())) {
-                // Determine if all authors are present.
-                boolean authorsPresent = true;
-                for (Author author : authors) {
-                    if (!book.getAuthors().contains(author)) {
-                        authorsPresent = false;
-                        break;
-                    }
-                }
-
-                // Add the book if the rest of the search works.
-                if (authorsPresent && (isbn.equals("*") || Long.toString(book.getISBN()).contains(isbn)) && (publisher.equals("*") || book.getPublisher().toString().toLowerCase().contains(publisher.toLowerCase()))) {
-                    foundBooks.add(book);
-                }
-            }
-        }
-
-        // Sort the books.
+        // Search and sort the books.
+        Books foundBooks = this.services.getBookInventory().getBooks(title,authorsString,isbn,publisher);
         foundBooks.sort(sortingMethod);
 
         // Build the return string.
