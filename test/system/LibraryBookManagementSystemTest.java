@@ -330,7 +330,44 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_payFines() {
+        // Assert missing parameters.
+        this.assertRequest("pay;","pay,missing-parameters,{visitor-id,amount};");
+        this.assertRequest("pay,0000000001;","pay,missing-parameters,{amount};");
 
+        // Register a visitor.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+
+        // Purchase some books.
+        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Assert various errors.
+        this.assertRequest("pay,0000000003,1;","pay,invalid-visitor-id;");
+
+        // Borrow 5 books.
+        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/08;");
+        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
+
+        // Assert a late fee.
+        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("return,0000000001,9,9,9,10,10;","return,overdue,50,9,9,9,10,10;");
+
+        // Assert failing to pay fees.
+        this.assertRequest("pay,0000000001,-5;","pay,invalid-amount,-5,50;");
+        this.assertRequest("pay,0000000001,60;","pay,invalid-amount,60,50;");
+
+        // Assert paying partial fees.
+        this.assertRequest("pay,0000000001,10;","pay,success,40;");
+        this.assertRequest("pay,0000000001,15;","pay,success,25;");
+        this.assertRequest("pay,0000000001,25;","pay,success,0;");
+
+        // Borrow 5 books.
+        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/20;");
+        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/20;");
     }
 
     /**

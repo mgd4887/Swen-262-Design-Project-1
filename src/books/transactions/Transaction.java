@@ -21,6 +21,7 @@ public class Transaction implements Serializable {
     private Date dueDate;
     private Date returnedDate;
     private Date lateFeePaidDate;
+    private int partialLateFeePaid;
 
     /**
      * Creates a transaction.
@@ -39,6 +40,7 @@ public class Transaction implements Serializable {
         this.dueDate = dueDate;
         this.returnedDate = null;
         this.lateFeePaidDate = null;
+        this.partialLateFeePaid = 0;
     }
 
     /**
@@ -120,6 +122,24 @@ public class Transaction implements Serializable {
      */
     public boolean getLateFeedPaid() {
         return this.lateFeePaidDate != null;
+    }
+
+    /**
+     * Returns the partial late fee paid.
+     *
+     * @return the partial late fee paid.
+     */
+    public int getPartialLateFeePaid() {
+        return this.partialLateFeePaid;
+    }
+
+    /**
+     * Increments the partial late fee paid.
+     *
+     * @param payment the partial late fee paid.
+     */
+    public void incrementPartialLateFeePaid(int payment) {
+        this.partialLateFeePaid += payment;
     }
 
     /**
