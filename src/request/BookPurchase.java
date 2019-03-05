@@ -4,6 +4,7 @@ import books.Author;
 import books.Book;
 import response.Response;
 import system.Services;
+import time.Date;
 
 import java.util.HashMap;
 
@@ -77,11 +78,12 @@ public class BookPurchase extends Request {
         }
 
         // Add the books.
+        Date currentDate = this.services.getClock().getDate();
         for (int id : amountToBuy.keySet()) {
             Book book = this.services.getBookStore().getBook(id);
 
             for (int i = 0; i < amountToBuy.get(id); i++) {
-                this.services.getBookInventory().registerBook(book);
+                this.services.getBookInventory().registerBook(book,currentDate);
                 this.services.getBookInventory().getBook(book.getISBN()).addCopy();
             }
         }

@@ -3,12 +3,9 @@ package user.visit;
 import time.Date;
 import time.Time;
 import user.Visitor;
-import user.visit.Visit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.function.Predicate;
 
 /**
  * This class stores all visit history, and allows history for each user and each day to be fetched.
@@ -46,6 +43,24 @@ public class VisitHistory implements Serializable {
 
         // Return false (visit not found).
         return false;
+    }
+
+    /**
+     * Returns the finished visits.
+     *
+     * @return the finished visits.
+     */
+    public ArrayList<Visit> getFinishedVisits() {
+        return new ArrayList<>(this.finishedVisits);
+    }
+
+    /**
+     * Returns the unfinished visits.
+     *
+     * @return the unfinished visits.
+     */
+    public ArrayList<Visit> getUnfinishedVisits() {
+        return new ArrayList<>(this.unfinishedVisits);
     }
 
     /**

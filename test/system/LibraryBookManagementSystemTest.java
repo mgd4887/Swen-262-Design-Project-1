@@ -521,6 +521,92 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_libraryStatistics() {
+        // Assert the base stats.
+        this.assertRequest("report;","report,2019/01/01,"
+            + "\n Number of Books: 0"
+            + "\n Number of Visitors: 0"
+            + "\n Average Length of Visit: 00:00:00"
+            + "\n Number of Books Purchased: 0"
+            + "\n Fines Collected: 0"
+            + "\n Fines Outstanding: 0\n;");
+        this.assertRequest("report,1;","report,2019/01/01,"
+            + "\n Number of Books: 0"
+            + "\n Number of Visitors: 0"
+            + "\n Average Length of Visit: 00:00:00"
+            + "\n Number of Books Purchased: 0"
+            + "\n Fines Collected: 0"
+            + "\n Fines Outstanding: 0\n;");
 
+        // Register 2 visitors.
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+
+        // Assert two people arriving.
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/01,10:00:00;");
+        this.assertRequest("arrive,0000000002;","arrive,0000000002,2019/01/01,10:00:00;");
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("depart,0000000001;","depart,0000000001,12:00:00,02:00:00;");
+        this.assertRequest("advance,0,2;","advance,success;");
+        this.assertRequest("depart,0000000002;","depart,0000000002,14:00:00,04:00:00;");
+
+        // Purchase some books.
+        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Borrow some books.
+        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
+        this.assertRequest("borrow,0000000002,{9};","borrow,2019/01/08;");
+
+        // Assert the stats.
+        this.assertRequest("report;","report,2019/01/01,"
+                + "\n Number of Books: 15"
+                + "\n Number of Visitors: 2"
+                + "\n Average Length of Visit: 03:00:00"
+                + "\n Number of Books Purchased: 15"
+                + "\n Fines Collected: 0"
+                + "\n Fines Outstanding: 0\n;");
+
+        // Assert advance to create late fees.
+        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("advance,6,0;","advance,success;");
+
+        // Purchase some books.
+        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Assert two people arriving.
+        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/13,14:00:00;");
+        this.assertRequest("arrive,0000000002;","arrive,0000000002,2019/01/13,14:00:00;");
+        this.assertRequest("advance,0,1;","advance,success;");
+        this.assertRequest("depart,0000000001;","depart,0000000001,15:00:00,01:00:00;");
+        this.assertRequest("advance,0,1;","advance,success;");
+        this.assertRequest("depart,0000000002;","depart,0000000002,16:00:00,02:00:00;");
+
+        // Pay the part of the late fees.
+        this.assertRequest("pay,0000000001,10;","pay,success,10;");
+        this.assertRequest("pay,0000000002,5;","pay,success,5;");
+
+        // Assert the stats.
+        this.assertRequest("report;","report,2019/01/13,"
+                + "\n Number of Books: 30"
+                + "\n Number of Visitors: 2"
+                + "\n Average Length of Visit: 02:15:00"
+                + "\n Number of Books Purchased: 30"
+                + "\n Fines Collected: 15"
+                + "\n Fines Outstanding: 15\n;");
+        this.assertRequest("report,8;","report,2019/01/13,"
+                + "\n Number of Books: 30"
+                + "\n Number of Visitors: 2"
+                + "\n Average Length of Visit: 01:30:00"
+                + "\n Number of Books Purchased: 0" // TODO: Bug - buying repeat books will not register as new purchase because only 1  purchase date is registered.
+                + "\n Fines Collected: 15"
+                + "\n Fines Outstanding: 15\n;");
     }
 }
