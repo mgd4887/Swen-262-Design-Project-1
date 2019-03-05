@@ -20,7 +20,7 @@ public class Transaction implements Serializable {
     private Date checkedOut;
     private Date dueDate;
     private Date returnedDate;
-    private boolean lateFeePaid;
+    private Date lateFeePaidDate;
 
     /**
      * Creates a transaction.
@@ -38,7 +38,7 @@ public class Transaction implements Serializable {
         this.checkedOut = checkedOut;
         this.dueDate = dueDate;
         this.returnedDate = null;
-        this.lateFeePaid = false;
+        this.lateFeePaidDate = null;
     }
 
     /**
@@ -96,6 +96,15 @@ public class Transaction implements Serializable {
     }
 
     /**
+     * Returns date late fee was paid.
+     *
+     * @return date late fee was paid.
+     */
+    public Date getLateFeePaidDate() {
+        return this.lateFeePaidDate;
+    }
+
+    /**
      * Returns if the book was returned.
      *
      * @return if the book was returned.
@@ -110,7 +119,7 @@ public class Transaction implements Serializable {
      * @return if the late fee was paid.
      */
     public boolean getLateFeedPaid() {
-        return this.lateFeePaid;
+        return this.lateFeePaidDate != null;
     }
 
     /**
@@ -124,9 +133,18 @@ public class Transaction implements Serializable {
 
     /**
      * Sets the late fee as paid.
+     *
+     * @param date the date the late fee was paid.
+     */
+    public void setLateFeeAsPaid(Date date) {
+        this.lateFeePaidDate = date;
+    }
+
+    /**
+     * Sets the late fee as paid.
      */
     public void setLateFeeAsPaid() {
-        this.lateFeePaid = true;
+        this.setLateFeeAsPaid(new Date(1,1,2019,0,0,0));
     }
 
     /**
