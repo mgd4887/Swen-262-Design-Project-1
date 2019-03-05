@@ -41,7 +41,7 @@ public class BookStore implements Serializable {
      * @param pageCount the page count of the book.
      */
     public void addBook(long isbn,String name,ArrayList<Author> authors,Publisher publisher,Date date,int pageCount) {
-        this.books.add(new Book(authors,publisher,isbn,date,pageCount,0,0,new Date(0,0,0,0,0,0),name,books.size() + 1));
+        this.books.add(new Book(authors,publisher,isbn,date,pageCount,0,0,name,books.size() + 1));
     }
 
     /**

@@ -1,6 +1,7 @@
 package request;
 
 import books.Book;
+import books.purchases.PurchaseLog;
 import books.transactions.Transaction;
 import response.Response;
 import system.Services;
@@ -71,8 +72,11 @@ public class LibraryStatisticsReport extends Request {
         int purchasedBooks = 0;
         for (Book book : this.services.getBookInventory().getBooks()) {
             bookCount += book.getNumCopies();
-            if (book.getPurchasedDate().differenceInDays(currentDate) < dayLimit) {
-                purchasedBooks += book.getNumCopies();
+        }
+
+        for (PurchaseLog log : this.services.getPurchaseHistory().getPurchaseLogs()) {
+            if (log.getPurchaseDate().differenceInDays(currentDate) < dayLimit) {
+                purchasedBooks += 1;
             }
         }
 

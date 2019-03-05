@@ -32,9 +32,9 @@ public class InventoryTest {
         Date blankDate = new Date(0,0,0,0,0,0);
 
         // Create the books.
-        this.book1 = new Book(author1,publisher1,1,blankDate,425,3,1,blankDate,"Test Book");
-        this.book2 = new Book(author1,publisher2,2,blankDate,271,7,7,blankDate,"Test Book: The Sequel");
-        this.book3 = new Book(author2,publisher2,3,blankDate,515,2,0,blankDate,"Other Book");
+        this.book1 = new Book(author1,publisher1,1,blankDate,425,3,1,"Test Book");
+        this.book2 = new Book(author1,publisher2,2,blankDate,271,7,7,"Test Book: The Sequel");
+        this.book3 = new Book(author2,publisher2,3,blankDate,515,2,0,"Other Book");
 
         // Create the component under testing and register the books.
         this.CuT = new Inventory();

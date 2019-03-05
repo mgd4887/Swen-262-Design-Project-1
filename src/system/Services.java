@@ -2,6 +2,7 @@ package system;
 
 import books.BookStore;
 import books.Inventory;
+import books.purchases.PurchaseHistory;
 import books.transactions.TransactionHistory;
 import user.Registry;
 import user.visit.VisitHistory;
@@ -20,6 +21,7 @@ public class Services implements Serializable {
     private Registry visitorsRegistry;
     private Clock clock;
     private BookStore bookStore;
+    private PurchaseHistory purchaseHistory;
 
     /**
      * Creates the services.
@@ -31,6 +33,7 @@ public class Services implements Serializable {
         this.visitorsRegistry = new Registry();
         this.clock = new Clock();
         this.bookStore = BookStore.fromFile(BookStore.BOOK_STORE_FILE_LOCATION);
+        this.purchaseHistory = new PurchaseHistory();
     }
 
     /**
@@ -85,5 +88,14 @@ public class Services implements Serializable {
      */
     public BookStore getBookStore() {
         return this.bookStore;
+    }
+
+    /**
+     * Returns the purchase history.
+     *
+     * @return the purchase history.
+     */
+    public PurchaseHistory getPurchaseHistory() {
+        return this.purchaseHistory;
     }
 }

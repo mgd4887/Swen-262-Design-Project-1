@@ -27,22 +27,12 @@ public class Inventory implements Serializable {
      * Registers a book in the inventory.
      *
      * @param book the book to register.
-     * @param purchaseDate the date the book was purchased.
-     */
-    public void registerBook(Book book,Date purchaseDate) {
-        // If the book doesn't exist, add the book.
-        if (this.getBook(book.getISBN()) == null) {
-            this.books.add(new Book(book.getAuthors(),book.getPublisher(),book.getISBN(),book.getPublishedDate(),book.getPageCount(),book.getNumCopies(),book.getNumCopiesCheckedOut(),purchaseDate,book.getName(),book.getId()));
-        }
-    }
-
-    /**
-     * Registers a book in the inventory.
-     *
-     * @param book the book to register.
      */
     public void registerBook(Book book) {
-        this.registerBook(book,book.getPurchasedDate());
+        // If the book doesn't exist, add the book.
+        if (this.getBook(book.getISBN()) == null) {
+            this.books.add(book);
+        }
     }
 
     /**
@@ -52,7 +42,7 @@ public class Inventory implements Serializable {
      *
      * @return the book with the corresponding ISBN number.
      */
-    public Book getBook(long isbn){
+    public Book getBook(long isbn) {
         // Find and return the book.
         for (Book book : this.books) {
             if (book.getISBN() == isbn) {

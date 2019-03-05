@@ -39,7 +39,6 @@ class TransactionHistoryTest {
         // Create the first book.
         Publisher publisher1 = new Publisher("publisher1");
         Date publishDate1 = new Date(0, 0, 0, 0, 0, 0);
-        Date purchaseDate1 = new Date(1, 1, 1, 1, 1, 1);
         String book1Name = "book 1";
         Name author1Name = new Name("author", "one");
         Author author1 = new Author(author1Name);
@@ -47,12 +46,11 @@ class TransactionHistoryTest {
         int pageCount1 = 100;
         int numCopies1 = 11;
         int numCopiesCheckedOut1 = 11;
-        book1 = new Book(author1, publisher1, ISBN1, publishDate1, pageCount1, numCopies1, numCopiesCheckedOut1, purchaseDate1, book1Name);
+        book1 = new Book(author1, publisher1, ISBN1, publishDate1, pageCount1, numCopies1, numCopiesCheckedOut1, book1Name);
 
         // Create the the second book.
         Publisher publisher2 = new Publisher("publisher1");
         Date publishDate2 = new Date(0, 0, 0, 0, 0, 0);
-        Date purchaseDate2 = new Date(1, 1, 1, 1, 1, 1);
         String book2Name = "book 1";
         Name author2Name = new Name("author", "one");
         Author author2 = new Author(author2Name);
@@ -60,12 +58,11 @@ class TransactionHistoryTest {
         int pageCount2 = 100;
         int numCopies2 = 11;
         int numCopiesCheckedOut2 = 11;
-        book2 = new Book(author2, publisher2, ISBN2, publishDate2, pageCount2, numCopies2, numCopiesCheckedOut2, purchaseDate2, book2Name);
+        book2 = new Book(author2, publisher2, ISBN2, publishDate2, pageCount2, numCopies2, numCopiesCheckedOut2, book2Name);
 
         // Create the third book.
         Publisher publisher3 = new Publisher("publisher1");
         Date publishDate3 = new Date(0, 0, 0, 0, 0, 0);
-        Date purchaseDate3 = new Date(1, 1, 1, 1, 1, 1);
         String book3Name = "book 1";
         Name author3Name = new Name("author", "one");
         Author author3 = new Author(author3Name);
@@ -73,7 +70,7 @@ class TransactionHistoryTest {
         int pageCount3 = 100;
         int numCopies3 = 11;
         int numCopiesCheckedOut3 = 11;
-        book2 = new Book(author3, publisher3, ISBN3, publishDate3, pageCount3, numCopies3, numCopiesCheckedOut3, purchaseDate3, book3Name);
+        book2 = new Book(author3, publisher3, ISBN3, publishDate3, pageCount3, numCopies3, numCopiesCheckedOut3, book3Name);
 
         // Create the visitors.
         Name visitor1Name = new Name("visitor", "one");

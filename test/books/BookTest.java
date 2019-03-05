@@ -31,11 +31,10 @@ public class BookTest {
         int pageCount = 1;
         int numCopies = 2;
         int numCopiesCheckedOut = 1;
-        Date purchasedDate = new Date(0,0,0,0,0,0);
         String name = "Test Book";
 
         // Create the CuT.
-        this.CuT = new Book(author, publisher, ISBN, publishedDate, pageCount, numCopies, numCopiesCheckedOut, purchasedDate, name);
+        this.CuT = new Book(author, publisher, ISBN, publishedDate, pageCount, numCopies, numCopiesCheckedOut, name);
     }
 
     /**

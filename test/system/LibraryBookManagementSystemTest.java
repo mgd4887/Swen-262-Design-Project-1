@@ -605,7 +605,7 @@ public class LibraryBookManagementSystemTest {
                 + "\n Number of Books: 30"
                 + "\n Number of Visitors: 2"
                 + "\n Average Length of Visit: 01:30:00"
-                + "\n Number of Books Purchased: 0" // TODO: Bug - buying repeat books will not register as new purchase because only 1  purchase date is registered.
+                + "\n Number of Books Purchased: 15"
                 + "\n Fines Collected: 15"
                 + "\n Fines Outstanding: 15\n;");
     }

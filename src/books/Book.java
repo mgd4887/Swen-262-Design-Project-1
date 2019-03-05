@@ -21,7 +21,6 @@ public class Book implements Serializable {
     private int pageCount;
     private int numCopies;
     private int numCopiesCheckedOut;
-    private Date purchasedDate;
     private String name;
     private int id;
 
@@ -35,10 +34,9 @@ public class Book implements Serializable {
      * @param pageCount the page count of the book.
      * @param numCopies the number of copies of the book.
      * @param numCopiesCheckedOut the number of copies checked out.
-     * @param purchasedDate the purchase date of the book.
      * @param name the name of the book.
      */
-    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name,int id) {
+    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, String name,int id) {
         this.authors = authors;
         this.publisher = publisher;
         this.ISBN = ISBN;
@@ -46,7 +44,6 @@ public class Book implements Serializable {
         this.pageCount = pageCount;
         this.numCopies = numCopies;
         this.numCopiesCheckedOut = numCopiesCheckedOut;
-        this.purchasedDate = purchasedDate;
         this.name = name;
         this.id = id;
     }
@@ -61,11 +58,10 @@ public class Book implements Serializable {
      * @param pageCount the page count of the book.
      * @param numCopies the number of copies of the book.
      * @param numCopiesCheckedOut the number of copies checked out.
-     * @param purchasedDate the purchase date of the book.
      * @param name the name of the book.
      */
-    public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, Date purchasedDate, String name) {
-        this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,purchasedDate,name,0);
+    public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, String name) {
+        this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,name,0);
     }
 
     /**
@@ -111,15 +107,6 @@ public class Book implements Serializable {
      */
     public int getNumCopies() {
         return numCopies;
-    }
-
-    /**
-     * Gets when the library purchased this book.
-     *
-     * @return when the book was purchased.
-     */
-    public Date getPurchasedDate() {
-        return purchasedDate;
     }
 
     /**
@@ -194,7 +181,6 @@ public class Book implements Serializable {
                 ", pageCount=" + pageCount +
                 ", numCopies=" + numCopies +
                 ", numCopiesCheckedOut=" + numCopiesCheckedOut +
-                ", purchasedDate=" + purchasedDate +
                 ", name='" + name + '\'' +
                 '}';
     }

@@ -32,7 +32,7 @@ public class TransactionTest {
         Date blankDate = new Date(0,0,0,0,0,0);
 
         // Create the book.
-        this.book = new Book(author,publisher,1,blankDate,425,3,1,blankDate,"Test Book");
+        this.book = new Book(author,publisher,1,blankDate,425,3,1,"Test Book");
 
         // Create the visitor.
         this.visitor = new Visitor("0000000001","Jane","Doe","Address","1234567890");
