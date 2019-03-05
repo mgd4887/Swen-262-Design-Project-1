@@ -1,13 +1,13 @@
 package request;
 
 import books.Book;
+import books.Books;
 import books.transactions.Transaction;
 import response.Response;
 import system.Services;
 import time.Date;
 import user.Visitor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -84,7 +84,7 @@ public class BorrowBook extends Request {
         Date dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);
 
         // Get the books to check out.
-        ArrayList<Book> books = new ArrayList<>();
+        Books books = new Books();
         for (int id : amountToBorrow.keySet()) {
             Book book = this.services.getBookInventory().getBook(this.services.getBookStore().getBook(id).getISBN());
 
