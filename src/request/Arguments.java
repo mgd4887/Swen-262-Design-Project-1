@@ -1,6 +1,7 @@
 package request;
 
 import books.BookStore;
+import system.CSV;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Arguments {
 
         // Store the parameters.
         this.pointer = 0;
-        this.paramters = BookStore.parseCSV(arguments);
+        this.paramters = CSV.parseCSV(arguments);
     }
 
     /**
