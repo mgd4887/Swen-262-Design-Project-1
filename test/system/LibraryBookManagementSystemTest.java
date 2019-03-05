@@ -188,9 +188,9 @@ public class LibraryBookManagementSystemTest {
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,;");
         this.assertRequest("info,*,*,*,*,book-status;","info,4\n" +
                 "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
-                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
+                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
-                "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
+                "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
     }
 
     /**

@@ -52,7 +52,7 @@ public class InventoryTest {
     }
 
     /**
-     * Tests the {@link Inventory#getBook(int)} method.
+     * Tests the {@link Inventory#getBook(long)} method.
      */
     @Test
     public void test_getBook() {
@@ -63,44 +63,44 @@ public class InventoryTest {
     }
 
     /**
-     * Tests the {@link Inventory#getBooks(String)} method by name.
+     * Tests the {@link Inventory#getBooks(String, String, String, String)} method by name.
      */
     @Test
     public void test_getBooksName() {
-        assertTrue(CuT.getBooks("Test Book").contains(this.book1),"Book 1 not returned.");
-        assertTrue(CuT.getBooks("Test Book").contains(this.book2),"Book 2 not returned.");
-        assertFalse(CuT.getBooks("Test Book").contains(this.book3),"Book 3 returned.");
+        assertTrue(CuT.getBooks("Test Book","*","*","*").contains(this.book1),"Book 1 not returned.");
+        assertTrue(CuT.getBooks("Test Book","*","*","*").contains(this.book2),"Book 2 not returned.");
+        assertFalse(CuT.getBooks("Test Book","*","*","*").contains(this.book3),"Book 3 returned.");
 
-        assertFalse(CuT.getBooks("Test Book: The Sequel").contains(this.book1),"Book 1 returned.");
-        assertTrue(CuT.getBooks("Test Book: The Sequel").contains(this.book2),"Book 2 not returned.");
-        assertFalse(CuT.getBooks("Test Book: The Sequel").contains(this.book3),"Book 3 returned.");
+        assertFalse(CuT.getBooks("Test Book: The Sequel","*","*","*").contains(this.book1),"Book 1 returned.");
+        assertTrue(CuT.getBooks("Test Book: The Sequel","*","*","*").contains(this.book2),"Book 2 not returned.");
+        assertFalse(CuT.getBooks("Test Book: The Sequel","*","*","*").contains(this.book3),"Book 3 returned.");
     }
 
     /**
-     * Tests the {@link Inventory#getBooks(Author)} method by author.
+     * Tests the {@link Inventory#getBooks(String, String, String, String)} method by author.
      */
     @Test
     public void test_getBooksAuthor() {
-        assertTrue(CuT.getBooks(new Author("John","Doe")).contains(this.book1),"Book 1 not returned.");
-        assertTrue(CuT.getBooks(new Author("John","Doe")).contains(this.book2),"Book 2 not returned.");
-        assertFalse(CuT.getBooks(new Author("John","Doe")).contains(this.book3),"Book 3 returned.");
+        assertTrue(CuT.getBooks("*","John Doe","*","*").contains(this.book1),"Book 1 not returned.");
+        assertTrue(CuT.getBooks("*","John Doe","*","*").contains(this.book2),"Book 2 not returned.");
+        assertFalse(CuT.getBooks("*","John Doe","*","*").contains(this.book3),"Book 3 returned.");
 
-        assertFalse(CuT.getBooks(new Author("Jane","Doe")).contains(this.book1),"Book 1 returned.");
-        assertFalse(CuT.getBooks(new Author("Jane","Doe")).contains(this.book2),"Book 2 returned.");
-        assertTrue(CuT.getBooks(new Author("Jane","Doe")).contains(this.book3),"Book 3 not returned.");
+        assertFalse(CuT.getBooks("*","Jane Doe","*","*").contains(this.book1),"Book 1 returned.");
+        assertFalse(CuT.getBooks("*","Jane Doe","*","*").contains(this.book2),"Book 2 returned.");
+        assertTrue(CuT.getBooks("*","Jane Doe","*","*").contains(this.book3),"Book 3 not returned.");
     }
 
     /**
-     * Tests the {@link Inventory#getBooks(Publisher)} method by publisher.
+     * Tests the {@link Inventory#getBooks(String, String, String, String)} method by publisher.
      */
     @Test
     public void test_getBooksPublisher() {
-        assertTrue(CuT.getBooks(new Publisher("Publisher 1")).contains(this.book1),"Book 1 not returned.");
-        assertFalse(CuT.getBooks(new Publisher("Publisher 1")).contains(this.book2),"Book 2 returned.");
-        assertFalse(CuT.getBooks(new Publisher("Publisher 1")).contains(this.book3),"Book 3 returned.");
+        assertTrue(CuT.getBooks("*","*","*","Publisher 1").contains(this.book1),"Book 1 not returned.");
+        assertFalse(CuT.getBooks("*","*","*","Publisher 1").contains(this.book2),"Book 2 returned.");
+        assertFalse(CuT.getBooks("*","*","*","Publisher 1").contains(this.book3),"Book 3 returned.");
 
-        assertFalse(CuT.getBooks(new Publisher("Publisher 2")).contains(this.book1),"Book 1 returned.");
-        assertTrue(CuT.getBooks(new Publisher("Publisher 2")).contains(this.book2),"Book 2 not returned.");
-        assertTrue(CuT.getBooks(new Publisher("Publisher 2")).contains(this.book3),"Book 3 not returned.");
+        assertFalse(CuT.getBooks("*","*","*","Publisher 2").contains(this.book1),"Book 1 returned.");
+        assertTrue(CuT.getBooks("*","*","*","Publisher 2").contains(this.book2),"Book 2 not returned.");
+        assertTrue(CuT.getBooks("*","*","*","Publisher 2").contains(this.book3),"Book 3 not returned.");
     }
 }

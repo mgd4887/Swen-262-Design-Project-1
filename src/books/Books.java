@@ -1,5 +1,7 @@
 package books;
 
+import books.search.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,6 +37,28 @@ public class Books extends ArrayList<Book> implements Serializable {
     public Books(List<Book> list) {
         super(list);
     }
+
+    /**
+     * Returns the books for the given search.
+     *
+     * @param title the title of the book. To ignore this, leave it empty or use "*".
+     * @param authors the authors of the book. To ignore this, leave it empty or use "*".
+     * @param isbn the authors of the book. To ignore this, leave it empty or use "*".
+     * @param publisher the publisher of the book. To ignore this, leave it empty or use "*".
+     * @return the filtered books.
+     */
+    public Books filterBooks(String title,String authors,String isbn,String publisher) {
+        // Create the filters.
+        RootContainer rootContainer = new RootContainer(this);
+        TitleFilter titleFilter = new TitleFilter(rootContainer,title);
+        AuthorFilter authorFilter = new AuthorFilter(titleFilter,authors);
+        ISBNFilter isbnFilter = new ISBNFilter(authorFilter,isbn);
+        PublisherFilter publisherFilter = new PublisherFilter(isbnFilter,publisher);
+
+        // Return the books.
+        return publisherFilter.filterBooks();
+    }
+
     /**
      * Sorts the books by a certain method.
      *

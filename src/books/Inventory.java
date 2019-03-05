@@ -14,13 +14,13 @@ import java.util.HashMap;
  * @author Zachary Cook
  */
 public class Inventory implements Serializable {
-    private HashMap<Long,Book> books;
+    private Books books;
 
     /**
      * Creates the inventory of book.
      */
     public Inventory() {
-        this.books = new HashMap<>();
+        this.books = new Books();
     }
 
     /**
@@ -31,8 +31,8 @@ public class Inventory implements Serializable {
      */
     public void registerBook(Book book,Date purchaseDate) {
         // If the book doesn't exist, add the book.
-        if (!this.books.containsKey(book.getISBN())) {
-            this.books.put(book.getISBN(),new Book(book.getAuthors(),book.getPublisher(),book.getISBN(),book.getPublishedDate(),book.getPageCount(),book.getNumCopies(),book.getNumCopiesCheckedOut(),purchaseDate,book.getName(),book.getId()));
+        if (this.getBook(book.getISBN()) == null) {
+            this.books.add(new Book(book.getAuthors(),book.getPublisher(),book.getISBN(),book.getPublishedDate(),book.getPageCount(),book.getNumCopies(),book.getNumCopiesCheckedOut(),purchaseDate,book.getName(),book.getId()));
         }
     }
 
@@ -48,12 +48,33 @@ public class Inventory implements Serializable {
     /**
      * Returns the book for the ISBN number.
      *
-     * @param ISBN the ISBN number of the book.
+     * @param isbn the ISBN number of the book.
      *
      * @return the book with the corresponding ISBN number.
      */
-    public Book getBook(long ISBN){
-        return books.get(ISBN);
+    public Book getBook(long isbn){
+        // Find and return the book.
+        for (Book book : this.books) {
+            if (book.getISBN() == isbn) {
+                return book;
+            }
+        }
+
+        // Return null (not found).
+        return null;
+    }
+
+    /**
+     * Returns the books for the given search.
+     *
+     * @param title the title of the book. To ignore this, leave it empty or use "*".
+     * @param authors the authors of the book. To ignore this, leave it empty or use "*".
+     * @param isbn the authors of the book. To ignore this, leave it empty or use "*".
+     * @param publisher the publisher of the book. To ignore this, leave it empty or use "*".
+     * @return the filtered books.
+     */
+    public Books getBooks(String title,String authors,String isbn,String publisher) {
+        return this.books.filterBooks(title,authors,isbn,publisher);
     }
 
     /**
@@ -61,68 +82,9 @@ public class Inventory implements Serializable {
      *
      * @return all of the books.
      */
-    public Collection<Book> getBooks() {
-        return this.books.values();
+    public Books getBooks() {
+        return new Books(this.books);
     }
 
-    /**
-     * Searches the inventory for books by name.
-     *
-     * @param name the name to search.
-     *
-     * @return the list of books found.
-     */
-    public ArrayList<Book> getBooks(String name){
-        // Search the books.
-        ArrayList<Book> output = new ArrayList<>();
-        for (Book book: books.values()){
-            if (book.getName().contains(name)){
-                output.add(book);
-            }
-        }
-
-        // Return the books.
-        return output;
-    }
-
-    /**
-     * Searches the inventory for books by author.
-     *
-     * @param author the author to search.
-     *
-     * @return the list of books found.
-     */
-    public ArrayList<Book> getBooks(Author author){
-        // Search the books.
-        ArrayList<Book> output = new ArrayList<>();
-        for (Book book: books.values()){
-            if (book.getAuthors().contains(author)){
-                output.add(book);
-            }
-        }
-
-        // Return the books.
-        return output;
-    }
-
-    /**
-     * Searches the inventory for books by publisher.
-     *
-     * @param publisher the publisher to search.
-     *
-     * @return the list of books found.
-     */
-    public ArrayList<Book> getBooks(Publisher publisher){
-        // Search the books.
-        ArrayList<Book> output = new ArrayList<>();
-        for (Book book: books.values()){
-            if (book.getPublisher().equals(publisher)){
-                output.add(book);
-            }
-        }
-
-        // Return the books.
-        return output;
-    }
 
 }
