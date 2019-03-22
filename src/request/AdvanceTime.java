@@ -44,35 +44,27 @@ public class AdvanceTime extends Request {
             return this.sendMissingParametersResponse("number-of-days");
         }
 
-        // Get the number of hours and days to advance.
-        String daysToAdvanceString = arguments.getNextString();
-        int daysToAdvance = 0;
-        String hoursToAdvanceString = "";
-        int hoursToAdvance = 0;
-
-        // Get the days to advance.
-        try {
-            daysToAdvance = Integer.parseInt(daysToAdvanceString);
-        } catch (NumberFormatException e) {
-            return this.sendResponse("invalid-number-of-days," + daysToAdvanceString);
+        // Get the number of days to advance.
+        Integer daysToAdvance = arguments.getNextInteger();
+        if (daysToAdvance == null) {
+            return this.sendResponse("days-not-a-number");
         }
 
-        // Get the hours to advance.
+        // Get the number of hours to advance.
+        Integer hoursToAdvance = 0;
         if (arguments.hasNext()) {
-            hoursToAdvanceString = arguments.getNextString();
-            try {
-                hoursToAdvance = Integer.parseInt(hoursToAdvanceString);
-            } catch (NumberFormatException e) {
-                return this.sendResponse("invalid-number-of-hours," + hoursToAdvanceString);
+            hoursToAdvance = arguments.getNextInteger();
+            if (hoursToAdvance == null) {
+                return this.sendResponse("hours-not-a-number");
             }
         }
 
         // Return an error if the days or hours are invalid.
         if (daysToAdvance < 0 || daysToAdvance > 7) {
-            return this.sendResponse("invalid-number-of-days," + daysToAdvanceString);
+            return this.sendResponse("invalid-number-of-days," + daysToAdvance);
         }
         if (hoursToAdvance < 0 || hoursToAdvance > 23) {
-            return this.sendResponse("invalid-number-of-hours," + hoursToAdvanceString);
+            return this.sendResponse("invalid-number-of-hours," + hoursToAdvance);
         }
 
         // Advance the time.

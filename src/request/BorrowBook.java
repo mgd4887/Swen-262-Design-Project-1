@@ -56,12 +56,9 @@ public class BorrowBook extends Request {
         }
         HashMap<Integer,Integer> amountToBorrow = new HashMap<>();
 
-        for (String idString : arguments.getNextString().split(",")) {
+        for (Integer id : arguments.getNextListAsIntegers()) {
             // Get the id.
-            int id;
-            try {
-                id = Integer.parseInt(idString);
-            } catch (NumberFormatException e) {
+            if (id == null) {
                 return this.sendResponse("id-not-a-number");
             }
 

@@ -141,6 +141,7 @@ public class ArgumentsTest {
         // Create the expected result.
         ArrayList<Integer> expected = new ArrayList<>();
         expected.add(1);
+        expected.add(null);
         expected.add(3);
 
         // Run the assertions.
@@ -157,6 +158,7 @@ public class ArgumentsTest {
 
         // Create the expected result.
         ArrayList<Integer> expected = new ArrayList<>();
+        expected.add(null);
         expected.add(3);
         expected.add(4);
 

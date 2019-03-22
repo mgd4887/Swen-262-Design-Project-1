@@ -61,12 +61,14 @@ public class LibraryBookManagementSystemTest {
     /**
      * Tests starting a connection.
      */
+    /*
     @Test
     public void test_connect() {
         this.assertRequest("connect;","connect,1;");
         this.assertRequest("connect;","connect,2;");
         this.assertRequest("connect;","connect,3;");
     }
+    */
 
     /**
      * Tests registering visitors.
@@ -464,13 +466,13 @@ public class LibraryBookManagementSystemTest {
         // Assert advancing an incorrect amount days.
         this.assertRequest("advance,-2;","advance,invalid-number-of-days,-2;");
         this.assertRequest("advance,28;","advance,invalid-number-of-days,28;");
-        this.assertRequest("advance,test;","advance,invalid-number-of-days,test;");
+        this.assertRequest("advance,test;","advance,days-not-a-number;");
         this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
 
         // Assert advancing an incorrect amount of hours.
         this.assertRequest("advance,0,-2;","advance,invalid-number-of-hours,-2;");
         this.assertRequest("advance,0,28;","advance,invalid-number-of-hours,28;");
-        this.assertRequest("advance,0,test;","advance,invalid-number-of-hours,test;");
+        this.assertRequest("advance,0,test;","advance,hours-not-a-number;");
         this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
 
         // Assert advancing into the next day.

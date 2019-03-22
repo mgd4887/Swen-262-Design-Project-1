@@ -54,11 +54,8 @@ public class PayFine extends Request {
         if (!arguments.hasNext()) {
             return this.sendMissingParametersResponse("amount");
         }
-        int amountToPay = 0;
-
-        try {
-            amountToPay = Integer.parseInt(arguments.getNextString());
-        } catch (NumberFormatException e) {
+        Integer amountToPay = arguments.getNextInteger();
+        if (amountToPay == null) {
             return this.sendResponse("amount-not-a-number");
         }
 
@@ -70,7 +67,6 @@ public class PayFine extends Request {
 
         // Get the current date and due date.
         Date currentDate = this.services.getClock().getDate();
-        Date dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);
 
         // Determine the unpaid transactions.
         int unpaidBalance = 0;

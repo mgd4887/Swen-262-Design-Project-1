@@ -161,7 +161,7 @@ public class Arguments {
             try {
                 integerList.add(Integer.parseInt(string));
             } catch (NumberFormatException ignored) {
-
+                integerList.add(null);
             }
         }
 
@@ -182,7 +182,7 @@ public class Arguments {
             try {
                 remainingIntegers.add(Integer.parseInt(string));
             } catch (NumberFormatException ignored) {
-
+                remainingIntegers.add(null);
             }
         }
 

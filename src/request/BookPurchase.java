@@ -60,15 +60,7 @@ public class BookPurchase extends Request {
         }
         HashMap<Integer,Integer> amountToBuy = new HashMap<>();
 
-        while (arguments.hasNext()) {
-            // Get the id.
-            int id;
-            try {
-                id = Integer.parseInt(arguments.getNextString());
-            } catch (NumberFormatException e) {
-                return this.sendResponse("id-not-a-number");
-            }
-
+        for (Integer id : arguments.getRemainingIntegers()) {
             // Add the id.
             if (amountToBuy.containsKey(id)) {
                 amountToBuy.put(id,amountToBuy.get(id) + quantity);

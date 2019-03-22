@@ -55,12 +55,9 @@ public class ReturnBook extends Request {
         }
         ArrayList<Integer> booksToReturn = new ArrayList<>();
 
-        while (arguments.hasNext()) {
-            // Get the id.
-            int id;
-            try {
-                id = Integer.parseInt(arguments.getNextString());
-            } catch (NumberFormatException e) {
+        for (Integer id : arguments.getRemainingIntegers()) {
+            // Return if the id is null.
+            if (id == null) {
                 return this.sendResponse("id-not-a-number");
             }
 
