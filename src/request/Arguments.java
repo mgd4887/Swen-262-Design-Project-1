@@ -17,6 +17,16 @@ public class Arguments {
     /**
      * Creates the arguments collection.
      *
+     * @param arguments the pre-split arguments.
+     */
+    public Arguments(ArrayList<String> arguments) {
+        this.pointer = 0;
+        this.parameters = arguments;
+    }
+
+    /**
+     * Creates the arguments collection.
+     *
      * @param arguments a string of comma-separated values for parameters
      *                  and ending with a semicolon.
      */
@@ -32,6 +42,22 @@ public class Arguments {
         // Store the parameters.
         this.pointer = 0;
         this.parameters = CSV.parseCSV(arguments);
+    }
+
+    /**
+     * Creates an clone of the object starting at the current pointer.
+     *
+     * @return a new arguments parser.
+     */
+    public Arguments cloneFromCurrentPointer() {
+        // Get the arguments to use.
+        ArrayList<String> subArguments = new ArrayList<>();
+        for (int i = this.pointer; i < this.parameters.size(); i++) {
+            subArguments.add(this.parameters.get(i));
+        }
+
+        // Create the new argument parser.
+        return new Arguments(subArguments);
     }
 
     /**

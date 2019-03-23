@@ -30,6 +30,25 @@ public class ArgumentsTest {
     }
 
     /**
+     * Tests the {@link Arguments#cloneFromCurrentPointer()} method.
+     */
+    @Test
+    public void test_cloneFromCurrentPointer() {
+        // Create the component under testing.
+        Arguments CuT = new Arguments("Test1,Test2,Test3;");
+
+        // Create a clone.
+        CuT.offsetPointer(1);
+        Arguments clone = CuT.cloneFromCurrentPointer();
+
+        // Run the assertions.
+        assertEquals(clone.getNextString(),"Test2","String is incorrect.");
+        assertTrue(clone.hasNext(),"Next doesn't exist.");
+        assertEquals(clone.getNextString(),"Test3","String is incorrect.");
+        assertFalse(clone.hasNext(),"Next does exist.");
+    }
+
+    /**
      * Tests the {@link Arguments#getNextString()} and {@link Arguments#hasNext()} methods.
      */
     @Test
