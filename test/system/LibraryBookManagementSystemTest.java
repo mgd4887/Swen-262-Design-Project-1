@@ -96,7 +96,26 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_create() {
-        // TODO: Implement
+        // Connect a client, log in root, and register 2 visitors.
+        this.assertRequest("connect;","connect,1;");
+        this.assertRequest("1,login,root,password;","1,login,success;");
+        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+
+        // Assert creating users with incorrect requests.
+        this.assertRequest("create;","invalid-client-id;");
+        this.assertRequest("1,create;","1,create,missing-parameters,{username,password,role,visitor ID};");
+        this.assertRequest("1,create,JohnDoe;","1,create,missing-parameters,{password,role,visitor ID};");
+        this.assertRequest("1,create,JohnDoe,password123;","1,create,missing-parameters,{role,visitor ID};");
+        this.assertRequest("1,create,JohnDoe,password123,visitor;","1,create,missing-parameters,{visitor ID};");
+
+        // Assert creating a user.
+        this.assertRequest("1,create,JohnDoe,password123,visitor,0000000001;","1,create,success;");
+
+        // Asset creating invalid users fails.
+        this.assertRequest("1,create,JohnDoe2,password123,visitor,0000000001;","1,create,duplicate-visitor;");
+        this.assertRequest("1,create,JohnDoe,password123,visitor,0000000002;","1,create,duplicate-username;");
+        this.assertRequest("1,create,JohnDoe2,password123,visitor,0000000003;","1,create,invalid-visitor;");
     }
 
     /**
