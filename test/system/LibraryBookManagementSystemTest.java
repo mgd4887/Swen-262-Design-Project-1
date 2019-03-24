@@ -92,6 +92,64 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Tests creating a new account.
+     */
+    @Test
+    public void test_create() {
+        // TODO: Implement
+    }
+
+    /**
+     * Tests logging in a user.
+     */
+    @Test
+    public void test_login() {
+        // Connect a client.
+        this.assertRequest("connect;","connect,1;");
+
+        // Assert logging in with incorrect requests.
+        this.assertRequest("login;","invalid-client-id;");
+        this.assertRequest("1,login;","1,login,missing-parameters,{username,password};");
+        this.assertRequest("1,login,root;","1,login,missing-parameters,{password};");
+
+        // Assert logging in as root.
+        this.assertRequest("1,login,root,password;","1,login,success;");
+        this.assertRequest("1,login,root,password;","1,login,already-logged-in;");
+    }
+
+    /**
+     * Tests logging out a user.
+     */
+    @Test
+    public void test_logout() {
+        // TODO: Implement
+    }
+
+    /**
+     * Tests undoing a request.
+     */
+    @Test
+    public void test_undo() {
+        // TODO: Implement
+    }
+
+    /**
+     * Tests redoing a request.
+     */
+    @Test
+    public void test_redo() {
+        // TODO: Implement
+    }
+
+    /**
+     * Tests setting the book service.
+     */
+    @Test
+    public void test_service() {
+        // TODO: Implement
+    }
+
+    /**
      * Tests registering visitors.
      */
     @Test

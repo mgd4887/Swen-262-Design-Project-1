@@ -4,8 +4,12 @@ import books.BookStore;
 import books.Inventory;
 import books.purchases.PurchaseHistory;
 import books.transactions.TransactionHistory;
+import user.Name;
 import user.Registry;
+import user.Visitor;
 import user.connection.ClientConnections;
+import user.connection.User;
+import user.connection.UserRegistry;
 import user.visit.VisitHistory;
 
 import java.io.Serializable;
@@ -24,11 +28,13 @@ public class Services implements Serializable {
     private BookStore bookStore;
     private PurchaseHistory purchaseHistory;
     private ClientConnections clientConnections;
+    private UserRegistry userRegistry;
 
     /**
      * Creates the services.
      */
     public Services() {
+        // Create the services.
         this.transactionHistory = new TransactionHistory();
         this.bookInventory = new Inventory();
         this.visitHistory = new VisitHistory();
@@ -37,6 +43,11 @@ public class Services implements Serializable {
         this.bookStore = BookStore.fromFile(BookStore.BOOK_STORE_FILE_LOCATION);
         this.purchaseHistory = new PurchaseHistory();
         this.clientConnections = new ClientConnections();
+        this.userRegistry = new UserRegistry();
+
+        // Create a root user.
+        Visitor visitor = this.visitorsRegistry.registerVisitor(new Name("root"),"","000000000");
+        this.userRegistry.registerUser("root","password", User.PermissionLevel.EMPLOYEE,visitor);
     }
 
     /**
@@ -109,5 +120,14 @@ public class Services implements Serializable {
      */
     public ClientConnections getClientConnections() {
         return this.clientConnections;
+    }
+
+    /**
+     * Returns the user registry.
+     *
+     * @return the user registry.
+     */
+    public UserRegistry getUserRegistry() {
+        return this.userRegistry;
     }
 }

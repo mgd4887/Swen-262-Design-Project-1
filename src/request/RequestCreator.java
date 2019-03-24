@@ -43,8 +43,7 @@ public class RequestCreator {
                 // TODO: Unimplemented.
                 return null;
             case "login":
-                // TODO: Unimplemented.
-                return null;
+                return new LogIn(this.services,connection,arguments);
             case "logout":
                 // TODO: Unimplemented.
                 return null;

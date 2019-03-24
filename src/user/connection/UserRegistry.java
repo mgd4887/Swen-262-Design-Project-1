@@ -1,0 +1,67 @@
+package user.connection;
+
+import user.Visitor;
+
+import java.util.HashMap;
+
+/**
+ * Class that stores the users in the system.
+ *
+ * @author Zachary Cook
+ */
+public class UserRegistry {
+    HashMap<String,User> users;
+
+    /**
+     * Creates the user registry.
+     */
+    public UserRegistry() {
+        this.users = new HashMap<>();
+    }
+
+    /**
+     * Adds a visitor to the registry.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @param permissionLevel the permission level of the user.
+     * @param visitor the visitor associated with the user.
+     */
+    public void registerUser(String username,String password,User.PermissionLevel permissionLevel,Visitor visitor) {
+        // Throw an error if the user exists.
+        if (this.getUser(username) != null) {
+            throw new IllegalArgumentException("User already exists.");
+        }
+
+        // Add the user.
+        this.users.put(username,new User(username,password,permissionLevel,visitor));
+    }
+
+    /**
+     * Returns the user for the given username.
+     *
+     * @param username the username to check for.
+     * @return the user with the username.
+     */
+    public User getUser(String username) {
+        return this.users.get(username);
+    }
+
+    /**
+     * Returns if the login is valid.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return if the login is valid.
+     */
+    public boolean isLoginValid(String username,String password) {
+        // Return false if the user doesn't exist.
+        User user = this.getUser(username);
+        if (user == null) {
+            return false;
+        }
+
+        // Return based on the password.
+        return user.passwordMatches(password);
+    }
+}
