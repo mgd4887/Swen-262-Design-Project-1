@@ -1,6 +1,6 @@
 package system;
 
-import books.BookStore;
+import books.store.BookStore;
 import books.Inventory;
 import books.purchases.PurchaseHistory;
 import books.transactions.TransactionHistory;
@@ -40,7 +40,7 @@ public class Services implements Serializable {
         this.visitHistory = new VisitHistory();
         this.visitorsRegistry = new Registry();
         this.clock = new Clock();
-        this.bookStore = BookStore.fromFile(BookStore.BOOK_STORE_FILE_LOCATION);
+        this.bookStore = new BookStore();
         this.purchaseHistory = new PurchaseHistory();
         this.clientConnections = new ClientConnections();
         this.userRegistry = new UserRegistry();

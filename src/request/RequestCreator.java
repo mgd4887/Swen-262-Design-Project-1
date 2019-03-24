@@ -52,8 +52,7 @@ public class RequestCreator {
                 // TODO: Unimplemented.
                 return null;
             case "service":
-                // TODO: Unimplemented.
-                return null;
+                return new BookStoreService(this.services,connection,arguments);
             case "register":
                 return new RegisterVisitor(this.services,connection,arguments);
             case "arrive":

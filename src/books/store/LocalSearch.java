@@ -1,5 +1,9 @@
-package books;
+package books.store;
 
+import books.Author;
+import books.Book;
+import books.Books;
+import books.Publisher;
 import system.CSV;
 import time.Date;
 import user.Name;
@@ -7,27 +11,29 @@ import user.Name;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Class representing a  "Book Store". This includes the books
- * that can be bought by the library.
+ * Performs searching on the local book store.
  *
  * @author Zachary Cook
  */
-public class BookStore implements Serializable {
+public class LocalSearch implements StoreSearchService {
     // The default file location of the book store file.
     public static String BOOK_STORE_FILE_LOCATION = "books.txt";
 
-    private Books books;
+    private Books localStoreBooks;
+    private Books sharedBooks;
 
     /**
      * Creates the book store.
+     *
+     * @param books the main list of books.
      */
-    public BookStore() {
-        this.books = new Books();
+    public LocalSearch(Books books) {
+        this.localStoreBooks = new Books();
+        this.sharedBooks = books;
     }
 
     /**
@@ -41,7 +47,9 @@ public class BookStore implements Serializable {
      * @param pageCount the page count of the book.
      */
     public void addBook(long isbn,String name,ArrayList<Author> authors,Publisher publisher,Date date,int pageCount) {
-        this.books.add(new Book(authors,publisher,isbn,date,pageCount,0,0,name,books.size() + 1));
+        Book book = new Book(authors,publisher,isbn,date,pageCount,0,0,name,sharedBooks.size() + 1);
+        this.localStoreBooks.add(book);
+        this.sharedBooks.add(book);
     }
 
     /**
@@ -109,25 +117,6 @@ public class BookStore implements Serializable {
     }
 
     /**
-     * Returns a list of all the books.
-     *
-     * @return the books as a list.
-     */
-    public Books getBooks() {
-        return new Books(this.books);
-    }
-
-    /**
-     * Returns the book for a given id.
-     *
-     * @param id the id to return.
-     * @return the book with the id.
-     */
-    public Book getBook(int id) {
-        return this.books.get(id);
-    }
-
-    /**
      * Returns the books for the given search.
      *
      * @param title the title of the book. To ignore this, leave it empty or use "*".
@@ -137,29 +126,29 @@ public class BookStore implements Serializable {
      * @return the filtered books.
      */
     public Books getBooks(String title,String authors,String isbn,String publisher) {
-        return this.books.filterBooks(title,authors,isbn,publisher);
+        return this.localStoreBooks.filterBooks(title,authors,isbn,publisher);
     }
 
     /**
      * Creates a bookstore from the CSV file of books.
      *
-     * @param fileLocation the location of the file.
+     * @param books the main list of books.
      */
-    public static BookStore fromFile(String fileLocation) {
+    public static LocalSearch fromFile(Books books) {
         // Create the bookstore.
-        BookStore bookStore = new BookStore();
+        LocalSearch bookSearch = new LocalSearch(books);
 
         // Read the files by each line.
         BufferedReader reader;
         try {
             // Create the reader.
-            reader = new BufferedReader(new FileReader(fileLocation));
+            reader = new BufferedReader(new FileReader(BOOK_STORE_FILE_LOCATION));
 
             // Keep reading lines until the lines have ended.
             String line = reader.readLine();
             while (line != null) {
                 // Parse the book and add read the next line.
-                bookStore.addBookFromCSV(line);
+                bookSearch.addBookFromCSV(line);
                 line = reader.readLine();
             }
             reader.close();
@@ -169,7 +158,6 @@ public class BookStore implements Serializable {
         }
 
         // Return the bookstore.
-        return bookStore;
+        return bookSearch;
     }
-
 }

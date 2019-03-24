@@ -213,7 +213,28 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_service() {
-        // TODO: Implement
+        // Log in root.
+        this.logInRoot();
+
+        // Assert missing parameters.
+        this.assertRequest("service;","invalid-client-id;");
+        this.assertRequest("1,service;","1,service,missing-parameters,{info-service};");
+        this.assertRequest("1,service,fake-service;","1,service,invalid-service;");
+
+        // Set the service to Google.
+        this.assertRequest("1,service,google;","1,service,success;");
+
+        // Set the service to local.
+        this.assertRequest("1,service,local;","1,service,success;");
+        this.assertRequest("1,search,Harry Potter,*,*,*,title;","1,search,8\n" +
+                "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
+                "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
+                "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
+                "15,9780545582971,Harry Potter and the Order of the Phoenix,{J. K. Rowling},2013/08/27,\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
+                "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
+                "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
     }
 
     /**
