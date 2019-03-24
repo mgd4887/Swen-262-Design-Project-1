@@ -39,6 +39,24 @@ public class Books extends ArrayList<Book> implements Serializable {
     }
 
     /**
+     * Returns a book that matches the id.
+     *
+     * @param id the id to match.
+     * @return the book for the id.
+     */
+    public Book getBookById(int id) {
+        // Iterate through the books.
+        for (Book book : this) {
+            if (book.getId() == id) {
+                return book;
+            }
+        }
+
+        // Return null (not found).
+        return null;
+    }
+
+    /**
      * Returns the books for the given search.
      *
      * @param title the title of the book. To ignore this, leave it empty or use "*".

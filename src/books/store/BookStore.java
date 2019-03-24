@@ -35,7 +35,7 @@ public class BookStore implements Serializable {
 
         // Create the searches.
         this.localSearch = LocalSearch.fromFile(books);
-        this.googleSearch = null;
+        this.googleSearch = new GoogleSearch(books);
     }
 
     /**
@@ -69,7 +69,7 @@ public class BookStore implements Serializable {
      * @return the book with the id.
      */
     public Book getBook(int id) {
-        return this.books.get(id);
+        return this.books.getBookById(id);
     }
 
     /**
