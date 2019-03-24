@@ -122,7 +122,19 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_logout() {
-        // TODO: Implement
+        // Connect a client.
+        this.assertRequest("connect;","connect,1;");
+        this.assertRequest("1,login,root,password;","1,login,success;");
+
+        // Assert logging out.
+        this.assertRequest("1,logout;","1,logout,success;");
+
+        // Assert logging out with incorrect requests.
+        this.assertRequest("logout;","invalid-client-id;");
+        this.assertRequest("1,logout;","1,logout,not-authorized;");
+
+        // Assert logging back in.
+        this.assertRequest("1,login,root,password;","1,login,success;");
     }
 
     /**

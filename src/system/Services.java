@@ -46,7 +46,7 @@ public class Services implements Serializable {
         this.userRegistry = new UserRegistry();
 
         // Create a root user.
-        Visitor visitor = this.visitorsRegistry.registerVisitor(new Name("root"),"","000000000");
+        Visitor visitor = new Visitor("0000000000",new Name("root"),"","000000000");
         this.userRegistry.registerUser("root","password", User.PermissionLevel.EMPLOYEE,visitor);
     }
 

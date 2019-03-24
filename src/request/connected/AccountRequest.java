@@ -39,8 +39,8 @@ public abstract class AccountRequest extends ConnectedRequest {
 
         // Return an error if the connection has no account or if the permission level is incorrect.
         User user = this.getConnection().getUser();
-        if (user == null || user.getPermissionLevel().meetsPermissionLevel(this.permissionLevel)) {
-            return new Response("not-authorized;");
+        if (user == null || !user.getPermissionLevel().meetsPermissionLevel(this.permissionLevel)) {
+            return this.sendResponse("not-authorized");
         }
 
         // Return the response.
