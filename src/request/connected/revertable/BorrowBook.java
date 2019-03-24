@@ -1,13 +1,18 @@
-package request;
+package request.connected.revertable;
 
 import books.Book;
 import books.Books;
 import books.transactions.Transaction;
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Services;
 import time.Date;
 import user.Visitor;
+import user.connection.Connection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -21,9 +26,11 @@ public class BorrowBook extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public BorrowBook(Services services) {
-        super(services);
+    public BorrowBook(Services services,Connection connection,Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -37,23 +44,36 @@ public class BorrowBook extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        // Create the required parameters.
+        ArrayList<Parameter> requiredParameters = new ArrayList<>();
+        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
+        requiredParameters.add(new Parameter("{id}",Parameter.ParameterType.LIST_OF_INTEGERS));
+
+        // Return the required parameters.
+        return requiredParameters;
+    }
+
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
-        // Get the visitor id or return an error if it is missing.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("visitor-id,{id}");
-        }
+    public Response handleRequest() {
+        Arguments arguments = this.getArguments();
+        Services services = this.getServices();
+
+        // Get the visitor id.
         String visitorId = arguments.getNextString();
 
         // Get the ids.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("{id}");
-        }
         HashMap<Integer,Integer> amountToBorrow = new HashMap<>();
 
         for (Integer id : arguments.getNextListAsIntegers()) {
@@ -71,19 +91,19 @@ public class BorrowBook extends Request {
         }
 
         // Get the visitor.
-        Visitor visitor = this.services.getVisitorsRegistry().getVisitor(visitorId);
+        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
         if (visitor == null) {
             return this.sendResponse("invalid-visitor-id");
         }
 
         // Get the current date and due date.
-        Date currentDate = this.services.getClock().getDate();
+        Date currentDate = services.getClock().getDate();
         Date dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);
 
         // Get the books to check out.
         Books books = new Books();
         for (int id : amountToBorrow.keySet()) {
-            Book book = this.services.getBookInventory().getBook(this.services.getBookStore().getBook(id).getISBN());
+            Book book = services.getBookInventory().getBook(services.getBookStore().getBook(id).getISBN());
 
             // Return an error if the book is invalid.
             if (book == null) {
@@ -104,7 +124,7 @@ public class BorrowBook extends Request {
         // Determine the amount of unreturned books and unpaid fees.
         int unretunedBooks = 0;
         int unpaidBalance = 0;
-        for (Transaction transaction : this.services.getTransactionHistory().getTransactionsByVisitor(visitor)) {
+        for (Transaction transaction : services.getTransactionHistory().getTransactionsByVisitor(visitor)) {
             if (!transaction.getReturned()) {
                 unretunedBooks += 1;
             }
@@ -126,7 +146,7 @@ public class BorrowBook extends Request {
         // Borrow the books.
         for (Book book : books) {
             book.borrowCopy();
-            this.services.getTransactionHistory().registerTransaction(book,visitor,currentDate,dueDate);
+            services.getTransactionHistory().registerTransaction(book,visitor,currentDate,dueDate);
         }
 
         // Return the response.

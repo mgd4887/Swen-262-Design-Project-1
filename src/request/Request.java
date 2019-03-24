@@ -2,22 +2,57 @@ package request;
 
 import response.Response;
 import system.Services;
+import user.connection.Connection;
 
+import java.util.ArrayList;
 /**
  * Abstract class representing a request.
  *
  * @author Zachary Cook
  */
 public abstract class Request {
-    protected Services services;
+    private Services services;
+    private Connection connection;
+    private Arguments arguments;
 
     /**
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public Request(Services services) {
+    public Request(Services services,Connection connection,Arguments arguments) {
         this.services = services;
+        this.connection = connection;
+        this.arguments = arguments;
+    }
+
+    /**
+     * Returns the services used by the request.
+     *
+     * @return the services used by the request.
+     */
+    public Services getServices() {
+        return this.services;
+    }
+
+    /**
+     * Returns the connection used by the request.
+     *
+     * @return the connection used by the request.
+     */
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    /**
+     * Returns the arguments used by the request.
+     *
+     * @return the arguments used by the request.
+     */
+    public Arguments getArguments() {
+        return this.arguments;
     }
 
     /**
@@ -25,7 +60,6 @@ public abstract class Request {
      *
      * @param response the response message, ignoring the final semicolon.
      */
-
     public Response sendResponse(String response) {
         // Create the response string.
         String responseString = this.getName() + "," + response + ";";
@@ -44,6 +78,50 @@ public abstract class Request {
     }
 
     /**
+     * Creates a response for missing parameters.
+     *
+     * @param parameters the parameters to compile.
+     * @param startIndex the start index of the missing parameters.
+     */
+    public Response sendMissingParametersResponse(ArrayList<Parameter> parameters,int startIndex) {
+        // Assemble the string.
+        String arguments = "";
+        for (int i = startIndex; i < parameters.size(); i++) {
+            // Add the comma.
+            if (!arguments.equals("")) {
+                arguments += ",";
+            }
+
+            // Add the parameter.
+            arguments += parameters.get(i).getName();
+        }
+
+        // Create and return the response.
+        return this.sendMissingParametersResponse(arguments);
+    }
+
+    /**
+     * Gets the response for the request.
+     */
+    public Response getResponse() {
+        // Determine if any parameters are missing.
+        ArrayList<Parameter> requiredParameters = this.getRequiredParameters();
+        for (int i = 0; i < requiredParameters.size(); i++) {
+            // Return if the parameter is missing.
+            if (!arguments.hasNext()) {
+                return this.sendMissingParametersResponse(this.getRequiredParameters(),i);
+            }
+
+            // Increment the pointer.
+            arguments.offsetPointer(1);
+        }
+        arguments.resetPointer();
+
+        // Return the response.
+        return this.handleRequest();
+    }
+
+    /**
      * Returns the name of the request.
      *
      * @return the name of the request.
@@ -51,10 +129,16 @@ public abstract class Request {
     public abstract String getName();
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    public abstract ArrayList<Parameter> getRequiredParameters();
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
-    public abstract Response handleRequest(Arguments arguments);
+    public abstract Response handleRequest();
 }

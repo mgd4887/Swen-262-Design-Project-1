@@ -1,13 +1,15 @@
-package request;
+package request.connected.unrevertable;
 
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
-import time.Time;
+import user.connection.Connection;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Request for getting the current date and time.
@@ -20,9 +22,11 @@ public class CurrentDateTime extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public CurrentDateTime(Services services) {
-        super(services);
+    public CurrentDateTime(Services services,Connection connection,Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -36,15 +40,26 @@ public class CurrentDateTime extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        return new ArrayList<>();
+    }
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
+    public Response handleRequest() {
+        Services services = this.getServices();
+
         // Get the clock information.
-        Clock clock = this.services.getClock();
+        Clock clock = services.getClock();
         Date date = clock.getDate();
         String formattedDate = date.formatDate();
         String formattedTime = date.formatTime();

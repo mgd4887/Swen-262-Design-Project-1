@@ -1,11 +1,14 @@
-package request;
+package request.connected.unrevertable;
 
 import books.Author;
 import books.Book;
 import books.Books;
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Services;
-import user.Name;
+import user.connection.Connection;
 
 import java.util.ArrayList;
 
@@ -21,9 +24,11 @@ public class LibraryBookSearch extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public LibraryBookSearch(Services services) {
-        super(services);
+    public LibraryBookSearch(Services services,Connection connection,Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -37,23 +42,33 @@ public class LibraryBookSearch extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        // Create the required parameters.
+        ArrayList<Parameter> requiredParameters = new ArrayList<>();
+        requiredParameters.add(new Parameter("title",Parameter.ParameterType.STRING));
+        requiredParameters.add(new Parameter("{authors}",Parameter.ParameterType.LIST_OF_STRINGS));
+
+        // Return the required parameters.
+        return requiredParameters;
+    }
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
-        // Get the title or return an error if it is missing.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("title,{authors}");
-        }
-        String title = arguments.getNextString();
+    public Response handleRequest() {
+        Arguments arguments = this.getArguments();
+        Services services = this.getServices();
 
-        // Get the authors, if any.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("{authors}");
-        }
+        // Get the title and authors.
+        String title = arguments.getNextString();
         String authorsString = arguments.getNextString();
 
         // Get the ISBN, if any.
@@ -87,7 +102,7 @@ public class LibraryBookSearch extends Request {
         }
 
         // Search and sort the books.
-        Books foundBooks = this.services.getBookInventory().getBooks(title,authorsString,isbn,publisher);
+        Books foundBooks = services.getBookInventory().getBooks(title,authorsString,isbn,publisher);
         foundBooks.sort(sortingMethod);
 
         // Build the return string.

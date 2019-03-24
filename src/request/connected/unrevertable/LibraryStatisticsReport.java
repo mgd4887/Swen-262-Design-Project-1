@@ -1,14 +1,20 @@
-package request;
+package request.connected.unrevertable;
 
 import books.Book;
 import books.purchases.PurchaseLog;
 import books.transactions.Transaction;
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Services;
 import time.Date;
 import time.Time;
 import user.Visitor;
+import user.connection.Connection;
 import user.visit.Visit;
+
+import java.util.ArrayList;
 
 /**
  * Request for getting a statistics report of the library.
@@ -21,9 +27,11 @@ public class LibraryStatisticsReport extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public LibraryStatisticsReport(Services services) {
-        super(services);
+    public LibraryStatisticsReport(Services services, Connection connection, Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -37,30 +45,41 @@ public class LibraryStatisticsReport extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        return new ArrayList<>();
+    }
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
+    public Response handleRequest() {
+        Arguments arguments = this.getArguments();
+        Services services = this.getServices();
+
         // Get the day scope, if any.
-        int dayLimit = Integer.MAX_VALUE;
+        Integer dayLimit = Integer.MAX_VALUE;
         if (arguments.hasNext()) {
-            try {
-                dayLimit = Integer.parseInt(arguments.getNextString());
-            } catch (NumberFormatException e) {
+            dayLimit = arguments.getNextInteger();
+            if (dayLimit == null) {
                 return this.sendResponse("day-not-a-number");
             }
         }
 
         // Get the current date.
-        Date currentDate = this.services.getClock().getDate();
+        Date currentDate = services.getClock().getDate();
 
         // Get the average visit length.
         int averageVisitLength = 0;
         int visits = 0;
-        for (Visit visit : this.services.getVisitHistory().getFinishedVisits()) {
+        for (Visit visit : services.getVisitHistory().getFinishedVisits()) {
             if (visit.getDate().differenceInDays(currentDate) < dayLimit) {
                 averageVisitLength = ((averageVisitLength * visits) + (visit.getTimeOfDeparture().getSeconds() - visit.getDate().getSeconds())) / (visits + 1);
                 visits += 1;
@@ -70,11 +89,11 @@ public class LibraryStatisticsReport extends Request {
         // Get the purchased books.
         int bookCount = 0;
         int purchasedBooks = 0;
-        for (Book book : this.services.getBookInventory().getBooks()) {
+        for (Book book : services.getBookInventory().getBooks()) {
             bookCount += book.getNumCopies();
         }
 
-        for (PurchaseLog log : this.services.getPurchaseHistory().getPurchaseLogs()) {
+        for (PurchaseLog log : services.getPurchaseHistory().getPurchaseLogs()) {
             if (log.getPurchaseDate().differenceInDays(currentDate) < dayLimit) {
                 purchasedBooks += 1;
             }
@@ -84,8 +103,8 @@ public class LibraryStatisticsReport extends Request {
         int finesCollected = 0;
         int finesOutstanding = 0;
 
-        for (Visitor visitor : this.services.getVisitorsRegistry().getVisitors()) {
-            for (Transaction transaction : this.services.getTransactionHistory().getTransactionsByVisitor(visitor)) {
+        for (Visitor visitor : services.getVisitorsRegistry().getVisitors()) {
+            for (Transaction transaction : services.getTransactionHistory().getTransactionsByVisitor(visitor)) {
                 if (transaction.getCheckedOut().differenceInDays(currentDate) < dayLimit || !transaction.getReturned() || transaction.getReturnedDate().differenceInDays(currentDate) < dayLimit) {
                     // Add the fines.
                     int finesPaid = transaction.getPartialLateFeePaid();
@@ -104,7 +123,7 @@ public class LibraryStatisticsReport extends Request {
         // Create the result.
         String result = currentDate.formatDate() + ","
             + "\n Number of Books: " + bookCount
-            + "\n Number of Visitors: " + this.services.getVisitorsRegistry().getVisitors().size()
+            + "\n Number of Visitors: " + services.getVisitorsRegistry().getVisitors().size()
             + "\n Average Length of Visit: " + averageVisitTime.formatTime()
             + "\n Number of Books Purchased: " + purchasedBooks
             + "\n Fines Collected: " + finesCollected

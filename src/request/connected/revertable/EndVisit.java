@@ -1,11 +1,17 @@
-package request;
+package request.connected.revertable;
 
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
 import user.Visitor;
+import user.connection.Connection;
 import user.visit.Visit;
+
+import java.util.ArrayList;
 
 /**
  * Request for getting the current date and time.
@@ -18,9 +24,11 @@ public class EndVisit extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public EndVisit(Services services) {
-        super(services);
+    public EndVisit(Services services,Connection connection,Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -34,32 +42,46 @@ public class EndVisit extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        // Create the required parameters.
+        ArrayList<Parameter> requiredParameters = new ArrayList<>();
+        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
+
+        // Return the required parameters.
+        return requiredParameters;
+    }
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
-        // Get the id or return an error if it is missing.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("visitor-id");
-        }
+    public Response handleRequest() {
+        Arguments arguments = this.getArguments();
+        Services services = this.getServices();
+
+        // Get the id.
         String visitorId = arguments.getNextString();
 
         // Return an error if the id isn't registered.
-        Visitor visitor = this.services.getVisitorsRegistry().getVisitor(visitorId);
+        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
         if (visitor == null) {
             return this.sendResponse("invalid-id");
         }
 
         // Get the current time.
-        Clock clock = this.services.getClock();
+        Clock clock = services.getClock();
         Date date = clock.getDate();
         String formattedTime = date.formatTime();
 
         // End the current visit and return an error if there is no visit..
-        Visit visit = this.services.getVisitHistory().finishVisit(visitor,date);
+        Visit visit = services.getVisitHistory().finishVisit(visitor,date);
         if (visit == null) {
             return this.sendResponse("invalid-id");
         }

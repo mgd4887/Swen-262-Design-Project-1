@@ -1,11 +1,16 @@
-package request;
+package request.connected.revertable;
 
 import books.Author;
 import books.Book;
+import request.Arguments;
+import request.Parameter;
+import request.Request;
 import response.Response;
 import system.Services;
 import time.Date;
+import user.connection.Connection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,9 +24,11 @@ public class BookPurchase extends Request {
      * Creates a request.
      *
      * @param services the services to use for the request.
+     * @param connection the connection to use.
+     * @param arguments the arguments to use.
      */
-    public BookPurchase(Services services) {
-        super(services);
+    public BookPurchase(Services services,Connection connection,Arguments arguments) {
+        super(services,connection,arguments);
     }
 
     /**
@@ -35,24 +42,33 @@ public class BookPurchase extends Request {
     }
 
     /**
+     * Returns a list of the required parameters.
+     *
+     * @return a list of the required parameters.
+     */
+    @Override
+    public ArrayList<Parameter> getRequiredParameters() {
+        // Create the required parameters.
+        ArrayList<Parameter> requiredParameters = new ArrayList<>();
+        requiredParameters.add(new Parameter("quantity",Parameter.ParameterType.INTEGER));
+        requiredParameters.add(new Parameter("id", Parameter.ParameterType.REMAINING_INTEGERS));
+
+        // Return the required parameters.
+        return requiredParameters;
+    }
+
+    /**
      * Returns a response for the request.
      *
-     * @param arguments the argument parser.
      * @return the response of the request.
      */
     @Override
-    public Response handleRequest(Arguments arguments) {
-        // Get the quantity or return an error if it is missing.
-        if (!arguments.hasNext()) {
-            return this.sendMissingParametersResponse("quantity,id");
-        }
+    public Response handleRequest() {
+        Arguments arguments = this.getArguments();
+        Services services = this.getServices();
 
-        int quantity;
-        try {
-            quantity = Integer.parseInt(arguments.getNextString());
-        } catch (NumberFormatException e) {
-            return this.sendResponse("quantity-not-a-number");
-        }
+        // Get the quantity.
+        int quantity = arguments.getNextInteger();
 
         // Get the ids.
         if (!arguments.hasNext()) {
@@ -70,21 +86,21 @@ public class BookPurchase extends Request {
         }
 
         // Add the books.
-        Date currentDate = this.services.getClock().getDate();
+        Date currentDate = services.getClock().getDate();
         for (int id : amountToBuy.keySet()) {
-            Book book = this.services.getBookStore().getBook(id);
+            Book book = services.getBookStore().getBook(id);
 
             for (int i = 0; i < amountToBuy.get(id); i++) {
-                this.services.getBookInventory().registerBook(book);
-                this.services.getBookInventory().getBook(book.getISBN()).addCopy();
-                this.services.getPurchaseHistory().registerPurchase(book,currentDate);
+                services.getBookInventory().registerBook(book);
+                services.getBookInventory().getBook(book.getISBN()).addCopy();
+                services.getPurchaseHistory().registerPurchase(book,currentDate);
             }
         }
 
         // Build the return string.
         String results = Integer.toString(amountToBuy.keySet().size());
         for (int id : amountToBuy.keySet()) {
-            Book book = this.services.getBookStore().getBook(id);
+            Book book = services.getBookStore().getBook(id);
 
             // Create the list of authors.
             String authorsList = "";
