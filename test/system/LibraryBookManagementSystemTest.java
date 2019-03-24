@@ -61,14 +61,12 @@ public class LibraryBookManagementSystemTest {
     /**
      * Tests starting a connection.
      */
-    /*
     @Test
     public void test_connect() {
         this.assertRequest("connect;","connect,1;");
         this.assertRequest("connect;","connect,2;");
         this.assertRequest("connect;","connect,3;");
     }
-    */
 
     /**
      * Tests registering visitors.

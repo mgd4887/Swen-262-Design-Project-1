@@ -5,6 +5,7 @@ import system.Services;
 import user.connection.Connection;
 
 import java.util.ArrayList;
+
 /**
  * Abstract class representing a request.
  *

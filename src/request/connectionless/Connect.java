@@ -53,7 +53,12 @@ public class Connect extends Request {
      */
     @Override
     public Response handleRequest() {
-        // TODO: Implement
-        return null;
+        Services services = this.getServices();
+
+        // Create the connection.
+        Connection connection = services.getClientConnections().createConnection();
+
+        // Return the id.
+        return this.sendResponse(Integer.toString(connection.getId()));
     }
 }

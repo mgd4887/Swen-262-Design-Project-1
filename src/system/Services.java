@@ -5,6 +5,7 @@ import books.Inventory;
 import books.purchases.PurchaseHistory;
 import books.transactions.TransactionHistory;
 import user.Registry;
+import user.connection.ClientConnections;
 import user.visit.VisitHistory;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class Services implements Serializable {
     private Clock clock;
     private BookStore bookStore;
     private PurchaseHistory purchaseHistory;
+    private ClientConnections clientConnections;
 
     /**
      * Creates the services.
@@ -34,6 +36,7 @@ public class Services implements Serializable {
         this.clock = new Clock();
         this.bookStore = BookStore.fromFile(BookStore.BOOK_STORE_FILE_LOCATION);
         this.purchaseHistory = new PurchaseHistory();
+        this.clientConnections = new ClientConnections();
     }
 
     /**
@@ -97,5 +100,14 @@ public class Services implements Serializable {
      */
     public PurchaseHistory getPurchaseHistory() {
         return this.purchaseHistory;
+    }
+
+    /**
+     * Returns the client connections.
+     *
+     * @return the client connections.
+     */
+    public ClientConnections getClientConnections() {
+        return this.clientConnections;
     }
 }

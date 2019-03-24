@@ -2,6 +2,7 @@ package request;
 
 import request.connected.revertable.*;
 import request.connected.unrevertable.*;
+import request.connectionless.Connect;
 import system.Services;
 import user.connection.Connection;
 
@@ -35,19 +36,25 @@ public class RequestCreator {
         // Return a new request if one exists.
         switch (name) {
             case "connect":
-                // TODO: Unimplemented.
+                return new Connect(this.services,connection,arguments);
             case "create":
                 // TODO: Unimplemented.
+                return null;
             case "login":
                 // TODO: Unimplemented.
+                return null;
             case "logout":
                 // TODO: Unimplemented.
+                return null;
             case "undo":
                 // TODO: Unimplemented.
+                return null;
             case "redo":
                 // TODO: Unimplemented.
+                return null;
             case "service":
                 // TODO: Unimplemented.
+                return null;
             case "register":
                 return new RegisterVisitor(this.services,connection,arguments);
             case "arrive":
