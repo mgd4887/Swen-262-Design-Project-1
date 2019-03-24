@@ -69,6 +69,29 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Tests ending a connection.
+     */
+    @Test
+    public void test_disconnect() {
+        // Connect three clients.
+        this.assertRequest("connect;","connect,1;");
+        this.assertRequest("connect;","connect,2;");
+        this.assertRequest("connect;","connect,3;");
+
+        // Assert that disconnecting without a connection errors.
+        this.assertRequest("disconnect;","invalid-client-id;");
+
+        // Disconnect 2 clients.
+        this.assertRequest("1,disconnect;","1,disconnect;");
+        this.assertRequest("2,disconnect;","2,disconnect;");
+
+        // Connect 3 clients.
+        this.assertRequest("connect;","connect,1;");
+        this.assertRequest("connect;","connect,2;");
+        this.assertRequest("connect;","connect,4;");
+    }
+
+    /**
      * Tests registering visitors.
      */
     @Test

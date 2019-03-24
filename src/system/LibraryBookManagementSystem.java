@@ -1,11 +1,8 @@
 package system;
 
 import request.*;
-import request.connected.revertable.*;
-import request.connected.unrevertable.*;
 import response.Response;
-
-import java.util.HashMap;
+import user.connection.Connection;
 
 /**
  * Class representing the library book management system. This acts
@@ -67,11 +64,22 @@ public class LibraryBookManagementSystem {
             return "partial-request;";
         }
 
+        // Determine the connection.
+        Connection connection = null;
+        if (argumentParser.hasNext()) {
+            Integer clientId = argumentParser.getNextInteger();
+            if (clientId != null) {
+                connection = this.services.getClientConnections().getConnection(clientId);
+            } else {
+                argumentParser.resetPointer();
+            }
+        }
+
         // Create the request.
         if (!argumentParser.hasNext()) {
             return "partial-request;";
         }
-        Request requestObject = this.requestCreator.createRequest(argumentParser.getNextString(),null,argumentParser.cloneFromCurrentPointer());
+        Request requestObject = this.requestCreator.createRequest(argumentParser.getNextString(),connection,argumentParser.cloneFromCurrentPointer());
         if (requestObject == null) {
             return "invalid-request;";
         }

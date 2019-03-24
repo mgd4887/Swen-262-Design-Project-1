@@ -57,6 +57,13 @@ public abstract class Request {
     }
 
     /**
+     * Sends a blank response.
+     */
+    public Response sendResponse() {
+        return new Response(this.getName() + ";");
+    }
+
+    /**
      * Sends a general response.
      *
      * @param response the response message, ignoring the final semicolon.

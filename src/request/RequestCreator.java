@@ -37,6 +37,8 @@ public class RequestCreator {
         switch (name) {
             case "connect":
                 return new Connect(this.services,connection,arguments);
+            case "disconnect":
+                return new Disconnect(this.services,connection,arguments);
             case "create":
                 // TODO: Unimplemented.
                 return null;
