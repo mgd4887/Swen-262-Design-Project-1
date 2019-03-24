@@ -4,11 +4,12 @@ import books.Book;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class FindBorrowedBooks extends Request {
+public class FindBorrowedBooks extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -27,7 +28,7 @@ public class FindBorrowedBooks extends Request {
      * @param arguments the arguments to use.
      */
     public FindBorrowedBooks(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
     }
 
     /**
@@ -47,12 +48,7 @@ public class FindBorrowedBooks extends Request {
      */
     @Override
     public ArrayList<Parameter> getRequiredParameters() {
-        // Create the required parameters.
-        ArrayList<Parameter> requiredParameters = new ArrayList<>();
-        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
-
-        // Return the required parameters.
-        return requiredParameters;
+        return new ArrayList<>();
     }
 
     /**
@@ -64,14 +60,17 @@ public class FindBorrowedBooks extends Request {
     public Response handleRequest() {
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
-
-        // Get the visitor id.
-        String visitorId = arguments.getNextString();
+        Connection connection = this.getConnection();
 
         // Get the visitor.
-        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
-        if (visitor == null) {
-            return this.sendResponse("invalid-visitor-id");
+        Visitor visitor = connection.getUser().getVisitor();
+        if (arguments.hasNext()) {
+            String visitorId = arguments.getNextString();
+            visitor = services.getVisitorsRegistry().getVisitor(visitorId);
+
+            if (visitor == null) {
+                return this.sendResponse("invalid-visitor-id");
+            }
         }
 
         // Determine the amount of unreturned books.

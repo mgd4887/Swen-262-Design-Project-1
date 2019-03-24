@@ -51,6 +51,40 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Creates a connection and logs in root.
+     */
+    public void logInRoot() {
+        // Connect 1 client.
+        this.assertRequest("connect;","connect,1;");
+
+        // Log in as root.
+        this.assertRequest("1,login,root,password;","1,login,success;");
+    }
+
+    /**
+     * Sets up the preset accounts and connections.
+     */
+    public void createTestConnections() {
+        // Log in as root.
+        this.logInRoot();
+
+        // Create 2 visitors and accounts.
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,Jane,Doe,Test Address,1234567890;","1,register,0000000002,2019/01/01 08:00:00;");
+        this.assertRequest("1,create,JohnDoe,password123,employee,0000000001;","1,create,success;");
+        this.assertRequest("1,create,JaneDoe,password456,visitor,0000000002;","1,create,success;");
+
+        // Disconnect root.
+        this.assertRequest("1,disconnect;","1,disconnect;");
+
+        // Create 2 connections and log them in.
+        this.assertRequest("connect;","connect,1;");
+        this.assertRequest("connect;","connect,2;");
+        this.assertRequest("1,login,JohnDoe,password123;","1,login,success;");
+        this.assertRequest("2,login,JaneDoe,password456;","2,login,success;");
+    }
+
+    /**
      * Tests that partial requests will fail.
      */
     @Test
@@ -99,8 +133,8 @@ public class LibraryBookManagementSystemTest {
         // Connect a client, log in root, and register 2 visitors.
         this.assertRequest("connect;","connect,1;");
         this.assertRequest("1,login,root,password;","1,login,success;");
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,Jane,Doe,Test Address,1234567890;","1,register,0000000002,2019/01/01 08:00:00;");
 
         // Assert creating users with incorrect requests.
         this.assertRequest("create;","invalid-client-id;");
@@ -130,6 +164,8 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("login;","invalid-client-id;");
         this.assertRequest("1,login;","1,login,missing-parameters,{username,password};");
         this.assertRequest("1,login,root;","1,login,missing-parameters,{password};");
+        this.assertRequest("1,login,root,password123;","1,login,bad-username-or-password;");
+        this.assertRequest("1,login,foo,bar;","1,login,bad-username-or-password;");
 
         // Assert logging in as root.
         this.assertRequest("1,login,root,password;","1,login,success;");
@@ -185,22 +221,26 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_register() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("register;","register,missing-parameters,{first-name,last-name,address,phone-number};");
-        this.assertRequest("register,John;","register,missing-parameters,{last-name,address,phone-number};");
-        this.assertRequest("register,John,Doe;","register,missing-parameters,{address,phone-number};");
-        this.assertRequest("register,John,Doe,Test Address;","register,missing-parameters,{phone-number};");
+        this.assertRequest("register;","invalid-client-id;");
+        this.assertRequest("1,register;","1,register,missing-parameters,{first-name,last-name,address,phone-number};");
+        this.assertRequest("1,register,John;","1,register,missing-parameters,{last-name,address,phone-number};");
+        this.assertRequest("1,register,John,Doe;","1,register,missing-parameters,{address,phone-number};");
+        this.assertRequest("1,register,John,Doe,Test Address;","1,register,missing-parameters,{phone-number};");
 
         // Assert registering visitors.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
-        this.assertRequest("register,Jane,Doe,Test Address 2,1234567890;","register,0000000003,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,Jane,Doe,Test Address,1234567890;","1,register,0000000002,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,Jane,Doe,Test Address 2,1234567890;","1,register,0000000003,2019/01/01 08:00:00;");
         assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000001").getName(),"John Doe","Wrong visitor stored.");
         assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000002").getName(),"Jane Doe","Wrong visitor stored.");
         assertEquals(CuT.getServices().getVisitorsRegistry().getVisitor("0000000003").getName(),"Jane Doe","Wrong visitor stored.");
 
         // Assert an error for a duplicate visitor.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,duplicate;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,duplicate;");
         assertNull(CuT.getServices().getVisitorsRegistry().getVisitor("0000000004"),"Duplicate user stored.");
     }
 
@@ -209,28 +249,32 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_beginVisit() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("arrive;","arrive,missing-parameters,{visitor-id};");
+        this.assertRequest("arrive;","invalid-client-id;");
 
         // Assert an unregistered visitor.
-        this.assertRequest("arrive,0000000001;","arrive,invalid-id;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,invalid-id;");
 
         // Assert someone arriving when closed.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("advance,0,12;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/01,20:00:00;","Time not advanced.");
-        this.assertRequest("arrive,0000000001;","arrive,closed;");
-        this.assertRequest("advance,0,10;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/02,06:00:00;","Time not advanced.");
-        this.assertRequest("arrive,0000000001;","arrive,closed;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,advance,0,12;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/01,20:00:00;","Time not advanced.");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,closed;");
+        this.assertRequest("1,advance,0,10;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/02,06:00:00;","Time not advanced.");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,closed;");
 
         // Assert someone arriving when open.
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/02,08:00:00;","Time not advanced.");
-        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/02,08:00:00;");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/02,08:00:00;","Time not advanced.");
+        this.assertRequest("1,arrive;","1,arrive,0000000000,2019/01/02,08:00:00;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/02,08:00:00;");
 
         // Assert someone arriving when already arrived.
-        this.assertRequest("arrive,0000000001;","arrive,duplicate;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,duplicate;");
     }
 
     /**
@@ -238,23 +282,26 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_endVisit() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("depart;","depart,missing-parameters,{visitor-id};");
+        this.assertRequest("depart;","invalid-client-id;");
 
         // Assert an unregistered visitor.
-        this.assertRequest("depart,0000000001;","depart,invalid-id;");
+        this.assertRequest("1,depart,0000000001;","1,depart,invalid-id;");
 
         // Assert someone arriving.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/01,08:00:00;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
 
         // Assert someone departing when already arrived.
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/01,10:00:00;","Time not advanced.");
-        this.assertRequest("depart,0000000001;","depart,0000000001,10:00:00,02:00:00;");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/01,10:00:00;","Time not advanced.");
+        this.assertRequest("1,depart,0000000001;","1,depart,0000000001,10:00:00,02:00:00;");
 
         // Assert someone leaving when not arrived.
-        this.assertRequest("depart,0000000001;","depart,invalid-id;");
+        this.assertRequest("1,depart,0000000001;","1,depart,invalid-id;");
     }
 
     /**
@@ -262,53 +309,57 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_bookSearch() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("info;","info,missing-parameters,{title,{authors}};");
-        this.assertRequest("info,title;","info,missing-parameters,{{authors}};");
+        this.assertRequest("info;","invalid-client-id;");
+        this.assertRequest("1,info;","1,info,missing-parameters,{title,{authors}};");
+        this.assertRequest("1,info,title;","1,info,missing-parameters,{{authors}};");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Search using title.
-        this.assertRequest("info,Harry Potter,*;","info,3\n" +
+        this.assertRequest("1,info,Harry Potter,*;","1,info,3\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
                 "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,;");
 
         // Search using author.
-        this.assertRequest("info,*,{J.K. Rowling};","info,2\n" +
+        this.assertRequest("1,info,*,{J.K. Rowling};","1,info,2\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
 
         // Search using title and author.
-        this.assertRequest("info,Sorcerer's Stone,{J.K. Rowling};","info,1\n" +
+        this.assertRequest("1,info,Sorcerer's Stone,{J.K. Rowling};","1,info,1\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
 
         // Search using ISBN.
-        this.assertRequest("info,*,*,9780545387200;","info,1\n" +
+        this.assertRequest("1,info,*,*,9780545387200;","1,info,1\n" +
                 "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
 
         // Search using publisher.
-        this.assertRequest("info,*,*,*,Pottermore;","info,2\n" +
+        this.assertRequest("1,info,*,*,*,Pottermore;","1,info,2\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,;");
 
         // Searching with sorts.
-        this.assertRequest("info,*,*,*,*,title;","info,4\n" +
+        this.assertRequest("1,info,*,*,*,*,title;","1,info,4\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
                 "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
                 "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,;");
-        this.assertRequest("info,*,*,*,*,publish-date;","info,4\n" +
+        this.assertRequest("1,info,*,*,*,*,publish-date;","1,info,4\n" +
                 "3,11,9781781100486,\"Harry Potter and the Sorcerer's Stone\",{J.K. Rowling},2015/12/08,\n" +
                 "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
                 "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,;");
-        this.assertRequest("info,*,*,*,*,book-status;","info,4\n" +
+        this.assertRequest("1,info,*,*,*,*,book-status;","1,info,4\n" +
                 "6,12,9781338029994,\"Harry Potter Coloring Book\",{Inc. Scholastic},2015/11/10,\n" +
                 "3,17,9780545387200,\"The Hunger Games Trilogy\",{Suzanne Collins},2011/05/01,\n" +
                 "3,10,9781781100516,\"Harry Potter and the Prisoner of Azkaban\",{J.K. Rowling},1999/07/08,\n" +
@@ -320,42 +371,41 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_bookBorrow() {
-        // Assert missing parameters.
-        this.assertRequest("borrow;","borrow,missing-parameters,{visitor-id,{id}};");
-        this.assertRequest("borrow,0000000001;","borrow,missing-parameters,{{id}};");
+        // Create the test connections.
+        this.createTestConnections();
 
-        // Register a visitor.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+        // Assert missing parameters.
+        this.assertRequest("borrow;","invalid-client-id;");
+        this.assertRequest("1,borrow;","1,borrow,missing-parameters,{{id}};");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Assert various errors.
-        this.assertRequest("borrow,0000000003,{1};","borrow,invalid-visitor-id;");
-        this.assertRequest("borrow,0000000001,{1};","borrow,invalid-book-id;");
+        this.assertRequest("1,borrow,{1},0000000003;","1,borrow,invalid-visitor-id;");
+        this.assertRequest("1,borrow,{1},0000000001;","1,borrow,invalid-book-id;");
 
         // Borrow 5 books.
-        this.assertRequest("borrow,0000000001,{9,9};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{9};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{10};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{10};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9,9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,2019/01/08;");
 
         // Assert borrowing a 6th book fails.
-        this.assertRequest("borrow,0000000001,{10};","borrow,book-limit-exceeded;");
+        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,book-limit-exceeded;");
 
         // Test a book that is not available.
-        this.assertRequest("borrow,0000000002,{9};","borrow,book-limit-exceeded;");
+        this.assertRequest("1,borrow,{9},0000000002;","1,borrow,book-limit-exceeded;");
 
         // Test an outstanding balance.
-        this.assertRequest("borrow,0000000002,{10,16};","borrow,2019/01/08;");
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("borrow,0000000002,{11};","borrow,outstanding-fine,20;");
+        this.assertRequest("1,borrow,{10,16},0000000002;","1,borrow,2019/01/08;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,borrow,{11},0000000002;","1,borrow,outstanding-fine,20;");
     }
 
     /**
@@ -363,28 +413,31 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_findBorrowedBooks() {
-        // Assert missing parameters.
-        this.assertRequest("borrowed;","borrowed,missing-parameters,{visitor-id};");
+        // Create the test connections.
+        this.createTestConnections();
 
-        // Register a visitor.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        // Assert missing parameters.
+        this.assertRequest("borrowed;","invalid-client-id;");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
-        // Assert various errors.
-        this.assertRequest("borrow,0000000003,{1};","borrow,invalid-visitor-id;");
-
         // Borrow 5 books.
-        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
 
         // Assert the search.
-        this.assertRequest("borrowed,0000000001;","borrowed,5\n" +
+        this.assertRequest("1,borrowed,0000000001;","1,borrowed,5\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01\n" +
+                "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
+                "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01;");
+        this.assertRequest("1,borrowed;","1,borrowed,5\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01\n" +
@@ -397,30 +450,27 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_returnBooks() {
-        // Assert missing parameters.
-        this.assertRequest("return;","return,missing-parameters,{visitor-id,id};");
-        this.assertRequest("return,0000000001;","return,missing-parameters,{id};");
+        // Create the test connections.
+        this.createTestConnections();
 
-        // Register a visitor.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        // Assert missing parameters.
+        this.assertRequest("return;","invalid-client-id;");
+        this.assertRequest("1,return;","1,return,missing-parameters,{visitor-id,id};");
+        this.assertRequest("1,return,0000000001;","1,return,missing-parameters,{id};");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
-        // Assert various errors.
-        this.assertRequest("borrow,0000000003,1;","borrow,invalid-visitor-id;");
-        this.assertRequest("borrow,0000000001,1;","borrow,invalid-book-id;");
-
         // Borrow 5 books.
-        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
 
         // Assert the search.
-        this.assertRequest("borrowed,0000000001;","borrowed,5\n" +
+        this.assertRequest("1,borrowed;","1,borrowed,5\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01\n" +
@@ -428,23 +478,23 @@ public class LibraryBookManagementSystemTest {
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01;");
 
         // Return 3 books.
-        this.assertRequest("return,0000000001,9,9,10;","return,success;");
+        this.assertRequest("1,return,0000000001,9,9,10;","1,return,success;");
 
         // Assert the search.
-        this.assertRequest("borrowed,0000000001;","borrowed,2\n" +
+        this.assertRequest("1,borrowed,0000000001;","1,borrowed,2\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,2019/01/01\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,2019/01/01;");
 
         // Return a non-existent book.
-        this.assertRequest("return,0000000001,9,3,10;","return,invalid-book-id,3;");
+        this.assertRequest("1,return,0000000001,9,3,10;","1,return,invalid-book-id,3;");
 
         // Assert a book can be taken out.
-        this.assertRequest("borrow,0000000001,{9};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9};","1,borrow,2019/01/08;");
 
         // Assert a late fee.
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("return,0000000001,9,10;","return,overdue,20,9,10;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,return,0000000001,9,10;","1,return,overdue,20,9,10;");
     }
 
     /**
@@ -452,44 +502,44 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_payFines() {
-        // Assert missing parameters.
-        this.assertRequest("pay;","pay,missing-parameters,{visitor-id,amount};");
-        this.assertRequest("pay,0000000001;","pay,missing-parameters,{amount};");
+        // Create the test connections.
+        this.createTestConnections();
 
-        // Register a visitor.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
+        // Assert missing parameters.
+        this.assertRequest("pay;","invalid-client-id;");
+        this.assertRequest("1,pay;","1,pay,missing-parameters,{amount};");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Assert various errors.
-        this.assertRequest("pay,0000000003,1;","pay,invalid-visitor-id;");
+        this.assertRequest("1,pay,1,0000000003;","1,pay,invalid-visitor-id;");
 
         // Borrow 5 books.
-        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
 
         // Assert a late fee.
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("return,0000000001,9,9,9,10,10;","return,overdue,50,9,9,9,10,10;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,return,0000000001,9,9,9,10,10;","1,return,overdue,50,9,9,9,10,10;");
 
         // Assert failing to pay fees.
-        this.assertRequest("pay,0000000001,-5;","pay,invalid-amount,-5,50;");
-        this.assertRequest("pay,0000000001,60;","pay,invalid-amount,60,50;");
+        this.assertRequest("1,pay,-5;","1,pay,invalid-amount,-5,50;");
+        this.assertRequest("1,pay,60;","1,pay,invalid-amount,60,50;");
 
         // Assert paying partial fees.
-        this.assertRequest("pay,0000000001,10;","pay,success,40;");
-        this.assertRequest("pay,0000000001,15;","pay,success,25;");
-        this.assertRequest("pay,0000000001,25;","pay,success,0;");
+        this.assertRequest("1,pay,10,0000000001;","1,pay,success,40;");
+        this.assertRequest("1,pay,15;","1,pay,success,25;");
+        this.assertRequest("1,pay,25;","1,pay,success,0;");
 
         // Borrow 5 books.
-        this.assertRequest("borrow,0000000001,{9,9,10};","borrow,2019/01/20;");
-        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/20;");
+        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/20;");
+        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/20;");
     }
 
     /**
@@ -497,11 +547,15 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_searchBookStore() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("search;","search,missing-parameters,{title};");
+        this.assertRequest("search;","invalid-client-id;");
+        this.assertRequest("1,search;","1,search,missing-parameters,{title};");
 
         // Perform a search with only the title.
-        this.assertRequest("search,Harry Potter;","search,8\n" +
+        this.assertRequest("1,search,Harry Potter;","1,search,8\n" +
                 "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
                 "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
@@ -512,23 +566,23 @@ public class LibraryBookManagementSystemTest {
                 "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
 
         // Perform a search with the title and authors.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling};","search,3\n" +
+        this.assertRequest("1,search,Harry Potter,{J.K. Rowling};","1,search,3\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
 
         // Perform a search with the title, authors, and ISBN.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling},9781781107041;","search,1\n" +
+        this.assertRequest("1,search,Harry Potter,{J.K. Rowling},9781781107041;","1,search,1\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,;");
 
         // Perform a search with the title, authors, and publisher.
-        this.assertRequest("search,Harry Potter,{J.K. Rowling},*,Pottermore;","search,3\n" +
+        this.assertRequest("1,search,Harry Potter,{J.K. Rowling},*,Pottermore;","1,search,3\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
                 "10,9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,;");
 
         // Perform a search with only the title and search order.
-        this.assertRequest("search,Harry Potter,*,*,*,title;","search,8\n" +
+        this.assertRequest("1,search,Harry Potter,*,*,*,title;","1,search,8\n" +
                 "13,9781783296033,Harry Potter,{Jody Revenson},2015/09/25,\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
                 "9,9781408855713,Harry Potter and the Deathly Hallows,{J. K. Rowling},2014/01/01,\n" +
@@ -537,7 +591,7 @@ public class LibraryBookManagementSystemTest {
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
                 "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
                 "14,9780062101891,Harry Potter Page to Screen,{Bob McCabe},2011/10/25,;");
-        this.assertRequest("search,Harry Potter,*,*,*,publish-date;","search,8\n" +
+        this.assertRequest("1,search,Harry Potter,*,*,*,publish-date;","1,search,8\n" +
                 "16,9781781107041,Harry Potter and the Cursed Child – Parts One and Two (Special Rehearsal Edition),{J.K. Rowling, John Tiffany, Jack Thorne},2016/07/31,\n" +
                 "11,9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,\n" +
                 "12,9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,\n" +
@@ -553,12 +607,16 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_purchaseBook() {
+        // Log in root.
+        this.logInRoot();
+
         // Assert missing parameters.
-        this.assertRequest("buy;","buy,missing-parameters,{quantity,id};");
-        this.assertRequest("buy,3;","buy,missing-parameters,{id};");
+        this.assertRequest("buy;","invalid-client-id;");
+        this.assertRequest("1,buy;","1,buy,missing-parameters,{quantity,id};");
+        this.assertRequest("1,buy,3;","1,buy,missing-parameters,{id};");
 
         // Test a purchase.
-        this.assertRequest("buy,3,1,1,2,3,4;","buy,4\n" +
+        this.assertRequest("1,buy,3,1,1,2,3,4;","1,buy,4\n" +
                 "9780936070278,Galloway's Book on Running,{Jeff Galloway},2002/01/01,6,\n" +
                 "9781840894622,Running Shoes,{Frederick Lipp},2007/09/01,3,\n" +
                 "9780736045100,Fitness Running,{Richard L. Brown, Joe Henderson},2003/01/01,3,\n" +
@@ -570,63 +628,67 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_advanceTime() {
-        // Assert not giving a set of days.
-        this.assertRequest("advance;","advance,missing-parameters,{number-of-days};");
+        // Log in root.
+        this.logInRoot();
+
+        // Assert missing parameters.
+        this.assertRequest("advance;","invalid-client-id;");
+        this.assertRequest("1,advance;","1,advance,missing-parameters,{number-of-days};");
 
         // Assert advancing an incorrect amount days.
-        this.assertRequest("advance,-2;","advance,invalid-number-of-days,-2;");
-        this.assertRequest("advance,28;","advance,invalid-number-of-days,28;");
-        this.assertRequest("advance,test;","advance,days-not-a-number;");
-        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
+        this.assertRequest("1,advance,-2;","1,advance,invalid-number-of-days,-2;");
+        this.assertRequest("1,advance,28;","1,advance,invalid-number-of-days,28;");
+        this.assertRequest("1,advance,test;","1,advance,days-not-a-number;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/01,08:00:00;","Time mutated.");
 
         // Assert advancing an incorrect amount of hours.
-        this.assertRequest("advance,0,-2;","advance,invalid-number-of-hours,-2;");
-        this.assertRequest("advance,0,28;","advance,invalid-number-of-hours,28;");
-        this.assertRequest("advance,0,test;","advance,hours-not-a-number;");
-        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Time mutated.");
+        this.assertRequest("1,advance,0,-2;","1,advance,invalid-number-of-hours,-2;");
+        this.assertRequest("1,advance,0,28;","1,advance,invalid-number-of-hours,28;");
+        this.assertRequest("1,advance,0,test;","1,advance,hours-not-a-number;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/01,08:00:00;","Time mutated.");
 
         // Assert advancing into the next day.
-        this.assertRequest("advance,1;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/02,08:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,1;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/02,08:00:00;","Time not advanced.");
 
         // Assert advancing only days.
-        this.assertRequest("advance,2,0;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/04,08:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,2,0;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/04,08:00:00;","Time not advanced.");
 
         // Assert advancing only hours.
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/04,10:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/04,10:00:00;","Time not advanced.");
 
         // Assert advancing both.
-        this.assertRequest("advance,2,2;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/06,12:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,2,2;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/06,12:00:00;","Time not advanced.");
 
         // Assert advancing into the next day only using hours.
-        this.assertRequest("advance,0,20;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/07,08:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,0,20;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/07,08:00:00;","Time not advanced.");
 
         // Test a visitor having his visit ended by the time being past 19:00.
         Visitor visitor = CuT.getServices().getVisitorsRegistry().registerVisitor(new Name("John","Doe"),"Test Address","1234567890");
         Visit visit = CuT.getServices().getVisitHistory().addVisit(visitor,CuT.getServices().getClock().getDate());
 
         // Assert the visit has not ended.
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/07,10:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/07,10:00:00;","Time not advanced.");
         assertFalse(visit.hasEnded(),"Visit ended.");
 
         // Finish the visit
-        this.assertRequest("advance,0,10;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/07,20:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,0,10;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/07,20:00:00;","Time not advanced.");
         assertTrue(visit.hasEnded(),"Visit not ended.");
 
         // Reset the time to the next day.
-        this.assertRequest("advance,0,12;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/08,08:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,0,12;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/08,08:00:00;","Time not advanced.");
 
         // Test a visitor having his visit ended by the time being set to the next day.
         visit = CuT.getServices().getVisitHistory().addVisit(visitor,CuT.getServices().getClock().getDate());
-        this.assertRequest("advance,1,0;","advance,success;");
-        this.assertRequest("datetime;","datetime,2019/01/09,08:00:00;","Time not advanced.");
+        this.assertRequest("1,advance,1,0;","1,advance,success;");
+        this.assertRequest("1,datetime;","1,datetime,2019/01/09,08:00:00;","Time not advanced.");
         assertTrue(visit.hasEnded(),"Visit not ended.");
     }
 
@@ -635,7 +697,14 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_currentDateAndTime() {
-        this.assertRequest("datetime;","datetime,2019/01/01,08:00:00;","Initial time is incorrect.");
+        // Log in root.
+        this.logInRoot();
+
+        // Assert missing parameters.
+        this.assertRequest("datetime;","invalid-client-id;");
+
+        // Assert the initial time.
+        this.assertRequest("1,datetime;","1,datetime,2019/01/01,08:00:00;","Initial time is incorrect.");
     }
 
     /**
@@ -643,15 +712,21 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_libraryStatistics() {
+        // Log in root.
+        this.logInRoot();
+
+        // Assert missing parameters.
+        this.assertRequest("report;","invalid-client-id;");
+
         // Assert the base stats.
-        this.assertRequest("report;","report,2019/01/01,"
+        this.assertRequest("1,report;","1,report,2019/01/01,"
             + "\n Number of Books: 0"
             + "\n Number of Visitors: 0"
             + "\n Average Length of Visit: 00:00:00"
             + "\n Number of Books Purchased: 0"
             + "\n Fines Collected: 0"
             + "\n Fines Outstanding: 0\n;");
-        this.assertRequest("report,1;","report,2019/01/01,"
+        this.assertRequest("1,report,1;","1,report,2019/01/01,"
             + "\n Number of Books: 0"
             + "\n Number of Visitors: 0"
             + "\n Average Length of Visit: 00:00:00"
@@ -660,31 +735,31 @@ public class LibraryBookManagementSystemTest {
             + "\n Fines Outstanding: 0\n;");
 
         // Register 2 visitors.
-        this.assertRequest("register,John,Doe,Test Address,1234567890;","register,0000000001,2019/01/01 08:00:00;");
-        this.assertRequest("register,Jane,Doe,Test Address,1234567890;","register,0000000002,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,John,Doe,Test Address,1234567890;","1,register,0000000001,2019/01/01 08:00:00;");
+        this.assertRequest("1,register,Jane,Doe,Test Address,1234567890;","1,register,0000000002,2019/01/01 08:00:00;");
 
         // Assert two people arriving.
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/01,10:00:00;");
-        this.assertRequest("arrive,0000000002;","arrive,0000000002,2019/01/01,10:00:00;");
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("depart,0000000001;","depart,0000000001,12:00:00,02:00:00;");
-        this.assertRequest("advance,0,2;","advance,success;");
-        this.assertRequest("depart,0000000002;","depart,0000000002,14:00:00,04:00:00;");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,10:00:00;");
+        this.assertRequest("1,arrive,0000000002;","1,arrive,0000000002,2019/01/01,10:00:00;");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,depart,0000000001;","1,depart,0000000001,12:00:00,02:00:00;");
+        this.assertRequest("1,advance,0,2;","1,advance,success;");
+        this.assertRequest("1,depart,0000000002;","1,depart,0000000002,14:00:00,04:00:00;");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Borrow some books.
-        this.assertRequest("borrow,0000000001,{10,9};","borrow,2019/01/08;");
-        this.assertRequest("borrow,0000000002,{9};","borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,9},0000000001;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{9},0000000002;","1,borrow,2019/01/08;");
 
         // Assert the stats.
-        this.assertRequest("report;","report,2019/01/01,"
+        this.assertRequest("1,report;","1,report,2019/01/01,"
                 + "\n Number of Books: 15"
                 + "\n Number of Visitors: 2"
                 + "\n Average Length of Visit: 03:00:00"
@@ -693,37 +768,37 @@ public class LibraryBookManagementSystemTest {
                 + "\n Fines Outstanding: 0\n;");
 
         // Assert advance to create late fees.
-        this.assertRequest("advance,6,0;","advance,success;");
-        this.assertRequest("advance,6,0;","advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
 
         // Purchase some books.
-        this.assertRequest("buy,3,16,9,10,11,11;","buy,4\n" +
+        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Assert two people arriving.
-        this.assertRequest("arrive,0000000001;","arrive,0000000001,2019/01/13,14:00:00;");
-        this.assertRequest("arrive,0000000002;","arrive,0000000002,2019/01/13,14:00:00;");
-        this.assertRequest("advance,0,1;","advance,success;");
-        this.assertRequest("depart,0000000001;","depart,0000000001,15:00:00,01:00:00;");
-        this.assertRequest("advance,0,1;","advance,success;");
-        this.assertRequest("depart,0000000002;","depart,0000000002,16:00:00,02:00:00;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/13,14:00:00;");
+        this.assertRequest("1,arrive,0000000002;","1,arrive,0000000002,2019/01/13,14:00:00;");
+        this.assertRequest("1,advance,0,1;","1,advance,success;");
+        this.assertRequest("1,depart,0000000001;","1,depart,0000000001,15:00:00,01:00:00;");
+        this.assertRequest("1,advance,0,1;","1,advance,success;");
+        this.assertRequest("1,depart,0000000002;","1,depart,0000000002,16:00:00,02:00:00;");
 
         // Pay the part of the late fees.
-        this.assertRequest("pay,0000000001,10;","pay,success,10;");
-        this.assertRequest("pay,0000000002,5;","pay,success,5;");
+        this.assertRequest("1,pay,10,0000000001;","1,pay,success,10;");
+        this.assertRequest("1,pay,5,0000000002;","1,pay,success,5;");
 
         // Assert the stats.
-        this.assertRequest("report;","report,2019/01/13,"
+        this.assertRequest("1,report;","1,report,2019/01/13,"
                 + "\n Number of Books: 30"
                 + "\n Number of Visitors: 2"
                 + "\n Average Length of Visit: 02:15:00"
                 + "\n Number of Books Purchased: 30"
                 + "\n Fines Collected: 15"
                 + "\n Fines Outstanding: 15\n;");
-        this.assertRequest("report,8;","report,2019/01/13,"
+        this.assertRequest("1,report,8;","1,report,2019/01/13,"
                 + "\n Number of Books: 30"
                 + "\n Number of Visitors: 2"
                 + "\n Average Length of Visit: 01:30:00"

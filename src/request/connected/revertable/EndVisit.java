@@ -2,13 +2,14 @@ package request.connected.revertable;
 
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 import user.visit.Visit;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class EndVisit extends Request {
+public class EndVisit extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -28,7 +29,7 @@ public class EndVisit extends Request {
      * @param arguments the arguments to use.
      */
     public EndVisit(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.VISITOR);
     }
 
     /**
@@ -65,14 +66,17 @@ public class EndVisit extends Request {
     public Response handleRequest() {
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
+        Connection connection = this.getConnection();
 
-        // Get the id.
-        String visitorId = arguments.getNextString();
+        // Get the visitor.
+        Visitor visitor = connection.getUser().getVisitor();
+        if (arguments.hasNext()) {
+            String visitorId = arguments.getNextString();
+            visitor = services.getVisitorsRegistry().getVisitor(visitorId);
 
-        // Return an error if the id isn't registered.
-        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
-        if (visitor == null) {
-            return this.sendResponse("invalid-id");
+            if (visitor == null) {
+                return this.sendResponse("invalid-id");
+            }
         }
 
         // Get the current time.
@@ -102,6 +106,6 @@ public class EndVisit extends Request {
         }
 
         // Return the response.
-        return this.sendResponse(visitorId + "," + formattedTime + "," + formattedHours + ":" + formattedMinutes + ":" + formattedSeconds);
+        return this.sendResponse(visitor.getId() + "," + formattedTime + "," + formattedHours + ":" + formattedMinutes + ":" + formattedSeconds);
     }
 }

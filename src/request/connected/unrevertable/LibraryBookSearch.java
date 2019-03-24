@@ -5,10 +5,11 @@ import books.Book;
 import books.Books;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class LibraryBookSearch extends Request {
+public class LibraryBookSearch extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -28,7 +29,7 @@ public class LibraryBookSearch extends Request {
      * @param arguments the arguments to use.
      */
     public LibraryBookSearch(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.VISITOR);
     }
 
     /**

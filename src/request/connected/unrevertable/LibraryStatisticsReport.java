@@ -5,13 +5,14 @@ import books.purchases.PurchaseLog;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import time.Date;
 import time.Time;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 import user.visit.Visit;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class LibraryStatisticsReport extends Request {
+public class LibraryStatisticsReport extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -31,7 +32,7 @@ public class LibraryStatisticsReport extends Request {
      * @param arguments the arguments to use.
      */
     public LibraryStatisticsReport(Services services, Connection connection, Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
     }
 
     /**

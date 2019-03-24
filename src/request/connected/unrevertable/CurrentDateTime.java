@@ -2,12 +2,13 @@ package request.connected.unrevertable;
 
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class CurrentDateTime extends Request {
+public class CurrentDateTime extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -26,7 +27,7 @@ public class CurrentDateTime extends Request {
      * @param arguments the arguments to use.
      */
     public CurrentDateTime(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
     }
 
     /**

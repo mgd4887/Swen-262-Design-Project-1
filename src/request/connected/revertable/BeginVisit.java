@@ -3,13 +3,14 @@ package request.connected.revertable;
 
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BeginVisit extends Request {
+public class BeginVisit extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -28,7 +29,7 @@ public class BeginVisit extends Request {
      * @param arguments the arguments to use.
      */
     public BeginVisit(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.VISITOR);
     }
 
     /**
@@ -48,12 +49,7 @@ public class BeginVisit extends Request {
      */
     @Override
     public ArrayList<Parameter> getRequiredParameters() {
-        // Create the required parameters.
-        ArrayList<Parameter> requiredParameters = new ArrayList<>();
-        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
-
-        // Return the required parameters.
-        return requiredParameters;
+        return new ArrayList<>();
     }
 
     /**
@@ -65,14 +61,17 @@ public class BeginVisit extends Request {
     public Response handleRequest() {
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
+        Connection connection = this.getConnection();
 
-        // Get the id.
-        String visitorId = arguments.getNextString();
+        // Get the visitor.
+        Visitor visitor = connection.getUser().getVisitor();
+        if (arguments.hasNext()) {
+            String visitorId = arguments.getNextString();
+            visitor = services.getVisitorsRegistry().getVisitor(visitorId);
 
-        // Return an error if the id isn't registered.
-        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
-        if (visitor == null) {
-            return this.sendResponse("invalid-id");
+            if (visitor == null) {
+                return this.sendResponse("invalid-id");
+            }
         }
 
         // Get the current time.
@@ -93,6 +92,6 @@ public class BeginVisit extends Request {
 
         // Create the visit.
         services.getVisitHistory().addVisit(visitor,date);
-        return this.sendResponse(visitorId + "," + formattedDate + "," + formattedTime);
+        return this.sendResponse(visitor.getId() + "," + formattedDate + "," + formattedTime);
     }
 }

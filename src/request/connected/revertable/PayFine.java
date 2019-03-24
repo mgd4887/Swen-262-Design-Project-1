@@ -3,12 +3,13 @@ package request.connected.revertable;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import time.Date;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class PayFine extends Request {
+public class PayFine extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -27,7 +28,7 @@ public class PayFine extends Request {
      * @param arguments the arguments to use.
      */
     public PayFine(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
     }
 
     /**
@@ -49,7 +50,6 @@ public class PayFine extends Request {
     public ArrayList<Parameter> getRequiredParameters() {
         // Create the required parameters.
         ArrayList<Parameter> requiredParameters = new ArrayList<>();
-        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
         requiredParameters.add(new Parameter("amount",Parameter.ParameterType.INTEGER));
 
         // Return the required parameters.
@@ -65,18 +65,23 @@ public class PayFine extends Request {
     public Response handleRequest() {
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
+        Connection connection = this.getConnection();
 
         // Get the visitor id and amount to pay.
-        String visitorId = arguments.getNextString();
         Integer amountToPay = arguments.getNextInteger();
         if (amountToPay == null) {
             return this.sendResponse("amount-not-a-number");
         }
 
         // Get the visitor.
-        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
-        if (visitor == null) {
-            return this.sendResponse("invalid-visitor-id");
+        Visitor visitor = connection.getUser().getVisitor();
+        if (arguments.hasNext()) {
+            String visitorId = arguments.getNextString();
+            visitor = services.getVisitorsRegistry().getVisitor(visitorId);
+
+            if (visitor == null) {
+                return this.sendResponse("invalid-visitor-id");
+            }
         }
 
         // Get the current date and due date.

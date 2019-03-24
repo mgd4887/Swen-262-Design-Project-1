@@ -4,11 +4,12 @@ import books.Author;
 import books.Book;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import time.Date;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.HashMap;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BookPurchase extends Request {
+public class BookPurchase extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -28,7 +29,7 @@ public class BookPurchase extends Request {
      * @param arguments the arguments to use.
      */
     public BookPurchase(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
     }
 
     /**

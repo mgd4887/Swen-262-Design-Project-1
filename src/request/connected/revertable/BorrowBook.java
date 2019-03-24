@@ -5,12 +5,13 @@ import books.Books;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
-import request.Request;
+import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
 import time.Date;
 import user.Visitor;
 import user.connection.Connection;
+import user.connection.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.HashMap;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BorrowBook extends Request {
+public class BorrowBook extends AccountRequest {
     /**
      * Creates a request.
      *
@@ -30,7 +31,7 @@ public class BorrowBook extends Request {
      * @param arguments the arguments to use.
      */
     public BorrowBook(Services services,Connection connection,Arguments arguments) {
-        super(services,connection,arguments);
+        super(services,connection,arguments,User.PermissionLevel.VISITOR);
     }
 
     /**
@@ -52,7 +53,6 @@ public class BorrowBook extends Request {
     public ArrayList<Parameter> getRequiredParameters() {
         // Create the required parameters.
         ArrayList<Parameter> requiredParameters = new ArrayList<>();
-        requiredParameters.add(new Parameter("visitor-id",Parameter.ParameterType.STRING));
         requiredParameters.add(new Parameter("{id}",Parameter.ParameterType.LIST_OF_INTEGERS));
 
         // Return the required parameters.
@@ -69,9 +69,7 @@ public class BorrowBook extends Request {
     public Response handleRequest() {
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
-
-        // Get the visitor id.
-        String visitorId = arguments.getNextString();
+        Connection connection = this.getConnection();
 
         // Get the ids.
         HashMap<Integer,Integer> amountToBorrow = new HashMap<>();
@@ -91,9 +89,14 @@ public class BorrowBook extends Request {
         }
 
         // Get the visitor.
-        Visitor visitor = services.getVisitorsRegistry().getVisitor(visitorId);
-        if (visitor == null) {
-            return this.sendResponse("invalid-visitor-id");
+        Visitor visitor = connection.getUser().getVisitor();
+        if (arguments.hasNext()) {
+            String visitorId = arguments.getNextString();
+            visitor = services.getVisitorsRegistry().getVisitor(visitorId);
+
+            if (visitor == null) {
+                return this.sendResponse("invalid-visitor-id");
+            }
         }
 
         // Get the current date and due date.
