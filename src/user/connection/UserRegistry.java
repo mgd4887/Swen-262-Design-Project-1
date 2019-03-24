@@ -10,13 +10,15 @@ import java.util.HashMap;
  * @author Zachary Cook
  */
 public class UserRegistry {
-    HashMap<String,User> users;
+    HashMap<String,User> usersByName;
+    HashMap<Visitor,User> usersByVisitor;
 
     /**
      * Creates the user registry.
      */
     public UserRegistry() {
-        this.users = new HashMap<>();
+        this.usersByName = new HashMap<>();
+        this.usersByVisitor = new HashMap<>();
     }
 
     /**
@@ -34,7 +36,9 @@ public class UserRegistry {
         }
 
         // Add the user.
-        this.users.put(username,new User(username,password,permissionLevel,visitor));
+        User user = new User(username,password,permissionLevel,visitor);
+        this.usersByName.put(username,user);
+        this.usersByVisitor.put(visitor,user);
     }
 
     /**
@@ -44,7 +48,17 @@ public class UserRegistry {
      * @return the user with the username.
      */
     public User getUser(String username) {
-        return this.users.get(username);
+        return this.usersByName.get(username);
+    }
+
+    /**
+     * Returns the user for the given visitor.
+     *
+     * @param visitor the visitor to check for.
+     * @return the user with the visitor.
+     */
+    public User getUser(Visitor visitor) {
+        return this.usersByVisitor.get(visitor);
     }
 
     /**

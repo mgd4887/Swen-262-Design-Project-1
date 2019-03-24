@@ -40,8 +40,7 @@ public class RequestCreator {
             case "disconnect":
                 return new Disconnect(this.services,connection,arguments);
             case "create":
-                // TODO: Unimplemented.
-                return null;
+                return new CreateUser(this.services,connection,arguments);
             case "login":
                 return new LogIn(this.services,connection,arguments);
             case "logout":
