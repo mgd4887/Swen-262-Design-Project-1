@@ -197,7 +197,21 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_undo() {
-        // TODO: Implement
+        // Create the test connections.
+        this.createTestConnections();
+
+        // Assert missing parameters.
+        this.assertRequest("undo;","invalid-client-id;");
+        this.assertRequest("1,undo;","1,undo,cannot-undo;");
+
+        // Begin a visit.
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
+
+        // Undo the request.
+        this.assertRequest("1,undo;","1,undo,success;");
+
+        // Begin the visit again.
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
     }
 
     /**
@@ -205,7 +219,38 @@ public class LibraryBookManagementSystemTest {
      */
     @Test
     public void test_redo() {
-        // TODO: Implement
+        // Create the test connections.
+        this.createTestConnections();
+
+        // Assert missing parameters.
+        this.assertRequest("redo;","invalid-client-id;");
+        this.assertRequest("1,redo;","1,redo,cannot-redo;");
+
+        // Begin and end a visit.
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
+        this.assertRequest("1,depart,0000000001;","1,depart,0000000001,08:00:00,00:00:00;");
+
+        // Undo the request twice.
+        this.assertRequest("1,undo;","1,undo,success;");
+        this.assertRequest("1,undo;","1,undo,success;");
+
+        // Begin the visit again.
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
+
+        // Undo and redo the request.
+        this.assertRequest("1,undo;","1,undo,success;");
+        this.assertRequest("1,redo;","1,redo,success;");
+
+        // End the visit.
+        this.assertRequest("1,depart,0000000001;","1,depart,0000000001,08:00:00,00:00:00;");
+
+        // Undo the request twice and begin a visit.
+        this.assertRequest("1,undo;","1,undo,success;");
+        this.assertRequest("1,undo;","1,undo,success;");
+        this.assertRequest("1,arrive,0000000001;","1,arrive,0000000001,2019/01/01,08:00:00;");
+
+        // Assert nothing can be redone.
+        this.assertRequest("1,redo;","1,redo,cannot-redo;");
     }
 
     /**
@@ -345,7 +390,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,info,title;","1,info,missing-parameters,{{authors}};");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
@@ -406,7 +451,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,borrow;","1,borrow,missing-parameters,{{id}};");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
@@ -417,22 +462,22 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,borrow,{1},0000000001;","1,borrow,invalid-book-id;");
 
         // Borrow 5 books.
-        this.assertRequest("1,borrow,{9,9};","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{9};","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,10};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11},0000000001;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11},0000000001;","1,borrow,2019/01/08;");
 
         // Assert borrowing a 6th book fails.
-        this.assertRequest("1,borrow,{10},0000000001;","1,borrow,book-limit-exceeded;");
+        this.assertRequest("1,borrow,{11},0000000001;","1,borrow,book-limit-exceeded;");
 
         // Test a book that is not available.
-        this.assertRequest("1,borrow,{9},0000000002;","1,borrow,book-limit-exceeded;");
+        this.assertRequest("1,borrow,{10},0000000002;","1,borrow,book-limit-exceeded;");
 
         // Test an outstanding balance.
-        this.assertRequest("1,borrow,{10,16},0000000002;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,17},0000000002;","1,borrow,2019/01/08;");
         this.assertRequest("1,advance,6,0;","1,advance,success;");
         this.assertRequest("1,advance,6,0;","1,advance,success;");
-        this.assertRequest("1,borrow,{11},0000000002;","1,borrow,outstanding-fine,20;");
+        this.assertRequest("1,borrow,{12},0000000002;","1,borrow,outstanding-fine,20;");
     }
 
     /**
@@ -447,15 +492,15 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("borrowed;","invalid-client-id;");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Borrow 5 books.
-        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/08;");
 
         // Assert the search.
         this.assertRequest("1,borrowed,0000000001;","1,borrowed,5\n" +
@@ -486,15 +531,15 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,return,0000000001;","1,return,missing-parameters,{id};");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Borrow 5 books.
-        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/08;");
 
         // Assert the search.
         this.assertRequest("1,borrowed;","1,borrowed,5\n" +
@@ -516,7 +561,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,return,0000000001,9,3,10;","1,return,invalid-book-id,3;");
 
         // Assert a book can be taken out.
-        this.assertRequest("1,borrow,{9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10};","1,borrow,2019/01/08;");
 
         // Assert a late fee.
         this.assertRequest("1,advance,6,0;","1,advance,success;");
@@ -537,7 +582,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,pay;","1,pay,missing-parameters,{amount};");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
@@ -547,8 +592,8 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,pay,1,0000000003;","1,pay,invalid-visitor-id;");
 
         // Borrow 5 books.
-        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/08;");
 
         // Assert a late fee.
         this.assertRequest("1,advance,6,0;","1,advance,success;");
@@ -565,8 +610,8 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,pay,25;","1,pay,success,0;");
 
         // Borrow 5 books.
-        this.assertRequest("1,borrow,{9,9,10};","1,borrow,2019/01/20;");
-        this.assertRequest("1,borrow,{10,9};","1,borrow,2019/01/20;");
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/20;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/20;");
     }
 
     /**
@@ -643,7 +688,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,buy,3;","1,buy,missing-parameters,{id};");
 
         // Test a purchase.
-        this.assertRequest("1,buy,3,1,1,2,3,4;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,2,2,3,4,5;","1,buy,4\n" +
                 "9780936070278,Galloway's Book on Running,{Jeff Galloway},2002/01/01,6,\n" +
                 "9781840894622,Running Shoes,{Frederick Lipp},2007/09/01,3,\n" +
                 "9780736045100,Fitness Running,{Richard L. Brown, Joe Henderson},2003/01/01,3,\n" +
@@ -775,15 +820,15 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,depart,0000000002;","1,depart,0000000002,14:00:00,04:00:00;");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
                 "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
 
         // Borrow some books.
-        this.assertRequest("1,borrow,{10,9},0000000001;","1,borrow,2019/01/08;");
-        this.assertRequest("1,borrow,{9},0000000002;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10},0000000001;","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{10},0000000002;","1,borrow,2019/01/08;");
 
         // Assert the stats.
         this.assertRequest("1,report;","1,report,2019/01/01,"
@@ -799,7 +844,7 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,advance,6,0;","1,advance,success;");
 
         // Purchase some books.
-        this.assertRequest("1,buy,3,16,9,10,11,11;","1,buy,4\n" +
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
                 "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
                 "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
                 "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +

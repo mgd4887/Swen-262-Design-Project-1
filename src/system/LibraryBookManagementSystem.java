@@ -85,7 +85,7 @@ public class LibraryBookManagementSystem {
         }
 
         // Store the request if a connection exists.
-        if (connection != null) {
+        if (connection != null && !requestObject.getName().equals("undo") && !requestObject.getName().equals("redo")) {
             connection.addCompletedRequest(requestObject);
         }
 

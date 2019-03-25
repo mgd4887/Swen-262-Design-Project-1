@@ -69,7 +69,7 @@ public class VisitHistory implements Serializable {
      * @param visitor the visitor who is visiting.
      * @param visitDate the date of the visit, includes start time.
      */
-    public Visit addVisit(Visitor visitor, Date visitDate){
+    public Visit addVisit(Visitor visitor,Date visitDate){
         // Create the visit.
         this.visitId = this.finishedVisits.size() + this.unfinishedVisits.size();
         Visit visit = new Visit(visitId, visitor, visitDate);
@@ -77,6 +77,28 @@ public class VisitHistory implements Serializable {
         // Register the visit as unfinished and return the visit.
         this.unfinishedVisits.add(visit);
         return visit;
+    }
+
+    /**
+     * Undoes adding a visitor.
+     *
+     * @param visitor the visitor to remove the visit for.
+     */
+    public void undoAddVisit(Visitor visitor) {
+        // Get the index to remove.
+        int indexToRemove = -1;
+        for (int i = 0; i < this.unfinishedVisits.size(); i++) {
+            Visit visit = this.unfinishedVisits.get(i);
+            if (visit.getVisitor() == visitor) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        // Remove the last index.
+        if (indexToRemove != -1) {
+            this.unfinishedVisits.remove(indexToRemove);
+        }
     }
 
     /**
@@ -106,6 +128,29 @@ public class VisitHistory implements Serializable {
 
         // Return null (no visit).
         return visitToRemove;
+    }
+
+    /**
+     * Undoes finishing a visitor.
+     *
+     * @param visitor the visitor to remove the visit for.
+     */
+    public void undoFinishVisit(Visitor visitor) {
+        // Get the index to remove.
+        int indexToRemove = -1;
+        for (int i = 0; i < this.finishedVisits.size(); i++) {
+            Visit visit = this.finishedVisits.get(i);
+            if (visit.getVisitor() == visitor) {
+                indexToRemove = i;
+            }
+        }
+
+        // Remove the last index.
+        if (indexToRemove != -1) {
+            Visit visit = this.finishedVisits.remove(indexToRemove);
+            visit.undoEndVisit();
+            this.unfinishedVisits.add(visit);
+        }
     }
 
     /**

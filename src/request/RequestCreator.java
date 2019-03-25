@@ -46,11 +46,9 @@ public class RequestCreator {
             case "logout":
                 return new LogOut(this.services,connection,arguments);
             case "undo":
-                // TODO: Unimplemented.
-                return null;
+                return new Undo(this.services,connection,arguments);
             case "redo":
-                // TODO: Unimplemented.
-                return null;
+                return new Redo(this.services,connection,arguments);
             case "service":
                 return new BookStoreService(this.services,connection,arguments);
             case "register":

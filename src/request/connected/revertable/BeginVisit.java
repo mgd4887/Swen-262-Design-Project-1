@@ -3,6 +3,7 @@ package request.connected.revertable;
 
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Clock;
@@ -20,7 +21,12 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BeginVisit extends AccountRequest {
+public class BeginVisit extends AccountRequest implements Waypoint {
+    private Date currentDate;
+    private boolean currentlyClosed;
+    private boolean wasCompleted;
+    private Visitor visitorPerformedOn;
+
     /**
      * Creates a request.
      *
@@ -30,6 +36,12 @@ public class BeginVisit extends AccountRequest {
      */
     public BeginVisit(Services services,Connection connection,Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.VISITOR);
+        this.wasCompleted = false;
+
+        // Get the current date info.
+        Clock clock = services.getClock();
+        this.currentDate = clock.getDate();
+        this.currentlyClosed = (clock.getTimeState() == Clock.TimeState.CLOSED);
     }
 
     /**
@@ -59,6 +71,7 @@ public class BeginVisit extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = false;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
         Connection connection = this.getConnection();
@@ -75,13 +88,11 @@ public class BeginVisit extends AccountRequest {
         }
 
         // Get the current time.
-        Clock clock = services.getClock();
-        Date date = clock.getDate();
-        String formattedDate = date.formatDate();
-        String formattedTime = date.formatTime();
+        String formattedDate = this.currentDate.formatDate();
+        String formattedTime = this.currentDate.formatTime();
 
         // Return an error if the library is closed.
-        if (clock.getTimeState() == Clock.TimeState.CLOSED) {
+        if (this.currentlyClosed) {
             return this.sendResponse("closed");
         }
 
@@ -91,7 +102,43 @@ public class BeginVisit extends AccountRequest {
         }
 
         // Create the visit.
-        services.getVisitHistory().addVisit(visitor,date);
+        services.getVisitHistory().addVisit(visitor,this.currentDate);
+        this.wasCompleted = true;
+        this.visitorPerformedOn = visitor;
         return this.sendResponse(visitor.getId() + "," + formattedDate + "," + formattedTime);
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        Services services = this.getServices();
+
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Undo the visit.
+        services.getVisitHistory().undoAddVisit(this.visitorPerformedOn);
+        this.wasCompleted = false;
+
+        // Return true (success).
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }

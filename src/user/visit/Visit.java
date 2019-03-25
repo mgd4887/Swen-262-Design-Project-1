@@ -101,6 +101,13 @@ public class Visit implements Serializable {
     }
 
     /**
+     * Undoes ending the visit.
+     */
+    public void undoEndVisit() {
+        this.timeOfDeparture = null;
+    }
+
+    /**
      * Returns a string representation of the object.
      *
      * @return a string representation of the object.

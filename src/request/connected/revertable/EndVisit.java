@@ -2,6 +2,7 @@ package request.connected.revertable;
 
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Clock;
@@ -20,7 +21,10 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class EndVisit extends AccountRequest {
+public class EndVisit extends AccountRequest implements Waypoint {
+    private boolean wasCompleted;
+    private Visitor visitorPerformedOn;
+
     /**
      * Creates a request.
      *
@@ -30,6 +34,7 @@ public class EndVisit extends AccountRequest {
      */
     public EndVisit(Services services,Connection connection,Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.VISITOR);
+        this.wasCompleted = false;
     }
 
     /**
@@ -64,6 +69,7 @@ public class EndVisit extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = false;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
         Connection connection = this.getConnection();
@@ -106,6 +112,42 @@ public class EndVisit extends AccountRequest {
         }
 
         // Return the response.
+        this.wasCompleted = true;
+        this.visitorPerformedOn = visitor;
         return this.sendResponse(visitor.getId() + "," + formattedTime + "," + formattedHours + ":" + formattedMinutes + ":" + formattedSeconds);
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        Services services = this.getServices();
+
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Undo the visit.
+        services.getVisitHistory().undoFinishVisit(this.visitorPerformedOn);
+        this.wasCompleted = false;
+
+        // Return true (success).
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }
