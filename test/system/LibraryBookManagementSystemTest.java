@@ -221,8 +221,14 @@ public class LibraryBookManagementSystemTest {
         this.assertRequest("1,service;","1,service,missing-parameters,{info-service};");
         this.assertRequest("1,service,fake-service;","1,service,invalid-service;");
 
-        // Set the service to Google.
+        // Set the service to Google and search twice to make sure ids are constant.
         this.assertRequest("1,service,google;","1,service,success;");
+        this.assertRequest("1,search,C,Dennis Ritchie,*,*,title;","1,search,2\n" +
+                "516,9780133086218,C Programming Language,{Brian W. Kernighan,Dennis Ritchie},1988/03/22,\n" +
+                "517,9788025142028,Programovací jazyk C,{Brian W. Kernighan,Dennis M. Ritchie},2017/02/21,;");
+        this.assertRequest("1,search,C,Dennis Ritchie,*,*,title;","1,search,2\n" +
+                "516,9780133086218,C Programming Language,{Brian W. Kernighan,Dennis Ritchie},1988/03/22,\n" +
+                "517,9788025142028,Programovací jazyk C,{Brian W. Kernighan,Dennis M. Ritchie},2017/02/21,;");
 
         // Set the service to local.
         this.assertRequest("1,service,local;","1,service,success;");
