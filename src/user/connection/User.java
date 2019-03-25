@@ -2,12 +2,14 @@ package user.connection;
 
 import user.Visitor;
 
+import java.io.Serializable;
+
 /**
  * Class representing a user of the system.
  *
  * @author Zachary Cook
  */
-public class User {
+public class User implements Serializable {
     private String username;
     private String password;
     private PermissionLevel permissionLevel;

@@ -2,6 +2,7 @@ package user.connection;
 
 import request.Request;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Zachary Cook
  */
-public class Connection {
+public class Connection implements Serializable {
     private int id;
     private User user;
     private ArrayList<Request> pastRequests;

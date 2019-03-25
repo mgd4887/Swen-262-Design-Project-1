@@ -2,6 +2,7 @@ package user.connection;
 
 import user.Visitor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -9,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Zachary Cook
  */
-public class UserRegistry {
+public class UserRegistry implements Serializable {
     HashMap<String,User> usersByName;
     HashMap<Visitor,User> usersByVisitor;
 

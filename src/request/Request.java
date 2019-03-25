@@ -4,6 +4,7 @@ import response.Response;
 import system.Services;
 import user.connection.Connection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Zachary Cook
  */
-public abstract class Request {
+public abstract class Request implements Serializable {
     private Services services;
     private Connection connection;
     private Arguments arguments;

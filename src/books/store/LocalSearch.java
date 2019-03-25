@@ -11,6 +11,7 @@ import user.Name;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,7 +20,7 @@ import java.util.Arrays;
  *
  * @author Zachary Cook
  */
-public class LocalSearch implements StoreSearchService {
+public class LocalSearch implements StoreSearchService,Serializable {
     // The default file location of the book store file.
     public static String BOOK_STORE_FILE_LOCATION = "books.txt";
 

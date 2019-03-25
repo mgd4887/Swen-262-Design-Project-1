@@ -1,6 +1,6 @@
 package user.connection;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -8,7 +8,7 @@ import java.util.HashMap;
  *
  * @author Zachary Cook
  */
-public class ClientConnections {
+public class ClientConnections implements Serializable {
     private int nextMaxId;
     private HashMap<Integer,Connection> connections;
 
