@@ -84,6 +84,11 @@ public class LibraryBookManagementSystem {
             return "invalid-request;";
         }
 
+        // Store the request if a connection exists.
+        if (connection != null) {
+            connection.addCompletedRequest(requestObject);
+        }
+
         // Run the request and get a response.
         Response response = requestObject.getResponse();
         String responseString = response.getResponse();
