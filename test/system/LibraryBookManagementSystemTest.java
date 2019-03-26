@@ -696,6 +696,48 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Tests purchasing books with undoing.
+     */
+    @Test
+    public void test_purchaseBookWithUndo() {
+        // Log in root.
+        this.logInRoot();
+
+        // Assert the base stats.
+        this.assertRequest("1,report;","1,report,2019/01/01,"
+                + "\n Number of Books: 0"
+                + "\n Number of Visitors: 0"
+                + "\n Average Length of Visit: 00:00:00"
+                + "\n Number of Books Purchased: 0"
+                + "\n Fines Collected: 0"
+                + "\n Fines Outstanding: 0\n;");
+
+        // Purchase some books.
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Undoes the first set of purchases.
+        this.assertRequest("1,undo;","1,undo,success;");
+
+        // Assert the stats.
+        this.assertRequest("1,report;","1,report,2019/01/01,"
+                + "\n Number of Books: 15"
+                + "\n Number of Visitors: 0"
+                + "\n Average Length of Visit: 00:00:00"
+                + "\n Number of Books Purchased: 15"
+                + "\n Fines Collected: 0"
+                + "\n Fines Outstanding: 0\n;");
+    }
+
+    /**
      * Tests advancing time.
      */
     @Test

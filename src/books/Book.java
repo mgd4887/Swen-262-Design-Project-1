@@ -153,6 +153,13 @@ public class Book implements Serializable {
     }
 
     /**
+     * Removes a copy of the book.
+     */
+    public void removeCopy() {
+        this.numCopies += -1;
+    }
+
+    /**
      * Takes out a copy of the book.
      */
     public void borrowCopy() {

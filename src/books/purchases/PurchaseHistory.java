@@ -32,6 +32,29 @@ public class PurchaseHistory implements Serializable {
     }
 
     /**
+     * Removes a purchase log.
+     *
+     * @param book the book.
+     * @param purchaseDate the purchase date.
+     */
+    public void unregisterPurchase(Book book,Date purchaseDate) {
+        // Get the index to remove.
+        int indexToRemove = -1;
+        for (int i = 0; i <= this.purchaseLogs.size(); i++) {
+            PurchaseLog log = this.purchaseLogs.get(i);
+            if (log.getBook().getISBN() == book.getISBN() && log.getPurchaseDate().equals(purchaseDate)) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        // Remove the purchase.
+        if (indexToRemove != -1) {
+            this.purchaseLogs.remove(indexToRemove);
+        }
+    }
+
+    /**
      * Returns the purchase logs.
      *
      * @return the purchase logs.

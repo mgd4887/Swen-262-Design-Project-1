@@ -4,6 +4,7 @@ import books.Author;
 import books.Book;
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
@@ -20,7 +21,11 @@ import java.util.HashMap;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BookPurchase extends AccountRequest {
+public class BookPurchase extends AccountRequest implements Waypoint {
+    private boolean wasCompleted;
+    private Date currentDate;
+    private ArrayList<Book> purchasedBooks;
+
     /**
      * Creates a request.
      *
@@ -30,6 +35,9 @@ public class BookPurchase extends AccountRequest {
      */
     public BookPurchase(Services services,Connection connection,Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
+        this.wasCompleted = false;
+        this.currentDate = services.getClock().getDate();
+        this.purchasedBooks = new ArrayList<>();
     }
 
     /**
@@ -65,6 +73,7 @@ public class BookPurchase extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = false;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
 
@@ -87,14 +96,14 @@ public class BookPurchase extends AccountRequest {
         }
 
         // Add the books.
-        Date currentDate = services.getClock().getDate();
         for (int id : amountToBuy.keySet()) {
             Book book = services.getBookStore().getBook(id);
 
             for (int i = 0; i < amountToBuy.get(id); i++) {
                 services.getBookInventory().registerBook(book);
                 services.getBookInventory().getBook(book.getISBN()).addCopy();
-                services.getPurchaseHistory().registerPurchase(book,currentDate);
+                services.getPurchaseHistory().registerPurchase(book,this.currentDate);
+                this.purchasedBooks.add(book);
             }
         }
 
@@ -118,6 +127,45 @@ public class BookPurchase extends AccountRequest {
         }
 
         // Return the result.
+        this.wasCompleted = true;
         return this.sendResponse(results);
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        Services services = this.getServices();
+
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Remove the books and purchase history.
+        for (Book book : this.purchasedBooks) {
+            services.getBookInventory().getBook(book.getISBN()).removeCopy();
+            services.getPurchaseHistory().unregisterPurchase(book,this.currentDate);
+        }
+
+        // Return true (success).
+        this.wasCompleted = false;
+        this.purchasedBooks.clear();
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }
