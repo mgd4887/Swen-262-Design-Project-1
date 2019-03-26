@@ -1,6 +1,7 @@
 package user.connection;
 
 import request.Request;
+import user.Visitor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +54,28 @@ public class Connection implements Serializable {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Returns if the connection can manipulate the data
+     * for the given visitor.
+     *
+     * @param visitor the visitor to check.
+     * @return if the connection can manipulate the data.
+     */
+    public boolean canManipulateVisitor(Visitor visitor) {
+        // Return false if the connection doesn't have a user.
+        if (this.getUser() == null) {
+            return false;
+        }
+
+        // Return false if the users don't match and the user is a visitor.
+        if (this.getUser().getVisitor() != visitor && this.getUser().getPermissionLevel() == User.PermissionLevel.VISITOR) {
+            return false;
+        }
+
+        // Return true (success).
+        return true;
     }
 
     /**

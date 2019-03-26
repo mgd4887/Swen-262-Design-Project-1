@@ -99,6 +99,11 @@ public class BorrowBook extends AccountRequest {
             }
         }
 
+        // Return if the user isn't authorized for the visitor.
+        if (!connection.canManipulateVisitor(visitor)) {
+            return this.sendResponse("not-authorized");
+        }
+
         // Get the current date and due date.
         Date currentDate = services.getClock().getDate();
         Date dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);

@@ -85,6 +85,11 @@ public class EndVisit extends AccountRequest implements Waypoint {
             }
         }
 
+        // Return if the user isn't authorized for the visitor.
+        if (!connection.canManipulateVisitor(visitor)) {
+            return this.sendResponse("not-authorized");
+        }
+
         // Get the current time.
         Clock clock = services.getClock();
         Date date = clock.getDate();

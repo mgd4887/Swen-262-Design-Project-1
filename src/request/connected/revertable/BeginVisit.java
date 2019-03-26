@@ -87,6 +87,11 @@ public class BeginVisit extends AccountRequest implements Waypoint {
             }
         }
 
+        // Return if the user isn't authorized for the visitor.
+        if (!connection.canManipulateVisitor(visitor)) {
+            return this.sendResponse("not-authorized");
+        }
+
         // Get the current time.
         String formattedDate = this.currentDate.formatDate();
         String formattedTime = this.currentDate.formatTime();
