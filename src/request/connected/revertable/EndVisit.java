@@ -4,7 +4,7 @@ import request.Arguments;
 import request.Parameter;
 import request.Waypoint;
 import request.connected.AccountRequest;
-import response.Response;
+import request.response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
@@ -63,9 +63,9 @@ public class EndVisit extends AccountRequest implements Waypoint {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
@@ -116,7 +116,7 @@ public class EndVisit extends AccountRequest implements Waypoint {
             formattedSeconds = "0" + formattedSeconds;
         }
 
-        // Return the response.
+        // Return the request.response.
         this.wasCompleted = true;
         this.visitorPerformedOn = visitor;
         return this.sendResponse(visitor.getId() + "," + formattedTime + "," + formattedHours + ":" + formattedMinutes + ":" + formattedSeconds);

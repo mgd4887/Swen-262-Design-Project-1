@@ -26,7 +26,7 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
-     * Asserts that a request returns the intended response.
+     * Asserts that a request returns the intended request.response.
      *
      * @param request the request to make.
      * @param result the intended result.
@@ -41,7 +41,7 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
-     * Asserts that a request returns the intended response.
+     * Asserts that a request returns the intended request.response.
      *
      * @param request the request to make.
      * @param result the intended result.

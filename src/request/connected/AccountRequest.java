@@ -1,7 +1,7 @@
 package request.connected;
 
 import request.Arguments;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import user.connection.Connection;
 import user.connection.User;
@@ -28,7 +28,7 @@ public abstract class AccountRequest extends ConnectedRequest {
     }
 
     /**
-     * Gets the response for the request.
+     * Gets the request.response for the request.
      */
     @Override
     public Response getResponse() {
@@ -43,7 +43,7 @@ public abstract class AccountRequest extends ConnectedRequest {
             return this.sendResponse("not-authorized");
         }
 
-        // Return the response.
+        // Return the request.response.
         return super.getResponse();
     }
 }

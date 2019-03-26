@@ -3,7 +3,7 @@ package request.connected.unrevertable;
 import request.Arguments;
 import request.Parameter;
 import request.connected.AccountRequest;
-import response.Response;
+import request.response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
@@ -51,9 +51,9 @@ public class CurrentDateTime extends AccountRequest {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
@@ -65,7 +65,7 @@ public class CurrentDateTime extends AccountRequest {
         String formattedDate = date.formatDate();
         String formattedTime = date.formatTime();
 
-        // Format the response.
+        // Format the request.response.
         return this.sendResponse(formattedDate + "," + formattedTime);
     }
 }

@@ -29,10 +29,10 @@ public class SerializedLibraryBookManagementSystem extends LibraryBookManagement
     }
 
     /**
-     * Performs a request and returns a response as a string.
+     * Performs a request and returns a request.response as a string.
      *
      * @param request the request to make.
-     * @return the response.
+     * @return the request.response.
      */
     @Override
     public String performRequest(String request) {
@@ -42,7 +42,7 @@ public class SerializedLibraryBookManagementSystem extends LibraryBookManagement
         // Save the services.
         this.save();
 
-        // Return the response.
+        // Return the request.response.
         return response;
     }
 

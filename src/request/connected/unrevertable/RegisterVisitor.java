@@ -3,7 +3,7 @@ package request.connected.unrevertable;
 import request.Arguments;
 import request.Parameter;
 import request.connected.AccountRequest;
-import response.Response;
+import request.response.Response;
 import system.Clock;
 import system.Services;
 import time.Date;
@@ -61,9 +61,9 @@ public class RegisterVisitor extends AccountRequest {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
@@ -97,7 +97,7 @@ public class RegisterVisitor extends AccountRequest {
             return this.sendResponse("error," + e.getMessage());
         }
 
-        // Return the response.
+        // Return the request.response.
         return this.sendResponse(visitor.getId() + "," + formattedDate + " " + formattedTime);
     }
 }

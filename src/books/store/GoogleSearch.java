@@ -106,7 +106,7 @@ public class GoogleSearch implements StoreSearchService,Serializable {
                 responseBuilder.append(inputLine);
             }
 
-            // Store the response and close the connection.
+            // Store the request.response and close the connection.
             response = responseBuilder.toString();
             in.close();
         } catch (IOException e) {

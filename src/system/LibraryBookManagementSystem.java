@@ -1,7 +1,7 @@
 package system;
 
 import request.*;
-import response.Response;
+import request.response.Response;
 import user.connection.Connection;
 
 /**
@@ -48,11 +48,11 @@ public class LibraryBookManagementSystem {
     }
 
     /**
-     * Performs a request and returns a response as
+     * Performs a request and returns a request.response as
      * a string.
      *
      * @param request the request to make.
-     * @return the response.
+     * @return the request.response.
      */
     public String performRequest(String request) {
         // Create the argument parser.
@@ -89,11 +89,11 @@ public class LibraryBookManagementSystem {
             connection.addCompletedRequest(requestObject);
         }
 
-        // Run the request and get a response.
+        // Run the request and get a request.response.
         Response response = requestObject.getResponse();
         String responseString = response.getResponse();
 
-        // Return the response.
+        // Return the request.response.
         return responseString;
     }
 }

@@ -2,7 +2,7 @@ package request.connected;
 
 import request.Arguments;
 import request.Request;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import user.connection.Connection;
 
@@ -24,35 +24,35 @@ public abstract class ConnectedRequest extends Request {
     }
 
     /**
-     * Sends a blank response.
+     * Sends a blank request.response.
      */
     @Override
     public Response sendResponse() {
-        // Create the response string.
+        // Create the request.response string.
         String connectionId = Integer.toString(this.getConnection().getId());
         String responseString = connectionId + "," + this.getName() + ";";
 
-        // Return the response.
+        // Return the request.response.
         return new Response(responseString);
     }
 
     /**
-     * Sends a general response.
+     * Sends a general request.response.
      *
-     * @param response the response message, ignoring the final semicolon.
+     * @param response the request.response message, ignoring the final semicolon.
      */
     @Override
     public Response sendResponse(String response) {
-        // Create the response string.
+        // Create the request.response string.
         String connectionId = Integer.toString(this.getConnection().getId());
         String responseString = connectionId + "," + this.getName() + "," + response + ";";;
 
-        // Return the response.
+        // Return the request.response.
         return new Response(responseString);
     }
 
     /**
-     * Gets the response for the request.
+     * Gets the request.response for the request.
      */
     @Override
     public Response getResponse() {
@@ -61,7 +61,7 @@ public abstract class ConnectedRequest extends Request {
             return new Response("invalid-client-id;");
         }
 
-        // Return the response.
+        // Return the request.response.
         return super.getResponse();
     }
 }

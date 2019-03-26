@@ -5,7 +5,7 @@ import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
 import request.connected.AccountRequest;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import user.Visitor;
 import user.connection.Connection;
@@ -52,9 +52,9 @@ public class FindBorrowedBooks extends AccountRequest {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
@@ -88,7 +88,7 @@ public class FindBorrowedBooks extends AccountRequest {
             result += "\n" + book.getId() + "," + book.getISBN() + "," + book.getName() + "," + transaction.getCheckedOut().formatDate();
         }
 
-        // Return the response.
+        // Return the request.response.
         return this.sendResponse(result);
     }
 }

@@ -3,7 +3,7 @@ package request.connectionless;
 import request.Arguments;
 import request.Parameter;
 import request.Request;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import user.connection.Connection;
 
@@ -47,9 +47,9 @@ public class Connect extends Request {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {

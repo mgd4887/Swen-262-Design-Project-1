@@ -3,7 +3,7 @@ package request.connected.unrevertable;
 import request.Arguments;
 import request.Parameter;
 import request.connected.ConnectedRequest;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import user.connection.Connection;
 import user.connection.User;
@@ -54,9 +54,9 @@ public class LogIn extends ConnectedRequest {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
@@ -82,7 +82,7 @@ public class LogIn extends ConnectedRequest {
         User user = services.getUserRegistry().getUser(username);
         connection.setUser(user);
 
-        // Format the response.
+        // Format the request.response.
         return this.sendResponse("success");
     }
 }

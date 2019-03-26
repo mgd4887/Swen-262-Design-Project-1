@@ -6,7 +6,7 @@ import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
 import request.connected.AccountRequest;
-import response.Response;
+import request.response.Response;
 import system.Services;
 import time.Date;
 import time.Time;
@@ -56,9 +56,9 @@ public class LibraryStatisticsReport extends AccountRequest {
     }
 
     /**
-     * Returns a response for the request.
+     * Returns a request.response for the request.
      *
-     * @return the response of the request.
+     * @return the request.response of the request.
      */
     @Override
     public Response handleRequest() {
