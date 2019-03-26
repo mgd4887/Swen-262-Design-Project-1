@@ -16,8 +16,7 @@ import java.util.HashMap;
  * @author Zachary Cook
  */
 public class TransactionHistory implements Serializable {
-
-    private final HashMap<Integer, Transaction> transactions;
+    private final HashMap<Integer,Transaction> transactions;
 
     /**
      * Creates the inventory of book.
@@ -56,6 +55,31 @@ public class TransactionHistory implements Serializable {
         // Create and store the transaction.
         Transaction transaction = new Transaction(nextId,visitor,book,checkoutDate,dueDate);
         this.registerTransaction(transaction);
+    }
+
+    /**
+     * Registers a transaction in the transaction history.
+     *
+     * @param book the book part of the transaction.
+     * @param visitor the visitor part of the transaction.
+     * @param checkoutDate the checkout date.
+     * @param dueDate the due date.
+     */
+    public void unregisterTransaction(Book book,Visitor visitor,Date checkoutDate,Date dueDate) {
+        // Get the id to remove.
+        int indexToRemove = -1;
+        for (Integer id : this.transactions.keySet()) {
+            Transaction transaction = this.getTransaction(id);
+            if (transaction.getBook().equals(book) && transaction.getVisitor().equals(visitor) && transaction.getCheckedOut().equals(checkoutDate) && transaction.getDueDate().equals(dueDate)) {
+                indexToRemove = id;
+                break;
+            }
+        }
+
+        // Remove the id.
+        if (indexToRemove != -1) {
+            this.transactions.remove(indexToRemove);
+        }
     }
 
     /**

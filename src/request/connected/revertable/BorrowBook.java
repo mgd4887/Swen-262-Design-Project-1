@@ -5,6 +5,7 @@ import books.Books;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
@@ -22,7 +23,13 @@ import java.util.HashMap;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class BorrowBook extends AccountRequest {
+public class BorrowBook extends AccountRequest implements Waypoint {
+    private boolean wasCompleted;
+    private Date currentDate;
+    private Date dueDate;
+    private Visitor visitorAppliedTo;
+    private ArrayList<Book> booksBorrowed;
+
     /**
      * Creates a request.
      *
@@ -32,6 +39,12 @@ public class BorrowBook extends AccountRequest {
      */
     public BorrowBook(Services services,Connection connection,Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.VISITOR);
+        this.wasCompleted = false;
+        this.booksBorrowed = new ArrayList<>();
+
+        // Get the current date and due date.
+        this.currentDate = services.getClock().getDate();
+        this.dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);
     }
 
     /**
@@ -67,6 +80,7 @@ public class BorrowBook extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = true;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
         Connection connection = this.getConnection();
@@ -104,10 +118,6 @@ public class BorrowBook extends AccountRequest {
             return this.sendResponse("not-authorized");
         }
 
-        // Get the current date and due date.
-        Date currentDate = services.getClock().getDate();
-        Date dueDate = new Date(currentDate.getMonth(),currentDate.getDay()+ 7,currentDate.getYear(),0,0,0);
-
         // Get the books to check out.
         Books books = new Books();
         for (int id : amountToBorrow.keySet()) {
@@ -137,7 +147,7 @@ public class BorrowBook extends AccountRequest {
                 unretunedBooks += 1;
             }
             if (!transaction.getLateFeedPaid()) {
-                unpaidBalance += transaction.calculateFee(currentDate);
+                unpaidBalance += transaction.calculateFee(this.currentDate);
             }
         }
 
@@ -154,10 +164,51 @@ public class BorrowBook extends AccountRequest {
         // Borrow the books.
         for (Book book : books) {
             book.borrowCopy();
-            services.getTransactionHistory().registerTransaction(book,visitor,currentDate,dueDate);
+            services.getTransactionHistory().registerTransaction(book,visitor,this.currentDate,this.dueDate);
+            this.booksBorrowed.add(book);
         }
 
         // Return the response.
-        return this.sendResponse(dueDate.formatDate());
+        this.visitorAppliedTo = visitor;
+        this.wasCompleted = true;
+        return this.sendResponse(this.dueDate.formatDate());
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        Services services = this.getServices();
+
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Remove the books and purchase history.
+        for (Book book : this.booksBorrowed) {
+            book.returnCopy();
+            services.getTransactionHistory().unregisterTransaction(book,this.visitorAppliedTo,this.currentDate,this.dueDate);
+        }
+
+        // Return true (success).
+        this.wasCompleted = false;
+        this.booksBorrowed.clear();
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }
