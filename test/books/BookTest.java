@@ -70,7 +70,7 @@ public class BookTest {
     }
 
     /**
-     * Tests the {@link Book#getPurchasedDate()} method.
+     * Tests the {@link Book#getPublishedDate()} method.
      */
     @Test
     public void test_getPurchasedDate() {

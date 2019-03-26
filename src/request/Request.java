@@ -58,27 +58,29 @@ public abstract class Request implements Serializable {
     }
 
     /**
-     * Sends a blank request.response.
+     * Sends a blank response.
+     *
+     * @return a blank response.
      */
     public Response sendResponse() {
         return new Response(this.getName() + ";");
     }
 
     /**
-     * Sends a general request.response.
+     * Sends a general response.
      *
-     * @param response the request.response message, ignoring the final semicolon.
+     * @param response the response message, ignoring the final semicolon.
      */
     public Response sendResponse(String response) {
-        // Create the request.response string.
+        // Create the response string.
         String responseString = this.getName() + "," + response + ";";
 
-        // Return the request.response.
+        // Return the response.
         return new Response(responseString);
     }
 
     /**
-     * Sends a missing parameters request.response.
+     * Sends a missing parameters response.
      *
      * @param missingParameters the missing parameters as "param-1,param-2,param-3"
      */
@@ -87,7 +89,7 @@ public abstract class Request implements Serializable {
     }
 
     /**
-     * Creates a request.response for missing parameters.
+     * Creates a response for missing parameters.
      *
      * @param parameters the parameters to compile.
      * @param startIndex the start index of the missing parameters.
@@ -105,12 +107,12 @@ public abstract class Request implements Serializable {
             arguments += parameters.get(i).getName();
         }
 
-        // Create and return the request.response.
+        // Create and return the response.
         return this.sendMissingParametersResponse(arguments);
     }
 
     /**
-     * Gets the request.response for the request.
+     * Gets the response for the request.
      */
     public Response getResponse() {
         // Determine if any parameters are missing.
@@ -126,7 +128,7 @@ public abstract class Request implements Serializable {
         }
         arguments.resetPointer();
 
-        // Return the request.response.
+        // Return the response.
         return this.handleRequest();
     }
 
@@ -145,9 +147,9 @@ public abstract class Request implements Serializable {
     public abstract ArrayList<Parameter> getRequiredParameters();
 
     /**
-     * Returns a request.response for the request.
+     * Returns a response for the request.
      *
-     * @return the request.response of the request.
+     * @return the response of the request.
      */
     public abstract Response handleRequest();
 }

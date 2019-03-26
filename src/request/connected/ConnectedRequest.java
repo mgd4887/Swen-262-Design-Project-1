@@ -37,9 +37,9 @@ public abstract class ConnectedRequest extends Request {
     }
 
     /**
-     * Sends a general request.response.
+     * Sends a general response.
      *
-     * @param response the request.response message, ignoring the final semicolon.
+     * @param response the response message, ignoring the final semicolon.
      */
     @Override
     public Response sendResponse(String response) {
@@ -52,7 +52,7 @@ public abstract class ConnectedRequest extends Request {
     }
 
     /**
-     * Gets the request.response for the request.
+     * Gets the response for the request.
      */
     @Override
     public Response getResponse() {

@@ -1,11 +1,7 @@
 package books;
 
-import time.Date;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * Class representing the inventory of books.

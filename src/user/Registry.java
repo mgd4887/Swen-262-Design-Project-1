@@ -75,17 +75,7 @@ public class Registry implements Serializable {
     public Visitor registerVisitor(Name name,String address,String phoneNumber) {
         return this.registerVisitor(name,address,phoneNumber,new Date(0,0,0,0,0,0));
     }
-
-    /**
-     * Registers a visitor.
-     *
-     * @param visitor the visitor to add.
-     */
-    public Visitor registerVisitor(Visitor visitor) {
-        this.visitors.add(visitor);
-        return visitor;
-    }
-
+    
     /**
      * Returns a list of all the visitors.
      *

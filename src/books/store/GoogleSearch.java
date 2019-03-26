@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Performs searching on the Google book store.
+ *
+ * @author Zachary Cook
+ */
 public class GoogleSearch implements StoreSearchService,Serializable {
     private Books localStoreBooks;
     private Books sharedBooks;

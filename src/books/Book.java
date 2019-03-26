@@ -36,7 +36,7 @@ public class Book implements Serializable {
      * @param numCopiesCheckedOut the number of copies checked out.
      * @param name the name of the book.
      */
-    public Book(ArrayList<Author> authors, Publisher publisher, long ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, String name,int id) {
+    public Book(ArrayList<Author> authors,Publisher publisher,long ISBN,Date publishedDate,int pageCount,int numCopies,int numCopiesCheckedOut,String name,int id) {
         this.authors = authors;
         this.publisher = publisher;
         this.ISBN = ISBN;
@@ -60,7 +60,7 @@ public class Book implements Serializable {
      * @param numCopiesCheckedOut the number of copies checked out.
      * @param name the name of the book.
      */
-    public Book(Author author, Publisher publisher, int ISBN, Date publishedDate, int pageCount, int numCopies, int numCopiesCheckedOut, String name) {
+    public Book(Author author,Publisher publisher,int ISBN,Date publishedDate,int pageCount,int numCopies,int numCopiesCheckedOut,String name) {
         this(new ArrayList<>(Collections.singletonList(author)),publisher,ISBN,publishedDate,pageCount,numCopies,numCopiesCheckedOut,name,0);
     }
 

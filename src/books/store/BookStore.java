@@ -6,7 +6,7 @@ import books.Books;
 import java.io.Serializable;
 
 /**
- * Class representing a  "Book Store". This includes the books
+ * Class representing a "Book Store". This includes the books
  * that can be bought by the library.
  *
  * @author Zachary Cook

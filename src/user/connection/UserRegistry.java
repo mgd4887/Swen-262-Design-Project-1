@@ -11,8 +11,8 @@ import java.util.HashMap;
  * @author Zachary Cook
  */
 public class UserRegistry implements Serializable {
-    HashMap<String,User> usersByName;
-    HashMap<Visitor,User> usersByVisitor;
+    private HashMap<String,User> usersByName;
+    private HashMap<Visitor,User> usersByVisitor;
 
     /**
      * Creates the user registry.

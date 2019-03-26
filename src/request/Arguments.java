@@ -11,7 +11,7 @@ import java.util.List;
  * @author Zachary Cook
  */
 public class Arguments {
-    private int pointer = 0;
+    private int pointer;
     private List<String> parameters;
 
     /**

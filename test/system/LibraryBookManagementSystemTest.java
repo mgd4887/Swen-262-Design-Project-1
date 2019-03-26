@@ -929,7 +929,7 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
-     * Test getting library statistics.
+     * Tests getting library statistics.
      */
     @Test
     public void test_libraryStatistics() {

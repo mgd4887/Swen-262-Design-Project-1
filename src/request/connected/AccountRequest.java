@@ -28,7 +28,7 @@ public abstract class AccountRequest extends ConnectedRequest {
     }
 
     /**
-     * Gets the request.response for the request.
+     * Gets the response for the request.
      */
     @Override
     public Response getResponse() {

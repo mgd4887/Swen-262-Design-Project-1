@@ -54,9 +54,9 @@ public class LogIn extends ConnectedRequest {
     }
 
     /**
-     * Returns a request.response for the request.
+     * Returns a response for the request.
      *
-     * @return the request.response of the request.
+     * @return the response of the request.
      */
     @Override
     public Response handleRequest() {

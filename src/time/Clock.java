@@ -1,7 +1,5 @@
 package time;
 
-import time.Date;
-
 import java.io.Serializable;
 
 /**

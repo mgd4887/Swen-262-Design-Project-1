@@ -8,8 +8,6 @@ import time.Time;
 import user.Name;
 import user.Visitor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * This method tests the {@link VisitHistory} class
  *

@@ -1,5 +1,6 @@
 package request;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  *
  * @author Zachary Cook
  */
-public class RequestHistory {
+public class RequestHistory implements Serializable {
     private ArrayList<Request> pastRequests;
     private ArrayList<Request> undoneRequests;
 
