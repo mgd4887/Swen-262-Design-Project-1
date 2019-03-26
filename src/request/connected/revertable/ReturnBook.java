@@ -1,8 +1,10 @@
 package request.connected.revertable;
 
+import books.Book;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
@@ -19,7 +21,11 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class ReturnBook extends AccountRequest {
+public class ReturnBook extends AccountRequest implements Waypoint {
+    private boolean wasCompleted;
+    private Date currentDate;
+    private ArrayList<Transaction> transactionsEnded;
+
     /**
      * Creates a request.
      *
@@ -29,6 +35,10 @@ public class ReturnBook extends AccountRequest {
      */
     public ReturnBook(Services services, Connection connection, Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
+        this.wasCompleted = false;
+        this.transactionsEnded = new ArrayList<>();
+        this.currentDate = services.getClock().getDate();
+
     }
 
     /**
@@ -64,6 +74,7 @@ public class ReturnBook extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = false;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
 
@@ -88,9 +99,6 @@ public class ReturnBook extends AccountRequest {
         if (visitor == null) {
             return this.sendResponse("invalid-visitor-id");
         }
-
-        // Get the current date.
-        Date currentDate = services.getClock().getDate();
 
         // Get the transactions to that can be returned.
         ArrayList<Transaction> returnableTransactions = new ArrayList<>();
@@ -132,10 +140,11 @@ public class ReturnBook extends AccountRequest {
         String booksIdString = "";
         for (Transaction transaction : transactionsToReturn) {
             transaction.getBook().returnCopy();
-            transaction.setReturned(currentDate);
+            transaction.setReturned(this.currentDate);
+            this.transactionsEnded.add(transaction);
 
             booksIdString += "," + (transaction.getBook().getId() - 1);
-            lateFee += transaction.calculateFee(currentDate);
+            lateFee += transaction.calculateFee(this.currentDate);
         }
 
         // Return a success if there is a late fee.
@@ -144,6 +153,43 @@ public class ReturnBook extends AccountRequest {
         }
 
         // Return a success message.
+        this.wasCompleted = true;
         return this.sendResponse("success");
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Remove the books and purchase history.
+        for (Transaction transaction : this.transactionsEnded) {
+            transaction.getBook().borrowCopy();
+            transaction.setUnreturned();
+        }
+
+        // Return true (success).
+        this.wasCompleted = false;
+        this.transactionsEnded.clear();
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }

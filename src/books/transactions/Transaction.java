@@ -152,12 +152,26 @@ public class Transaction implements Serializable {
     }
 
     /**
+     * Sets the book as unreturned.
+     */
+    public void setUnreturned() {
+        this.returnedDate = null;
+    }
+
+    /**
      * Sets the late fee as paid.
      *
      * @param date the date the late fee was paid.
      */
     public void setLateFeeAsPaid(Date date) {
         this.lateFeePaidDate = date;
+    }
+
+    /**
+     * Sets the late fee as unpaid.
+     */
+    public void setLateFeeAsUnpaid() {
+        this.lateFeePaidDate = null;
     }
 
     /**

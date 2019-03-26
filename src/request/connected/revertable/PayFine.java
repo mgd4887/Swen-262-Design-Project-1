@@ -3,6 +3,7 @@ package request.connected.revertable;
 import books.transactions.Transaction;
 import request.Arguments;
 import request.Parameter;
+import request.Waypoint;
 import request.connected.AccountRequest;
 import response.Response;
 import system.Services;
@@ -12,6 +13,7 @@ import user.connection.Connection;
 import user.connection.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Request for setting the fines paid by a user as paid.
@@ -19,7 +21,10 @@ import java.util.ArrayList;
  * @author Joey Zhen
  * @author Zachary Cook
  */
-public class PayFine extends AccountRequest {
+public class PayFine extends AccountRequest implements Waypoint {
+    private boolean wasCompleted;
+    private HashMap<Transaction,Integer> transactionsToUndo;
+
     /**
      * Creates a request.
      *
@@ -29,6 +34,8 @@ public class PayFine extends AccountRequest {
      */
     public PayFine(Services services,Connection connection,Arguments arguments) {
         super(services,connection,arguments,User.PermissionLevel.EMPLOYEE);
+        this.wasCompleted = false;
+        this.transactionsToUndo = new HashMap<>();
     }
 
     /**
@@ -63,6 +70,7 @@ public class PayFine extends AccountRequest {
      */
     @Override
     public Response handleRequest() {
+        this.wasCompleted = false;
         Arguments arguments = this.getArguments();
         Services services = this.getServices();
         Connection connection = this.getConnection();
@@ -120,17 +128,56 @@ public class PayFine extends AccountRequest {
                 transaction.incrementPartialLateFeePaid(lateFeeRemainder);
                 balanceAfterward += -lateFeeRemainder;
                 amountToPay += -lateFeeRemainder;
+                this.transactionsToUndo.put(transaction,amountToPay);
                 if (transaction.getReturned()) {
                     transaction.setLateFeeAsPaid(currentDate);
                 }
             } else {
                 transaction.incrementPartialLateFeePaid(amountToPay);
                 balanceAfterward += -amountToPay;
+                this.transactionsToUndo.put(transaction,amountToPay);
                 amountToPay = 0;
             }
         }
 
         // Return the response.
+        this.wasCompleted = true;
         return this.sendResponse("success," + balanceAfterward);
+    }
+
+    /**
+     * Undos the waypoint.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean undo() {
+        // Return if the request failed.
+        if (!this.wasCompleted) {
+            return false;
+        }
+
+        // Remove the books and purchase history.
+        for (Transaction transaction : this.transactionsToUndo.keySet()) {
+            transaction.incrementPartialLateFeePaid(-this.transactionsToUndo.get(transaction));
+            transaction.setLateFeeAsUnpaid();
+        }
+
+        // Return true (success).
+        this.wasCompleted = false;
+        this.transactionsToUndo.clear();
+        return true;
+    }
+
+    /**
+     * Redos the waypoint. It should not be called without
+     * performing the original request.
+     *
+     * @return if it was successful.
+     */
+    @Override
+    public boolean redo() {
+        this.handleRequest();
+        return true;
     }
 }

@@ -676,6 +676,52 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Tests paying fines with undoing.
+     */
+    @Test
+    public void test_payFinesWithUndo() {
+        // Create the test connections.
+        this.createTestConnections();
+
+        // Assert missing parameters.
+        this.assertRequest("pay;","invalid-client-id;");
+        this.assertRequest("1,pay;","1,pay,missing-parameters,{amount};");
+
+        // Purchase some books.
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Borrow 5 books.
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/08;");
+
+        // Assert a late fee.
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,advance,6,0;","1,advance,success;");
+        this.assertRequest("1,return,0000000001,9,9,9,10,10;","1,return,overdue,50,9,9,9,10,10;");
+
+        // Assert paying partial fees.
+        this.assertRequest("1,pay,10,0000000001;","1,pay,success,40;");
+        this.assertRequest("1,pay,15;","1,pay,success,25;");
+        this.assertRequest("1,pay,25;","1,pay,success,0;");
+
+        // Undo the fees.
+        this.assertRequest("1,undo;","1,undo,success;");
+        this.assertRequest("1,undo;","1,undo,success;");
+
+        // Assert paying partial fees.
+        this.assertRequest("1,pay,15;","1,pay,success,25;");
+        this.assertRequest("1,pay,25;","1,pay,success,0;");
+
+        // Borrow 5 books.
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/20;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/20;");
+    }
+
+    /**
      * Tests searching the book store.
      */
     @Test
