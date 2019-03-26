@@ -602,6 +602,35 @@ public class LibraryBookManagementSystemTest {
     }
 
     /**
+     * Tests returning books with undoing.
+     */
+    @Test
+    public void test_returnBooksWithUndo() {
+        // Create the test connections.
+        this.createTestConnections();
+
+        // Purchase some books.
+        this.assertRequest("1,buy,3,17,10,11,12,12;","1,buy,4\n" +
+                "9780545387200,The Hunger Games Trilogy,{Suzanne Collins},2011/05/01,3,\n" +
+                "9781781100516,Harry Potter and the Prisoner of Azkaban,{J.K. Rowling},1999/07/08,3,\n" +
+                "9781781100486,Harry Potter and the Sorcerer's Stone,{J.K. Rowling},2015/12/08,3,\n" +
+                "9781338029994,Harry Potter Coloring Book,{Inc. Scholastic},2015/11/10,6,;");
+
+        // Borrow 5 books.
+        this.assertRequest("1,borrow,{10,10,11};","1,borrow,2019/01/08;");
+        this.assertRequest("1,borrow,{11,10};","1,borrow,2019/01/08;");
+
+        // Return 3 books.
+        this.assertRequest("1,return,0000000001,9,9,10;","1,return,success;");
+
+        // Undo the request.
+        this.assertRequest("1,undo;","1,undo,success;");
+
+        // Return 3 books.
+        this.assertRequest("1,return,0000000001,9,9,10;","1,return,success;");
+    }
+
+    /**
      * Tests paying fines.
      */
     @Test
