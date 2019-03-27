@@ -21,11 +21,10 @@ public class TimePage extends Page {
         //create an element to forward time
         HBox forwardTimeBox = new HBox();
         Button forwardTimeButton = new Button("Advance Time");
-        TextField forwardAmount = new TextField("Enter amount of time to forward here");
-        forwardAmount.setPrefWidth(300);
-        forwardAmount.setMinWidth(300);
-        forwardTimeButton.setOnMouseClicked(mouseEvent -> this.forwardTime(forwardAmount.getCharacters()));
-        forwardTimeBox.getChildren().addAll(forwardTimeButton, forwardAmount);
+        TextField forwardAmountDays = new TextField("Days");
+        TextField forwardAmountHours = new TextField("Hours");
+        forwardTimeButton.setOnMouseClicked(mouseEvent -> this.forwardTime(forwardAmountDays.getCharacters(), forwardAmountHours.getCharacters()));
+        forwardTimeBox.getChildren().addAll(forwardTimeButton, forwardAmountDays, forwardAmountHours);
         forwardTimeBox.setSpacing(10);
         //forwardTimeBox.setPrefWidth(250);
 
@@ -63,7 +62,29 @@ public class TimePage extends Page {
 
     }
 
-    private void forwardTime(CharSequence characters) {
+    private void forwardTime(CharSequence daysSequence, CharSequence hourSequence) {
+        String daysString = daysSequence.toString();
+        String hoursString = hourSequence.toString();
+        int days = 0;
+        int hours = 0;
+        boolean invalid = false;
+        try{
+            days = Integer.parseInt(daysString);
+        }catch (Exception e){
+            invalid = true;
+            System.out.println("could not pasre day");
+        }
+        try {
+            hours = Integer.parseInt(hoursString);
+        }catch (Exception e){
+            invalid = true;
+            System.out.println("could not pasre hour");
+        }
 
+
+        //TODO connect to server
+        if (!invalid) {
+            System.out.println("advance," + days + "," + hours + ";");
+        }
     }
 }
