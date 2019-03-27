@@ -2,6 +2,7 @@ package request;
 
 import system.CSV;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author Zachary Cook
  */
-public class Arguments {
+public class Arguments implements Serializable {
     private int pointer;
     private List<String> parameters;
 
