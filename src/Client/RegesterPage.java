@@ -15,6 +15,13 @@ import java.util.regex.Pattern;
 public class RegesterPage extends Page {
     private final int clientID;
 
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public RegesterPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int clientID) {
         super(clientApplication, LBMS);
         this.clientID = clientID;

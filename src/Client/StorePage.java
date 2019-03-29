@@ -7,6 +7,14 @@ import javafx.scene.layout.HBox;
 import system.SerializedLibraryBookManagementSystem;
 
 public class StorePage extends Page {
+
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public StorePage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }

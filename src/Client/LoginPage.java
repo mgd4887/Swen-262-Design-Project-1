@@ -13,6 +13,13 @@ import java.util.regex.Pattern;
 public class LoginPage extends Page {
     private final int clientID;
 
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param lbms              the LBMS the client is connected to
+     */
     public LoginPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem lbms, int clientID) {
         super(clientApplication, lbms);
         this.clientID = clientID;

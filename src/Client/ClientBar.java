@@ -13,6 +13,13 @@ public class ClientBar extends Page{
 
     private ArrayList<Client> clients = new ArrayList <Client>();
 
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public ClientBar(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }

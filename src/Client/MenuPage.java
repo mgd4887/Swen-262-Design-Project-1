@@ -11,6 +11,13 @@ import system.SerializedLibraryBookManagementSystem;
 
 public class MenuPage extends Page {
 
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public MenuPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }

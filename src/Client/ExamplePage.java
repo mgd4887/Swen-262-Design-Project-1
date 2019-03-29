@@ -11,6 +11,14 @@ import javafx.scene.text.Text;
 import system.SerializedLibraryBookManagementSystem;
 
 public class ExamplePage extends Page {
+
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public ExamplePage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }
