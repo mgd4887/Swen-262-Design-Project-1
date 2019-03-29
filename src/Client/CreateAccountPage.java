@@ -11,16 +11,16 @@ import system.SerializedLibraryBookManagementSystem;
 
 
 public class CreateAccountPage extends Page {
-    private final int visitorID;
+    private final String visitorID;
 
     /**
      * constructor for all pages
      * creates a page
-     *  @param clientApplication the client that this page is in
+     * @param clientApplication the client that this page is in
      * @param LBMS              the LBMS the client is connected to
      * @param id
      */
-    public CreateAccountPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int id) {
+    public CreateAccountPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, String id) {
         super(clientApplication, LBMS);
         this.visitorID = id;
     }

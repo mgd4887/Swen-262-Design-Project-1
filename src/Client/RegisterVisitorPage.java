@@ -79,7 +79,7 @@ public class RegisterVisitorPage extends Page {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(response);
         if (matcher.matches()){
-            int id = Integer.parseInt(matcher.group(2));
+            String id = matcher.group(2);
             clientApplication.changePage(new CreateAccountPage(clientApplication, LBMS, id));
         }else{
             clientApplication.addError(response);
