@@ -8,11 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 
-import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegesterPage extends Page {
+public class RegisterVisitorPage extends Page {
     private final int clientID;
 
     /**
@@ -22,7 +21,7 @@ public class RegesterPage extends Page {
      * @param clientApplication the client that this page is in
      * @param LBMS              the LBMS the client is connected to
      */
-    public RegesterPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int clientID) {
+    public RegisterVisitorPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int clientID) {
         super(clientApplication, LBMS);
         this.clientID = clientID;
     }
@@ -53,7 +52,7 @@ public class RegesterPage extends Page {
 
         HBox submit = new HBox();
         Button submitButton = new Button("Register");
-        submitButton.setOnMouseClicked(event -> submitRegester(nameField.getCharacters(),
+        submitButton.setOnMouseClicked(event -> submitRegister(nameField.getCharacters(),
                                                                 lastNameField.getCharacters(),
                                                                 addressField.getCharacters(),
                                                                 phoneField.getCharacters(),
@@ -65,7 +64,8 @@ public class RegesterPage extends Page {
         return root;
     }
 
-    private void submitRegester(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
+
+    private void submitRegister(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
         String request = clientID + ",register," + firstNameCharacters.toString() + "," + lastNameFieldCharacters.toString() + "," + addressFieldCharacters.toString() + "," + phoneFieldCharacters.toString() + ";";
         String response = LBMS.performRequest(request);
         // should be in the format "register,visitor ID,registration date;"
@@ -74,7 +74,7 @@ public class RegesterPage extends Page {
         Matcher matcher = pattern.matcher(response);
         if (matcher.matches()){
             int id = Integer.parseInt(matcher.group(2));
-            clientApplication.getCurrentClient().setID(id);
+            clientApplication.getCurrentClient().setVisitorID(id);
         }else{
             clientApplication.addError(response);
         }

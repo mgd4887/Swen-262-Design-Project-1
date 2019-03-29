@@ -65,7 +65,7 @@ public class ClientApplication extends Application implements Observer {
      */
     public void refresh() {
         if (currentClient != null) {
-            Page page = currentClient.getCurerntPage();
+            Page page = currentClient.getCurrentPage();
             if (page != null) {
                 root.setCenter(page.getRoot());
             } else {
@@ -93,7 +93,7 @@ public class ClientApplication extends Application implements Observer {
      */
     public void changePage(Page page) {
         currentClient.changePage(page);
-        this.page = currentClient.getCurerntPage();
+        this.page = currentClient.getCurrentPage();
         this.refresh();
     }
 

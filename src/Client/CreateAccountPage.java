@@ -23,7 +23,7 @@ public class CreateAccountPage extends Page {
     public Node getRoot() {
         //client ID,create,username,password,role,visitor ID;
 
-        int clientID = clientApplication.getCurrentClient().getID();
+        int clientID = clientApplication.getCurrentClient().getClientID();
 
         HBox username = new HBox();
         Label usernameLabel = new Label("Username:");

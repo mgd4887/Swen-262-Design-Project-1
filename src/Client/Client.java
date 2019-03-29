@@ -1,41 +1,50 @@
 package Client;
 
 public class Client {
-    private int ID;
+    private int clientID;
     private String firstName;
     private String lastName;
-    private Page curerntPage;
+    private Page currentPage;
     private String username;
+    private int VisitorID;
 
     public Client(int ID) {
-        this.ID = ID;
+        this.clientID = ID;
     }
 
     public String getName() {
         if (firstName == null || lastName == null){
-            return Integer.toString(ID);
+            return Integer.toString(clientID);
         }else{
             return firstName + " " + lastName;
         }
     }
 
-    public int getID() {
-        return ID;
+    public int getClientID() {
+        return clientID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setClientID(int clientID) {
+        this.clientID = clientID;
     }
 
     public void setName(String username) {
         this.username = username;
     }
 
-    public Page getCurerntPage(){
-        return curerntPage;
+    public Page getCurrentPage(){
+        return currentPage;
     }
 
     public void changePage(Page page) {
-        this.curerntPage = page;
+        this.currentPage = page;
+    }
+
+    public int getVisitorID() {
+        return VisitorID;
+    }
+
+    public void setVisitorID(int visitorID) {
+        VisitorID = visitorID;
     }
 }
