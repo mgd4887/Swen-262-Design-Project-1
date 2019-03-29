@@ -52,6 +52,7 @@ public class LoginPage extends Page {
         Matcher matcher = pattern.matcher(response);
         if (matcher.matches()){
             clientApplication.getCurrentClient().setName(username.toString());
+            clientApplication.changePage(new MenuPage(clientApplication,LBMS));
         }else{
             clientApplication.addError(response);
         }
