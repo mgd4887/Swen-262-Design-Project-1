@@ -60,6 +60,8 @@ public class ClientApplication extends Application implements Observer {
         }else{
             root.setCenter(null);
         }
+        root.setPrefWidth(1280);
+        root.setPrefHeight(720);
         root.setTop(clientBar.getRoot());
         root.setRight(null); // remove any errors
         //this.mainStage.setScene(scene);
