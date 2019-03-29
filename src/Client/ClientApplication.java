@@ -58,7 +58,11 @@ public class ClientApplication extends Application implements Observer {
                 root.setCenter(null);
             }
         }else{
-            root.setCenter(null);
+            if (page != null) {
+                root.setCenter(page.getRoot());
+            } else {
+                root.setCenter(null);
+            }
         }
         root.setPrefWidth(1280);
         root.setPrefHeight(720);
@@ -97,6 +101,7 @@ public class ClientApplication extends Application implements Observer {
 
     public void setCurrentClient(Client current) {
         this.curretClient = current;
+        this.refresh();
     }
 
     public void logout() {

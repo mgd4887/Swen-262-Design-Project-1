@@ -59,17 +59,7 @@ public class ClientBar extends Page{
     public void logOut() {
         int id = clientApplication.getCurrentClient().getID();
         String response = LBMS.performRequest(id+",logout;");
-        for (int i = 0; i < clients.size(); i++){
-            if (clients.get(i).getID() == id){
-                clients.remove(clients.get(i));
-            }
-        }
-        if (clients.isEmpty()){
-            clientApplication.changePage(null);
-        }else{
-            clientApplication.changeClient(clients.get(0).getID());
-        }
-        clientApplication.refresh();
+        clientApplication.changePage(new LoginPage(clientApplication,LBMS,id));
 
     }
 
