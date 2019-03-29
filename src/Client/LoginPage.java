@@ -42,7 +42,7 @@ public class LoginPage extends Page {
         HBox logout = new HBox();
         Button logoutButton = new Button("login");
         logoutButton.setOnMouseClicked(event -> disconnect());
-        submit.getChildren().add(submitButton);
+        submit.getChildren().add(logout);
 
         root.getChildren().addAll(username,password, submit);
 
