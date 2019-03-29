@@ -50,8 +50,15 @@ public class ClientApplication extends Application implements Observer {
     }
 
     public void refresh() {
-        if (page != null) {
-            root.setCenter(page.getRoot());
+        if (curretClient != null) {
+            Page page = curretClient.getCurerntPage();
+            if (page != null) {
+                root.setCenter(page.getRoot());
+            } else {
+                root.setCenter(null);
+            }
+        }else{
+            root.setCenter(null);
         }
         root.setTop(clientBar.getRoot());
         root.setRight(null); // remove any errors
@@ -61,12 +68,14 @@ public class ClientApplication extends Application implements Observer {
     }
 
     public void changePage(Page page) {
-        this.page = page;
+        curretClient.changePage(page);
+        this.page = curretClient.getCurerntPage();
         this.refresh();
     }
 
     public void changeClient(int clientID) {
         this.clientID = clientID;
+        this.curretClient = clientBar.getClient(clientID);
     }
 
     public int currentClientID(){
@@ -86,5 +95,9 @@ public class ClientApplication extends Application implements Observer {
 
     public void setCurrentClient(Client current) {
         this.curretClient = current;
+    }
+
+    public void logout() {
+        javafx.application.Platform.runLater(clientBar::logOut);
     }
 }

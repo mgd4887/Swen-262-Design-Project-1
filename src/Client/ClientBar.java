@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class ClientBar extends Page{
 
-    ArrayList<Client> clients = new ArrayList <Client>();
+    private ArrayList<Client> clients = new ArrayList <Client>();
 
     public ClientBar(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
@@ -45,14 +45,40 @@ public class ClientBar extends Page{
         Matcher matcher = pattern.matcher(response);
         if(matcher.matches()){
             int ID = Integer.parseInt(matcher.group(1));
-            clientApplication.changePage(new LoginPage(clientApplication,LBMS, ID));
             Client current = new Client(ID);
             clients.add(current);
             clientApplication.setCurrentClient(current);
+            clientApplication.changePage(new LoginPage(clientApplication,LBMS, ID));
             clientApplication.refresh();
         }else{
             clientApplication.addError(response);
             //TODO handle
         }
+    }
+
+    public void logOut() {
+        int id = clientApplication.getCurrentClient().getID();
+        LBMS.performRequest(id+",logout;");
+        for (int i = 0; i < clients.size(); i++){
+            if (clients.get(i).getID() == id){
+                clients.remove(clients.get(i));
+            }
+        }
+        if (clients.isEmpty()){
+            clientApplication.changePage(null);
+        }else{
+            clientApplication.changeClient(clients.get(0).getID());
+        }
+        clientApplication.refresh();
+
+    }
+
+    public Client getClient(int clientID) {
+        for (int i = 0; i < clients.size(); i++){
+            if (clients.get(i).getID() == clientID){
+                return clients.get(i);
+            }
+        }
+        return null;
     }
 }

@@ -61,12 +61,19 @@ public class MenuPage extends Page {
         statusButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new StatusPage(clientApplication, LBMS)));
         statusBox.getChildren().addAll(statusButton);
 
+        //create logout button
+        HBox logoutBox = new HBox();
+        Button logoutButton = new Button("Logout");
+        logoutButton.setOnMouseClicked(mouseEvent -> clientApplication.logout());
+        logoutBox.getChildren().addAll(logoutButton);
+
         //add buttons to gridpane
         centerPane.add(timeBox,0,0);
         centerPane.add(visitBox,0,1);
         centerPane.add(storeBox,1,0);
         centerPane.add(borrowBox,1,1);
         centerPane.add(statusBox,2,0);
+        centerPane.add(logoutBox,2,1);
         centerPane.setVgap(10);
         centerPane.setHgap(10);
 

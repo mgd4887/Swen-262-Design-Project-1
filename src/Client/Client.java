@@ -30,4 +30,12 @@ public class Client {
     public void setName(String username) {
         this.username = username;
     }
+
+    public Page getCurerntPage(){
+        return curerntPage;
+    }
+
+    public void changePage(Page page) {
+        this.curerntPage = page;
+    }
 }
