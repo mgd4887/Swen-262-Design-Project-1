@@ -1,48 +1,33 @@
 package Client;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+public class Client {
+    private int ID;
+    private String firstName;
+    private String lastName;
+    private Page curerntPage;
+    private String username;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class Client extends Application implements Observer {
-
-    private Page page;
-    private Stage mainStage;
-    private BorderPane root;
-
-    public static void main(String[] args) {
-        Application.launch( args );
+    public Client(int ID) {
+        this.ID = ID;
     }
 
-    @Override
-    public void start(Stage mainStage) throws Exception {
-        this.mainStage = mainStage;
-        this.page = new MenuPage(this);
-        this.root = new BorderPane();
-        refresh();
-        //Scene scene = this.page.getScene();
-        //this.mainStage.setScene( scene );
-        //mainStage.show();
+    public String getName() {
+        if (firstName == null || lastName == null){
+            return Integer.toString(ID);
+        }else{
+            return firstName + " " + lastName;
+        }
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        javafx.application.Platform.runLater(this::refresh);
+    public int getID() {
+        return ID;
     }
 
-    private void refresh() {
-        Scene scene = this.page.getScene();
-        this.mainStage.setScene(scene);
-        mainStage.show();
-
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
-    public void changePage(Page page) {
-        this.page = page;
-        this.refresh();
+    public void setName(String username) {
+        this.username = username;
     }
 }

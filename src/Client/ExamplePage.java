@@ -1,5 +1,6 @@
 package Client;
 
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -7,14 +8,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import system.SerializedLibraryBookManagementSystem;
 
 public class ExamplePage extends Page {
-    public ExamplePage(Client client) {
-        super(client);
+    public ExamplePage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
+        super(clientApplication, LBMS);
     }
 
     @Override
-    public Scene getScene() {
+    public Node getRoot() {
 
         //create outer boarder pane
         BorderPane outerPane = new BorderPane();
@@ -33,7 +35,7 @@ public class ExamplePage extends Page {
         textBox.setSpacing(10);
         centerPane.add(textBox,0,0);
 
-        return new Scene(outerPane);
+        return (outerPane);
     }
 
     private void submit(CharSequence characters) {

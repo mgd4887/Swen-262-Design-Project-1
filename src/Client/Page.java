@@ -1,14 +1,17 @@
 package Client;
 
-import javafx.scene.Scene;
+import javafx.scene.Node;
+import system.SerializedLibraryBookManagementSystem;
 
 public abstract class Page {
-    Client client;
+    protected final SerializedLibraryBookManagementSystem LBMS;
+    protected final ClientApplication clientApplication;
 
-    public Page(Client client) {
-        this.client = client;
+    public Page(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
+        this.clientApplication = clientApplication;
+        this.LBMS = LBMS;
     }
 
-    public abstract Scene getScene();
+    public abstract Node getRoot();
 
 }

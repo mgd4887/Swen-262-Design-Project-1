@@ -1,6 +1,6 @@
 package Client;
 
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -8,16 +8,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import system.SerializedLibraryBookManagementSystem;
 
 
 public class TimePage extends Page {
 
-    public TimePage(Client client) {
-        super(client);
+    public TimePage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
+        super(clientApplication, LBMS);
     }
 
     @Override
-    public Scene getScene() {
+    public Node getRoot() {
         //create an element to forward time
         HBox forwardTimeBox = new HBox();
         Button forwardTimeButton = new Button("Advance Time");
@@ -41,7 +42,7 @@ public class TimePage extends Page {
         //create a return to home button
         HBox returnBox = new HBox();
         Button returnButton = new Button("Return to menu");
-        returnButton.setOnMouseClicked(mouseEvent -> client.changePage(new MenuPage(client)));
+        returnButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new MenuPage(clientApplication, LBMS)));
         returnBox.getChildren().addAll(returnButton);
         returnBox.setSpacing(10);
         returnBox.setPrefWidth(250);
@@ -55,7 +56,7 @@ public class TimePage extends Page {
 
         BorderPane root = new BorderPane();
         root.setCenter(center);
-        return new Scene(root);
+        return (root);
     }
 
     private void getCurrentTime() {
