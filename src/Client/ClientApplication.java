@@ -21,11 +21,20 @@ public class ClientApplication extends Application implements Observer {
     private ClientBar clientBar;
     private Client currentClient;
 
+    /**
+     * the main function, starts the client
+     * @param args no args needed
+     */
     public static void main(String[] args) {
         // Create the system.
         Application.launch( args );
     }
 
+    /**
+     * Starts the application, part of JAVA FX
+     * @param mainStage the stage to show stuff on
+     * @throws Exception not used
+     */
     @Override
     public void start(Stage mainStage) throws Exception {
         this.LBMS = SerializedLibraryBookManagementSystem.loadFromFile();
@@ -41,11 +50,19 @@ public class ClientApplication extends Application implements Observer {
         //mainStage.show();
     }
 
+    /**
+     * update when observed updates
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         javafx.application.Platform.runLater(this::refresh);
     }
 
+    /**
+     * update the UI from the current status of the client
+     */
     public void refresh() {
         if (currentClient != null) {
             Page page = currentClient.getCurerntPage();
