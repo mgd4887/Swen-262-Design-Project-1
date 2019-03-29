@@ -71,4 +71,21 @@ public class ClientBar extends Page{
         }
         return null;
     }
+
+    public void disconnect(int id) {
+
+        LBMS.performRequest(id + ",disconnect;");
+
+        for (int i = 0; i < clients.size(); i++){
+            if (clients.get(i).getID() == id){
+                clients.remove(clients.get(i));
+            }
+        }
+        if (clients.isEmpty()){
+            clientApplication.changePage(new StartPage(clientApplication, LBMS));
+        }else{
+            clientApplication.changeClient(clients.get(0).getID());
+        }
+        clientApplication.refresh();
+    }
 }

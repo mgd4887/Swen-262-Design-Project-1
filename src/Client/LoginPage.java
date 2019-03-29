@@ -39,18 +39,18 @@ public class LoginPage extends Page {
                 clientID));
         submit.getChildren().add(submitButton);
 
-        HBox logout = new HBox();
-        Button logoutButton = new Button("login");
-        logoutButton.setOnMouseClicked(event -> disconnect());
-        submit.getChildren().add(submitButton);
+        HBox disconnect = new HBox();
+        Button disconnectButton = new Button("disconnect");
+        disconnectButton.setOnMouseClicked(event -> disconnect());
+        disconnect.getChildren().add(disconnectButton);
 
-        root.getChildren().addAll(username,password, submit);
+        root.getChildren().addAll(username,password, submit, disconnect);
 
         return root;
     }
 
     private void disconnect() {
-
+        clientApplication.disconnect(clientID);
     }
 
     private void submitLogin(CharSequence username, CharSequence password, int clientID) {
