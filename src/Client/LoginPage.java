@@ -39,9 +39,18 @@ public class LoginPage extends Page {
                 clientID));
         submit.getChildren().add(submitButton);
 
+        HBox logout = new HBox();
+        Button logoutButton = new Button("login");
+        logoutButton.setOnMouseClicked(event -> disconnect());
+        submit.getChildren().add(submitButton);
+
         root.getChildren().addAll(username,password, submit);
 
         return root;
+    }
+
+    private void disconnect() {
+
     }
 
     private void submitLogin(CharSequence username, CharSequence password, int clientID) {
