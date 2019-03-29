@@ -64,7 +64,7 @@ public class MenuPage extends Page {
 
         //create button for Status page
         HBox statusBox = new HBox();
-        Button statusButton = new Button("Store");
+        Button statusButton = new Button("Status");
         statusButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new StatusPage(clientApplication, LBMS)));
         statusBox.getChildren().addAll(statusButton);
 
@@ -74,6 +74,12 @@ public class MenuPage extends Page {
         logoutButton.setOnMouseClicked(mouseEvent -> clientApplication.logout());
         logoutBox.getChildren().addAll(logoutButton);
 
+        //create button for Register page
+        HBox registerBox = new HBox();
+        Button registerButton = new Button("Register new user");
+        registerButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new RegisterVisitorPage(clientApplication, LBMS)));
+        registerBox.getChildren().addAll(registerButton);
+
         //add buttons to gridpane
         centerPane.add(timeBox,0,0);
         centerPane.add(visitBox,0,1);
@@ -81,6 +87,7 @@ public class MenuPage extends Page {
         centerPane.add(borrowBox,1,1);
         centerPane.add(statusBox,2,0);
         centerPane.add(logoutBox,2,1);
+        centerPane.add(registerBox,3,0);
         centerPane.setVgap(10);
         centerPane.setHgap(10);
 

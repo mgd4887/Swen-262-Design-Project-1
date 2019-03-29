@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterVisitorPage extends Page {
-    private final int clientID;
 
     /**
      * constructor for all pages
@@ -21,9 +20,8 @@ public class RegisterVisitorPage extends Page {
      * @param clientApplication the client that this page is in
      * @param LBMS              the LBMS the client is connected to
      */
-    public RegisterVisitorPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int clientID) {
+    public RegisterVisitorPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
-        this.clientID = clientID;
     }
 
     @Override
@@ -56,10 +54,18 @@ public class RegisterVisitorPage extends Page {
                                                                 lastNameField.getCharacters(),
                                                                 addressField.getCharacters(),
                                                                 phoneField.getCharacters(),
-                                                                clientID));
+                                                                clientApplication.currentClientID()));
         submit.getChildren().add(submitButton);
 
-        root.addColumn(0, firstName,lastName,address,phoneNumber,submit);
+        //create a return to home button
+        HBox returnBox = new HBox();
+        Button returnButton = new Button("Return to menu");
+        returnButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new MenuPage(clientApplication, LBMS)));
+        returnBox.getChildren().addAll(returnButton);
+        returnBox.setSpacing(10);
+        returnBox.setPrefWidth(250);
+
+        root.addColumn(0, firstName,lastName,address,phoneNumber,submit, returnBox);
 
         return root;
     }
@@ -74,7 +80,7 @@ public class RegisterVisitorPage extends Page {
         Matcher matcher = pattern.matcher(response);
         if (matcher.matches()){
             int id = Integer.parseInt(matcher.group(2));
-            clientApplication.getCurrentClient().setVisitorID(id);
+            clientApplication.changePage(new CreateAccountPage(clientApplication, LBMS, id));
         }else{
             clientApplication.addError(response);
         }
