@@ -107,4 +107,8 @@ public class ClientApplication extends Application implements Observer {
     public void logout() {
         javafx.application.Platform.runLater(clientBar::logOut);
     }
+
+    public void disconnect(int id) {
+        clientBar.disconnect(id);
+    }
 }
