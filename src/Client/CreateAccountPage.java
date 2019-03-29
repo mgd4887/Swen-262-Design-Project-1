@@ -78,6 +78,11 @@ public class CreateAccountPage extends Page {
         String username = usernameChars.toString();
         String password = passwordChars.toString();
         String response = LBMS.performRequest(clientID + ",create," + username + "," + password + "," + role + "," + visitorID + ";");
-        System.out.println(response);
+        String expected = clientID + ",create,success;";
+        if (response.equals(expected)){
+            clientApplication.changePage(new MenuPage(clientApplication, LBMS));
+        }else {
+            clientApplication.addError(response);
+        }
     }
 }
