@@ -48,7 +48,7 @@ public class ClientBar extends Page{
             int ID = Integer.parseInt(matcher.group(1));
             Client current = new Client(ID);
             clients.add(current);
-            clientApplication.setCurrentClient(current);
+            clientApplication.changeClient(ID);
             clientApplication.changePage(new LoginPage(clientApplication,LBMS, ID));
             clientApplication.refresh();
         }else{
