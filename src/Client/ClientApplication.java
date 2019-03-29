@@ -11,6 +11,8 @@ import system.SerializedLibraryBookManagementSystem;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientApplication extends Application implements Observer {
 
@@ -31,7 +33,7 @@ public class ClientApplication extends Application implements Observer {
     public void start(Stage mainStage) throws Exception {
         this.LBMS = SerializedLibraryBookManagementSystem.loadFromFile();
         this.mainStage = mainStage;
-        this.page = new MenuPage(this, LBMS);
+        this.page = null;
         this.root = new BorderPane();
         this.clientBar = new ClientBar(this, LBMS);
         this.root.setTop(clientBar.getRoot());
@@ -48,7 +50,9 @@ public class ClientApplication extends Application implements Observer {
     }
 
     public void refresh() {
-        root.setCenter(page.getRoot());
+        if (page != null) {
+            root.setCenter(page.getRoot());
+        }
         root.setTop(clientBar.getRoot());
         root.setRight(null); // remove any errors
         //this.mainStage.setScene(scene);

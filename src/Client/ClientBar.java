@@ -45,7 +45,7 @@ public class ClientBar extends Page{
         Matcher matcher = pattern.matcher(response);
         if(matcher.matches()){
             int ID = Integer.parseInt(matcher.group(1));
-            clientApplication.changePage(new NewClientPage(clientApplication,LBMS, ID));
+            clientApplication.changePage(new LoginPage(clientApplication,LBMS, ID));
             Client current = new Client(ID);
             clients.add(current);
             clientApplication.setCurrentClient(current);
