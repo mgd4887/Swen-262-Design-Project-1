@@ -73,25 +73,46 @@ public class ClientApplication extends Application implements Observer {
 
     }
 
+    /**
+     * changes the current page of hte current client
+     * @param page the page to the change the current client to
+     */
     public void changePage(Page page) {
         curretClient.changePage(page);
         this.page = curretClient.getCurerntPage();
         this.refresh();
     }
 
+    /**
+     * change the current client
+     * @param clientID the ID of the client to change to
+     */
     public void changeClient(int clientID) {
         this.clientID = clientID;
         this.curretClient = clientBar.getClient(clientID);
+        this.refresh();
     }
 
+    /**
+     * returns the current client ID
+     * @return the ID of  hte current client
+     */
     public int currentClientID(){
         return clientID;
     }
 
+    /**
+     * gets the current Client
+     * @return the current client
+     */
     public Client getCurrentClient() {
         return curretClient;
     }
 
+    /**
+     * adds an error to the client
+     * @param response the error message
+     */
     public void addError(String response) {
         VBox error = new VBox();
         Text errorText = new Text(response);
@@ -99,15 +120,17 @@ public class ClientApplication extends Application implements Observer {
         root.setRight(error);
     }
 
-    public void setCurrentClient(Client current) {
-        this.curretClient = current;
-        this.refresh();
-    }
-
+    /**
+     * logs the current client out off the session
+     */
     public void logout() {
         javafx.application.Platform.runLater(clientBar::logOut);
     }
 
+    /**
+     * disconnects the  client of the given ID
+     * @param id the ID of the client to disconnect
+     */
     public void disconnect(int id) {
         clientBar.disconnect(id);
     }
