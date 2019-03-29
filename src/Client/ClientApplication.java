@@ -33,7 +33,7 @@ public class ClientApplication extends Application implements Observer {
     public void start(Stage mainStage) throws Exception {
         this.LBMS = SerializedLibraryBookManagementSystem.loadFromFile();
         this.mainStage = mainStage;
-        this.page = null;
+        this.page = new StartPage(this, LBMS);
         this.root = new BorderPane();
         this.clientBar = new ClientBar(this, LBMS);
         this.root.setTop(clientBar.getRoot());
