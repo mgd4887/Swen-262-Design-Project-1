@@ -58,8 +58,8 @@ public class RegesterPage extends Page {
         return root;
     }
 
-    private void submitRegester(CharSequence fisrtNamecharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
-        String request = clientID + ",register," + fisrtNamecharacters.toString() + "," + lastNameFieldCharacters.toString() + "," + addressFieldCharacters.toString() + "," + phoneFieldCharacters.toString() + ";";
+    private void submitRegester(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
+        String request = clientID + ",register," + firstNameCharacters.toString() + "," + lastNameFieldCharacters.toString() + "," + addressFieldCharacters.toString() + "," + phoneFieldCharacters.toString() + ";";
         String response = LBMS.performRequest(request);
         // should be in the format "register,visitor ID,registration date;"
         String regex = "(.+),([0-9]{10}),(.+);";

@@ -2,8 +2,6 @@ package Client;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import system.SerializedLibraryBookManagementSystem;
 
@@ -38,6 +36,9 @@ public class ClientBar extends Page{
         return root;
     }
 
+    /**
+     * adds a client to the the client bar
+     */
     private void addClient() {
         String response = LBMS.performRequest("connect;");
         String regex = "connect,([0-9]+);";
@@ -52,10 +53,12 @@ public class ClientBar extends Page{
             clientApplication.refresh();
         }else{
             clientApplication.addError(response);
-            //TODO handle
         }
     }
 
+    /**
+     * logs the current client to the client bar
+     */
     public void logOut() {
         int id = clientApplication.getCurrentClient().getID();
         String response = LBMS.performRequest(id+",logout;");
@@ -63,6 +66,11 @@ public class ClientBar extends Page{
 
     }
 
+    /**
+     * gets a specific client by ID
+     * @param clientID the id of the client you want to get
+     * @return the client that has that ID
+     */
     public Client getClient(int clientID) {
         for (int i = 0; i < clients.size(); i++){
             if (clients.get(i).getID() == clientID){
@@ -72,6 +80,10 @@ public class ClientBar extends Page{
         return null;
     }
 
+    /**
+     * disconnects a client from the server
+     * @param id the ID of the client you want to disconnect
+     */
     public void disconnect(int id) {
 
         LBMS.performRequest(id + ",disconnect;");
