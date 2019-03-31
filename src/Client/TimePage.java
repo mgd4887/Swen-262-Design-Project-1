@@ -1,5 +1,6 @@
 package Client;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +12,14 @@ import javafx.scene.text.Text;
 import system.SerializedLibraryBookManagementSystem;
 
 
+/**
+ * This class handles the changing of time of the lbms for testing purposes. It is an extension of page, so the
+ * client application can grab the page layout and display it for the user. Also holds a method to relay user inputted
+ * information back to the lbms.
+ *
+ * @author michael dolan
+ * @author bendrix bailey
+ */
 public class TimePage extends Page {
 
     /**
@@ -24,6 +33,12 @@ public class TimePage extends Page {
         super(clientApplication, LBMS);
     }
 
+    /**
+     * This method creates the page for changing time. Uses javafx to display buttons and text. Parent layout is a
+     * borderpane
+     *
+     * @return returns the graphic display to show on the ui page.
+     */
     @Override
     public Node getRoot() {
         //create an element to forward time
@@ -40,8 +55,9 @@ public class TimePage extends Page {
         HBox currentTimeBox = new HBox();
         Button getTimeButton = new Button("Get Current Time");
         Label currentTimeLabel = new Label("Current Time:");
-        Text currentTime = new Text();
-        getTimeButton.setOnMouseClicked(mouseEvent -> this.getCurrentTime());
+        String currentTimeText = "------";
+        getTimeButton.setOnMouseClicked(mouseEvent -> this.getCurrentTime(currentTimeText));
+        Text currentTime = new Text(currentTimeText);
         currentTimeBox.getChildren().addAll(currentTimeLabel, currentTime, getTimeButton);
         currentTimeBox.setSpacing(10);
         currentTimeBox.setPrefWidth(250);
@@ -63,13 +79,29 @@ public class TimePage extends Page {
 
         BorderPane root = new BorderPane();
         root.setCenter(center);
+        center.setAlignment(Pos.CENTER);
         return (root);
     }
 
-    private void getCurrentTime() {
-
+    /**
+     * This method allows for the user to grab the current time from the lbms and display it.
+     *
+     * @param currentTimeText the text field for the current time.
+     * @return returns the response from the lbms.
+     */
+    private String getCurrentTime(String currentTimeText) {
+        String response = LBMS.performRequest("datetime;");
+        System.out.println(response);
+        currentTimeText = response;
+        return response;
     }
 
+    /**
+     * This method sends the information to the server to progress time.
+     *
+     * @param daysSequence days to progress
+     * @param hourSequence hours to progress
+     */
     private void forwardTime(CharSequence daysSequence, CharSequence hourSequence) {
         String daysString = daysSequence.toString();
         String hoursString = hourSequence.toString();
@@ -80,13 +112,23 @@ public class TimePage extends Page {
             days = Integer.parseInt(daysString);
         }catch (Exception e){
             invalid = true;
-            System.out.println("could not pasre day");
+            System.out.println("could not parse day");
         }
         try {
             hours = Integer.parseInt(hoursString);
         }catch (Exception e){
             invalid = true;
-            System.out.println("could not pasre hour");
+            System.out.println("could not parse hour");
+        }
+
+        String request = "advance," + daysString + "[," + hoursString + "];";
+        String response = LBMS.performRequest(request);
+        if(response.contains("success")){
+            clientApplication.addError("Successfully advanced time!");
+        }else if(response.contains("invalid-number-of-days")){
+            clientApplication.addError("Invalid number of days entered!");
+        }else{
+            clientApplication.addError("Invalid number of hours entered!");
         }
 
 
