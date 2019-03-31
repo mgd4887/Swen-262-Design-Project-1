@@ -10,9 +10,6 @@ import system.SerializedLibraryBookManagementSystem;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ClientApplication extends Application implements Observer {
 
@@ -22,13 +19,22 @@ public class ClientApplication extends Application implements Observer {
     private int clientID;
     private SerializedLibraryBookManagementSystem LBMS;
     private ClientBar clientBar;
-    private Client curretClient;
+    private Client currentClient;
 
+    /**
+     * the main function, starts the client
+     * @param args no args needed
+     */
     public static void main(String[] args) {
         // Create the system.
         Application.launch( args );
     }
 
+    /**
+     * Starts the application, part of JAVA FX
+     * @param mainStage the stage to show stuff on
+     * @throws Exception not used
+     */
     @Override
     public void start(Stage mainStage) throws Exception {
         this.LBMS = SerializedLibraryBookManagementSystem.loadFromFile();
@@ -44,14 +50,22 @@ public class ClientApplication extends Application implements Observer {
         //mainStage.show();
     }
 
+    /**
+     * update when observed updates
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         javafx.application.Platform.runLater(this::refresh);
     }
 
+    /**
+     * update the UI from the current status of the client
+     */
     public void refresh() {
-        if (curretClient != null) {
-            Page page = curretClient.getCurerntPage();
+        if (currentClient != null) {
+            Page page = currentClient.getCurrentPage();
             if (page != null) {
                 root.setCenter(page.getRoot());
             } else {
@@ -78,8 +92,8 @@ public class ClientApplication extends Application implements Observer {
      * @param page the page to the change the current client to
      */
     public void changePage(Page page) {
-        curretClient.changePage(page);
-        this.page = curretClient.getCurerntPage();
+        currentClient.changePage(page);
+        this.page = currentClient.getCurrentPage();
         this.refresh();
     }
 
@@ -89,7 +103,7 @@ public class ClientApplication extends Application implements Observer {
      */
     public void changeClient(int clientID) {
         this.clientID = clientID;
-        this.curretClient = clientBar.getClient(clientID);
+        this.currentClient = clientBar.getClient(clientID);
         this.refresh();
     }
 
@@ -106,7 +120,7 @@ public class ClientApplication extends Application implements Observer {
      * @return the current client
      */
     public Client getCurrentClient() {
-        return curretClient;
+        return currentClient;
     }
 
     /**

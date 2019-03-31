@@ -9,31 +9,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import system.SerializedLibraryBookManagementSystem;
 
-/**
- * This class represents the main menu for navigating our library book management system.
- * Like other classes, this uses lambda methods to outsource functionality to the client application
- *
- * @author michael dolan
- * @author bendrix bailey
- */
 public class MenuPage extends Page {
 
     /**
-     * This is the constructor for this class, like others, it supers information up to the abstract class of page.
+     * constructor for all pages
+     * creates a page
      *
-     * @param clientApplication client application that runs this program
-     * @param LBMS lbms system that controls informaion
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
      */
     public MenuPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }
 
-    /**
-     * This method creates the layout and designates button functionality to other classes.
-     * Uses a borderpane and other nested panes to create a aesthetically pleasing layout
-     *
-     * @return pane construct that can be displayed via client application
-     */
     @Override
     public Node getRoot() {
 
@@ -76,7 +64,7 @@ public class MenuPage extends Page {
 
         //create button for Status page
         HBox statusBox = new HBox();
-        Button statusButton = new Button("Store");
+        Button statusButton = new Button("Status");
         statusButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new StatusPage(clientApplication, LBMS)));
         statusBox.getChildren().addAll(statusButton);
 
@@ -86,6 +74,12 @@ public class MenuPage extends Page {
         logoutButton.setOnMouseClicked(mouseEvent -> clientApplication.logout());
         logoutBox.getChildren().addAll(logoutButton);
 
+        //create button for Register page
+        HBox registerBox = new HBox();
+        Button registerButton = new Button("Register new user");
+        registerButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new RegisterVisitorPage(clientApplication, LBMS)));
+        registerBox.getChildren().addAll(registerButton);
+
         //add buttons to gridpane
         centerPane.add(timeBox,0,0);
         centerPane.add(visitBox,0,1);
@@ -93,6 +87,7 @@ public class MenuPage extends Page {
         centerPane.add(borrowBox,1,1);
         centerPane.add(statusBox,2,0);
         centerPane.add(logoutBox,2,1);
+        centerPane.add(registerBox,3,0);
         centerPane.setVgap(10);
         centerPane.setHgap(10);
 

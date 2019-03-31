@@ -8,16 +8,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 
-import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegesterPage extends Page {
-    private final int clientID;
+public class RegisterVisitorPage extends Page {
 
-    public RegesterPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS, int clientID) {
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
+    public RegisterVisitorPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
-        this.clientID = clientID;
     }
 
     @Override
@@ -46,19 +50,28 @@ public class RegesterPage extends Page {
 
         HBox submit = new HBox();
         Button submitButton = new Button("Register");
-        submitButton.setOnMouseClicked(event -> submitRegester(nameField.getCharacters(),
+        submitButton.setOnMouseClicked(event -> submitRegister(nameField.getCharacters(),
                                                                 lastNameField.getCharacters(),
                                                                 addressField.getCharacters(),
                                                                 phoneField.getCharacters(),
-                                                                clientID));
+                                                                clientApplication.currentClientID()));
         submit.getChildren().add(submitButton);
 
-        root.addColumn(0, firstName,lastName,address,phoneNumber,submit);
+        //create a return to home button
+        HBox returnBox = new HBox();
+        Button returnButton = new Button("Return to menu");
+        returnButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new MenuPage(clientApplication, LBMS)));
+        returnBox.getChildren().addAll(returnButton);
+        returnBox.setSpacing(10);
+        returnBox.setPrefWidth(250);
+
+        root.addColumn(0, firstName,lastName,address,phoneNumber,submit, returnBox);
 
         return root;
     }
 
-    private void submitRegester(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
+
+    private void submitRegister(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
         String request = clientID + ",register," + firstNameCharacters.toString() + "," + lastNameFieldCharacters.toString() + "," + addressFieldCharacters.toString() + "," + phoneFieldCharacters.toString() + ";";
         String response = LBMS.performRequest(request);
         // should be in the format "register,visitor ID,registration date;"
@@ -66,8 +79,8 @@ public class RegesterPage extends Page {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(response);
         if (matcher.matches()){
-            int id = Integer.parseInt(matcher.group(2));
-            clientApplication.getCurrentClient().setID(id);
+            String id = matcher.group(2);
+            clientApplication.changePage(new CreateAccountPage(clientApplication, LBMS, id));
         }else{
             clientApplication.addError(response);
         }

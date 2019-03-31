@@ -13,6 +13,13 @@ public class ClientBar extends Page{
 
     private ArrayList<Client> clients = new ArrayList <Client>();
 
+    /**
+     * constructor for all pages
+     * creates a page
+     *
+     * @param clientApplication the client that this page is in
+     * @param LBMS              the LBMS the client is connected to
+     */
     public ClientBar(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }
@@ -23,7 +30,7 @@ public class ClientBar extends Page{
         ArrayList<Button> clientButtons = new ArrayList <>();
         for (Client client: clients){
             Button clientButton = new Button(client.getName());
-            clientButton.setOnMouseClicked(event -> clientApplication.changeClient(client.getID()));
+            clientButton.setOnMouseClicked(event -> clientApplication.changeClient(client.getClientID()));
             clientButtons.add(clientButton);
 
         }
@@ -60,7 +67,7 @@ public class ClientBar extends Page{
      * logs the current client to the client bar
      */
     public void logOut() {
-        int id = clientApplication.getCurrentClient().getID();
+        int id = clientApplication.getCurrentClient().getClientID();
         String response = LBMS.performRequest(id+",logout;");
         clientApplication.changePage(new LoginPage(clientApplication,LBMS,id));
 
@@ -73,7 +80,7 @@ public class ClientBar extends Page{
      */
     public Client getClient(int clientID) {
         for (int i = 0; i < clients.size(); i++){
-            if (clients.get(i).getID() == clientID){
+            if (clients.get(i).getClientID() == clientID){
                 return clients.get(i);
             }
         }
@@ -89,14 +96,14 @@ public class ClientBar extends Page{
         LBMS.performRequest(id + ",disconnect;");
 
         for (int i = 0; i < clients.size(); i++){
-            if (clients.get(i).getID() == id){
+            if (clients.get(i).getClientID() == id){
                 clients.remove(clients.get(i));
             }
         }
         if (clients.isEmpty()){
             clientApplication.changePage(new StartPage(clientApplication, LBMS));
         }else{
-            clientApplication.changeClient(clients.get(0).getID());
+            clientApplication.changeClient(clients.get(0).getClientID());
         }
         clientApplication.refresh();
     }
