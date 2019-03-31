@@ -71,7 +71,7 @@ public class VisitPage extends Page {
         //end visit
         BorderPane endRoot = new BorderPane();
         VBox endVisitLables = new VBox();
-        Label endVisitLabel = new Label("Starting a visit:");
+        Label endVisitLabel = new Label("Ending a visit:");
         Label endVisitLabel2 = new Label("Enter visitor ID");
         endVisitLabel.setFont(new Font("Helvetica", 25));
         endVisitLabel2.setFont(new Font("Helvetica", 25));
@@ -82,7 +82,7 @@ public class VisitPage extends Page {
 
         TextField endIdInput = new TextField();
         visitLabel.setFont(new Font("Helvetica", 25));
-        Button endVisitButton = new Button("Start Visit");
+        Button endVisitButton = new Button("End Visit");
         endVisitButton.setOnMouseClicked(mouseEvent -> this.endVisit(endIdInput.getCharacters()));
 
         VBox endVisitVbox = new VBox();
