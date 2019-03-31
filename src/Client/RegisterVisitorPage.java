@@ -1,6 +1,8 @@
 package Client;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import system.SerializedLibraryBookManagementSystem;
@@ -11,6 +13,13 @@ import javafx.scene.control.Button;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class allows users to register a new visitor. Uses javafx and lambda functions to give commands to the lbms.
+ * Creates page layout necessary for interacting with lbms system
+ *
+ * @author michael dolan
+ * @author bendrix bailey
+ */
 public class RegisterVisitorPage extends Page {
 
     /**
@@ -24,8 +33,15 @@ public class RegisterVisitorPage extends Page {
         super(clientApplication, LBMS);
     }
 
+    /**
+     * This method does the actual construction of the page. Gives buttons functionality to call method below
+     * that sends information to the lbms
+     *
+     * @return returns the borderpane that will be displayed on the page
+     */
     @Override
     public Node getRoot() {
+        BorderPane rootPane = new BorderPane();
         GridPane root = new GridPane();
 
         HBox firstName = new HBox();
@@ -48,29 +64,43 @@ public class RegisterVisitorPage extends Page {
         Label phoneLabel = new Label("Phone number: ");
         phoneNumber.getChildren().addAll(phoneLabel, phoneField);
 
-        HBox submit = new HBox();
+
+
+        HBox buttonBox = new HBox();
         Button submitButton = new Button("Register");
         submitButton.setOnMouseClicked(event -> submitRegister(nameField.getCharacters(),
                                                                 lastNameField.getCharacters(),
                                                                 addressField.getCharacters(),
                                                                 phoneField.getCharacters(),
                                                                 clientApplication.currentClientID()));
-        submit.getChildren().add(submitButton);
+        buttonBox.getChildren().add(submitButton);
 
         //create a return to home button
-        HBox returnBox = new HBox();
         Button returnButton = new Button("Return to menu");
         returnButton.setOnMouseClicked(mouseEvent -> clientApplication.changePage(new MenuPage(clientApplication, LBMS)));
-        returnBox.getChildren().addAll(returnButton);
-        returnBox.setSpacing(10);
-        returnBox.setPrefWidth(250);
+        buttonBox.getChildren().add(returnButton);
+        buttonBox.setSpacing(10);
+        buttonBox.setPrefWidth(250);
 
-        root.addColumn(0, firstName,lastName,address,phoneNumber,submit, returnBox);
+        root.addColumn(0, firstName,lastName,address,phoneNumber,buttonBox);
+        rootPane.setCenter(root);
+        root.setAlignment(Pos.CENTER);
 
-        return root;
+        return rootPane;
     }
 
-
+    /**
+     * This method controls the submission of the registry data to the lbms. Because the lbms works using string input,
+     * this method creates a string to send to the lbms with the data inputted by the user. This method also
+     * handles errors if the user inputted information incorrectly, or with incorrect format. Called by the lambda
+     * methods within this class.
+     *
+     * @param firstNameCharacters the string characters for the first name of the visitor
+     * @param lastNameFieldCharacters characters inputted for the last name of the visitor
+     * @param addressFieldCharacters characters inputted for the address of the visitor
+     * @param phoneFieldCharacters characters inputted for the phone number of the bisitor
+     * @param clientID the id of the current application running this program.
+     */
     private void submitRegister(CharSequence firstNameCharacters, CharSequence lastNameFieldCharacters, CharSequence addressFieldCharacters, CharSequence phoneFieldCharacters, int clientID) {
         String request = clientID + ",register," + firstNameCharacters.toString() + "," + lastNameFieldCharacters.toString() + "," + addressFieldCharacters.toString() + "," + phoneFieldCharacters.toString() + ";";
         String response = LBMS.performRequest(request);
