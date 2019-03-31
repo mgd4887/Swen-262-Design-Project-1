@@ -9,12 +9,31 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import system.SerializedLibraryBookManagementSystem;
 
+/**
+ * This class represents the main menu for navigating our library book management system.
+ * Like other classes, this uses lambda methods to outsource functionality to the client application
+ *
+ * @author michael dolan
+ * @author bendrix bailey
+ */
 public class MenuPage extends Page {
 
+    /**
+     * This is the constructor for this class, like others, it supers information up to the abstract class of page.
+     *
+     * @param clientApplication client application that runs this program
+     * @param LBMS lbms system that controls informaion
+     */
     public MenuPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
     }
 
+    /**
+     * This method creates the layout and designates button functionality to other classes.
+     * Uses a borderpane and other nested panes to create a aesthetically pleasing layout
+     *
+     * @return pane construct that can be displayed via client application
+     */
     @Override
     public Node getRoot() {
 
