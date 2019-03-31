@@ -121,20 +121,17 @@ public class TimePage extends Page {
             System.out.println("could not parse hour");
         }
 
-        String request = "advance," + daysString + "[," + hoursString + "];";
-        String response = LBMS.performRequest(request);
-        if(response.contains("success")){
-            clientApplication.addError("Successfully advanced time!");
-        }else if(response.contains("invalid-number-of-days")){
-            clientApplication.addError("Invalid number of days entered!");
-        }else{
-            clientApplication.addError("Invalid number of hours entered!");
-        }
-
-
-        //TODO connect to server
-        if (!invalid) {
+        if (!invalid) { //if the strings are correctly formatted
             System.out.println("advance," + days + "," + hours + ";");
+            String request = "advance," + daysString + "[," + hoursString + "];";
+            String response = LBMS.performRequest(request);
+            if (response.contains("success")) { //if the lbms accepted the command
+                clientApplication.addError("Successfully advanced time!");
+            } else if (response.contains("invalid-number-of-days")) { //if number of days was wrong format
+                clientApplication.addError("Invalid number of days entered!");
+            } else { //if number of hours was invalid
+                clientApplication.addError("Invalid number of hours entered!");
+            }
         }
     }
 }
