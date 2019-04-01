@@ -28,6 +28,7 @@ public class BorrowPage extends Page {
         searchResults.setPrefHeight(500);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Node getRoot() {
 

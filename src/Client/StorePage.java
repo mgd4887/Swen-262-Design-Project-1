@@ -86,15 +86,18 @@ public class StorePage extends Page {
 
 
         /*
-         * Create borrow book section
+         * Create Buy book section
          */
 
-        HBox borrowBook = new HBox();
-        Label borrowBookLabel = new Label("Enter book ID or select a book with the book search");
-        TextField borrowBookFiled = new TextField();
-        Button borrowBookButton = new Button("Buy Book");
-        borrowBookButton.setOnMouseClicked(Event -> Borrow(borrowBookFiled.getCharacters()));
-        borrowBook.getChildren().addAll(borrowBookLabel, borrowBookFiled, borrowBookButton);
+        HBox buyBook = new HBox();
+        Label buyBookLabel = new Label("Enter book ID or select a book with the book search");
+        TextField buyBookFiled = new TextField();
+        Label quantityLabel = new Label("how many");
+        TextField quantityField = new TextField();
+
+        Button buyBookButton = new Button("Buy Book");
+        buyBookButton.setOnMouseClicked(Event -> Buy(buyBookFiled.getCharacters(), quantityField.getCharacters()));
+        buyBook.getChildren().addAll(buyBookLabel, buyBookFiled,quantityLabel, quantityField, buyBookButton);
 
 
         //create a return to home button
@@ -106,7 +109,7 @@ public class StorePage extends Page {
         returnBox.setPrefWidth(250);
 
         BorderPane root = new BorderPane();
-        root.setTop(borrowBook);
+        root.setTop(buyBook);
         root.setBottom(returnBox);
         root.setCenter(bookSearch);
         return (root);
@@ -143,8 +146,7 @@ public class StorePage extends Page {
 
                 HBox bookBox = new HBox();
 
-                RadioButton radioButton = new RadioButton();
-                radioButton.setToggleGroup(toggleGroup);
+                CheckBox radioButton = new CheckBox();
 
                 Text copiesAvailable = new Text(matcher.group(1));
                 Text bookID = new Text(matcher.group(2));
@@ -166,19 +168,26 @@ public class StorePage extends Page {
 
     }
 
-    private void Borrow(CharSequence characters) {
+
+    private void Buy(CharSequence characters, CharSequence quantityFieldCharacters) {
         String bookID = characters.toString();
+        int quality = 0;
+        try{
+            quality = Integer.parseInt(quantityFieldCharacters.toString());
+        }catch (Exception e){
+            clientApplication.addError("not a number");
+        }
 
         //get if the book search system has been used;
         for (Node node: searchResults.getChildren()){
             HBox book = (HBox) node;
-            RadioButton button = (RadioButton) book.getChildren().get(0);
+            CheckBox  button = (CheckBox ) book.getChildren().get(0);
             if (button.isSelected()){
                 Text bookIDText = (Text) book.getChildren().get(1);
-                bookID = bookIDText.getText();
+                bookID += "," + bookIDText.getText();
             }
         }
 
-        String request = clientApplication.getCurrentClient().getClientID() + ",borrow," + bookID;
+        String request = clientApplication.getCurrentClient().getClientID() + ",buy," + quality + "," + bookID + ";";
     }
 }
