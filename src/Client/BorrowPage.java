@@ -1,14 +1,11 @@
 package Client;
 
-import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import request.connected.revertable.BorrowBook;
 import system.SerializedLibraryBookManagementSystem;
 
 import java.util.regex.Matcher;
@@ -28,7 +25,7 @@ public class BorrowPage extends Page {
     public BorrowPage(ClientApplication clientApplication, SerializedLibraryBookManagementSystem LBMS) {
         super(clientApplication, LBMS);
         this.searchResults = new VBox();
-        searchResults.setPrefHeight(720);
+        searchResults.setPrefHeight(500);
     }
 
     @Override
